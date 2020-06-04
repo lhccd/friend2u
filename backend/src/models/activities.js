@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 //  '-> One Schema and check for data-completeness during storing.
 
 const ActivitySchema  = new mongoose.Schema({
-    categorie: {
+    category: {
         type: String,
         enum: ['Sport', 'Food', 'Entertainment', 'Others'],
         //default: 'Others',
