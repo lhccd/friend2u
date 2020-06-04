@@ -10,6 +10,7 @@ const UserSchema  = new mongoose.Schema({
 		'birthday',
 		'name',
 		'username',
+		'gender',
 		
 		//We consider that people use the app have a mobile phone
 		'mobile',
@@ -50,12 +51,18 @@ const UserSchema  = new mongoose.Schema({
 	bio: {
 		type: String,
 		default: "I'm bored. Let's hang out!"
-	}
+	},
 	
 	gender: {
 		type: String,
 		enum: ['Male','Female','Other','NotDeclared']
+	},
+	
+	profilePicture: {
+		type: String,
+		default: 'static/images/default.png'
 	}
+	
 	
 });
 

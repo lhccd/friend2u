@@ -34,5 +34,12 @@ api.get('/', (req, res) => {
 api.use('/activities', activities);
 
 
+//Serving static files
+//TO DO
+//
+//We probably won't need this because the static files will be served in the front end.
+//Now it is used to serve the default profile picture
+api.use('/static', express.static('public'));
+
 
 module.exports = api;
