@@ -56,50 +56,6 @@ const register = async (req,res) => {
 		});
 		else newUser[prop] = req.body[prop];
 	};
-	
-	/*
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a password property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'username')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a username property'
-    });
-    
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a email property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'birthday')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a birthday property'
-    });
-    
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'name')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a name property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'surname')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a surname property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'gender')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a gender property'
-    });
-    
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'mobile')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a mobile property'
-    });
-    */
-
-    //const user = Object.assign(req.body, {password: bcrypt.hashSync(req.body.password, 8)});
     
     UserModel.create(newUser, (err, user) => {
 		if(err){
