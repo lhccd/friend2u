@@ -5,7 +5,22 @@ const mongoose = require('mongoose');
 const requiredProperties = require('./user_config')
 
 const UserSchema  = new mongoose.Schema({
+<<<<<<< HEAD:backend/src/models/user.js
 	required: requiredProperties,
+=======
+	required: [
+		'username',
+		'hashedPassword',
+		'email',
+		'birthday',
+		'name',
+		'username',
+		'gender',
+		
+		//We consider that people use the app have a mobile phone
+		'mobile',
+	],
+>>>>>>> 7965b4c4ff2eeedce302c5fcfaf0797c1d21acdf:backend/src/models/users.js
 	
     username: {
         type: String,
@@ -18,7 +33,11 @@ const UserSchema  = new mongoose.Schema({
     
     email: {
 		type: String,
+<<<<<<< HEAD:backend/src/models/user.js
 		validate: /^.+\@.+\..+$/,
+=======
+		//validate: '^.+\@.+\..+$',
+>>>>>>> 7965b4c4ff2eeedce302c5fcfaf0797c1d21acdf:backend/src/models/users.js
 		unique: true,
 	},
 	
@@ -32,7 +51,11 @@ const UserSchema  = new mongoose.Schema({
 	
 	mobile: {
 		type: String,
+<<<<<<< HEAD:backend/src/models/user.js
 		validate: /^\+?\d{1,16}$/
+=======
+		//validate: '^\+?\d{1,16}$',
+>>>>>>> 7965b4c4ff2eeedce302c5fcfaf0797c1d21acdf:backend/src/models/users.js
 	},
 	
 	//This must be passed already as a Date object
