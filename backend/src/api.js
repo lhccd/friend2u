@@ -6,7 +6,7 @@ const helmet     = require('helmet');
 
 const middlewares = require('./middleware/middlewares');
 
-//const auth  = require('./routes/auth');
+const auth  = require('./routes/auth');
 const activities = require('./routes/activities');
 const users = require('./routes/users');
 
@@ -31,7 +31,7 @@ api.get('/', (req, res) => {
 });
 
 // API routes
-// api.use('/auth'  , auth);
+api.use('/auth'  , auth);
 api.use('/activities', activities);
 api.use('/users', users);
 
