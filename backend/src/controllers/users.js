@@ -11,7 +11,7 @@ const create = (req, res) => {
         message: 'The request body is empty'
     });
 
-    // Try to crate an activity.
+    // Try to crate an user.
     UserModel.create(req.body)
         .then(activity => res.status(201).json(activity))
         .catch(error => res.status(500).json({
@@ -62,7 +62,7 @@ const update = (req, res) => {
         }));
 };
 
-// Remove an existing activity.
+// Remove an existing user.
 const remove = (req, res) => {
     UserModel.findByIdAndRemove(req.params.id).exec()
         .then(() => res.status(200).json({message: `User with id${req.params.id} was deleted`}))
