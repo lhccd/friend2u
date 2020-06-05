@@ -2,9 +2,28 @@
 
 const UserModel = require('../models/users');
 
+
+//create for testing
+const create = (req, res) => {
+    // Check whether there is something to store in our DB.
+    if (Object.keys(req.body).length === 0) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body is empty'
+    });
+
+    // Try to crate an activity.
+    UserModel.create(req.body)
+        .then(activity => res.status(201).json(activity))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        }));
+};
+
+
 // Reading an existing User.
 const read = (req, res) => {
-    UserModel.findById(req.userId).select('username').exec()
+    UserModel.findById(req.params.id).exec()
         .then(user => {
 
             if (!user) return res.status(404).json({
@@ -33,7 +52,7 @@ const update = (req, res) => {
 
     console.log(req.body);
 
-    UseryModel.findByIdAndUpdate(req.params.id,req.body,{
+    UserModel.findByIdAndUpdate(req.params.id,req.body,{
         new: true,
         runValidators: true}).exec()
         .then(user => res.status(200).json(user))
@@ -53,10 +72,19 @@ const remove = (req, res) => {
         }));
 };
 
-
+const list  = (req, res) => {
+    UserModel.find({}).exec()
+        .then(users => res.status(200).json(users))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        }));
+};
 
 module.exports = {
+    create,
     read,
     update,
     remove,
+    list,
 };

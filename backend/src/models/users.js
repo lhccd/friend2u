@@ -27,7 +27,7 @@ const UserSchema  = new mongoose.Schema({
     
     email: {
 		type: String,
-		validate: '^.+\@.+\..+$',
+		//validate: '^.+\@.+\..+$',
 		unique: true,
 	},
 	
@@ -41,7 +41,7 @@ const UserSchema  = new mongoose.Schema({
 	
 	mobile: {
 		type: String,
-		validate: '^\+?\d{1,16}$',
+		//validate: '^\+?\d{1,16}$',
 	},
 	
 	birthday: {
