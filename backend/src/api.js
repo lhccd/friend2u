@@ -8,6 +8,7 @@ const middlewares = require('./middleware/middlewares');
 
 //const auth  = require('./routes/auth');
 const activities = require('./routes/activities');
+const users = require('./routes/users');
 
 const api = express();
 
@@ -32,6 +33,7 @@ api.get('/', (req, res) => {
 // API routes
 // api.use('/auth'  , auth);
 api.use('/activities', activities);
+api.use('/users', users)
 
 
 //Serving static files

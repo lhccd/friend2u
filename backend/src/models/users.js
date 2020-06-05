@@ -14,7 +14,7 @@ const UserSchema  = new mongoose.Schema({
 		
 		//We consider that people use the app have a mobile phone
 		'mobile',
-	]
+	],
 	
     username: {
         type: String,
@@ -33,16 +33,16 @@ const UserSchema  = new mongoose.Schema({
 	
 	name: {
 		type: String,
-	}
+	},
 	
 	surname: {
 		type: String,
-	}
+	},
 	
 	mobile: {
-		type: String
-		validate: '^\+?\d{1,16}$'
-	}
+		type: String,
+		validate: '^\+?\d{1,16}$',
+	},
 	
 	birthday: {
 		type: Date,
