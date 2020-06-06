@@ -3,8 +3,8 @@
 const jwt        = require('jsonwebtoken');
 const bcrypt     = require('bcryptjs');
 
-const config     = require('../config');
-const UserModel  = require('../models/user');
+const config           = require('../config');
+const UserSchema       = require('../models/user');
 const requiredProperties  = require('../models/user_config');
 
 //Now we use a list
@@ -26,28 +26,80 @@ const login = async (req,res) => {
         error: 'Bad Request',
         message: 'The request body must contain a username property'
     });
+    
+    const cb = (err) => {
+		if(err === 404){
+			return res.status(401).json("Authentication failed");
+		}
+		console.log(err)
+		return res.status(500).json(err);
+	}
+    
+    UserSchema.findOne({username: req.body.username}, (err, user) => {
+		if(err) return cb(err);
+		if(!user) return cb(404);
+		
+		user.comparePassword(req.body.password, (err,match) => {
+			//If an error occured or if the passwords didn't match we throw an error
+			if(err) return cb(err);
+			if(!match) return cb(404);
+			
+			//Otherwise we generate the tokens
+			//The access token contains only the id and the username of the user
+			const accessToken  = jwt.sign({id: user._id, username: user.username}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
+			const refreshToken = jwt.sign({id: user._id, username: user.username}, config.refreshTokenSecret, {expiresIn: config.refreshTokenLife});
+			
+			console.log('[*] User logged in: ' + accessToken); 
+			
+			const response = {
+				"accessToken": accessToken,
+				"refreshToken": refreshToken,
+			}
+			
+			tokenList[refreshToken] = response;
+			
+			res.status(200).json(response);		
+			
+		})
+	})
 
-    try {
-        let user = await UserModel.findOne({username: req.body.username}).exec();
-
-        // check if the password is valid
-        const isPasswordValid = bcrypt.compareSync(req.body.password, user.password);
-        if (!isPasswordValid) return res.status(401).send({token: null});
-
-        // if user is found and password is valid
-        // create a token
-        const token = jwt.sign({id: user._id, username: user.username}, config.JwtSecret, {
-            expiresIn: 86400 // expires in 24 hours
-        });
-
-        return res.status(200).json({token: token});
-    } catch(err) {
-        return res.status(404).json({
-            error: 'User Not Found',
-            message: err.message
-        });
-    }
 };
+
+
+
+const token = async (req,res) => {
+    // refresh the damn token
+    const refreshToken = req.body.refreshToken
+    // if refresh token exists
+    console.log(tokenList)
+    console.log(refreshToken)
+    
+    if((refreshToken) && (refreshToken in tokenList)) {
+		
+		jwt.verify(refreshToken, config.refreshTokenSecret, (err, decoded) => {
+			if (err){
+				console.log(err)
+				return res.status(401).send({
+					error: 'Unauthorized',
+					message: 'Failed to authenticate token.'
+				});
+			}
+
+			// if everything is good, save to request for use in other routes
+			const accessToken  = jwt.sign({id: decoded.id, username: decoded.username}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
+			const response = {
+				"token": accessToken,
+			}
+			// update the token in the list
+			tokenList[refreshToken].token = token
+			res.status(200).json(response);    
+		});
+		
+    } else {
+        res.status(404).send('Invalid request')
+    }
+}
+
 
 
 //For the registration we require all the information to be given
@@ -63,7 +115,7 @@ const register = async (req,res) => {
 		else newUser[prop] = req.body[prop];
 	};
     
-    UserModel.create(newUser, (err, user) => {
+    UserSchema.create(newUser, (err, user) => {
 		if(err){
 			if (err.code == 11000) {
 				return res.status(400).json({
@@ -139,6 +191,7 @@ const logout = (req, res) => {
 module.exports = {
     login,
     register,
+    token,
     logout,
     me
 };

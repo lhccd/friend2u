@@ -1,6 +1,6 @@
 "use strict";
 
-const UserModel = require('../models/users');
+const UserModel = require('../models/user');
 
 
 //create for testing
