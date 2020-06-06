@@ -55,6 +55,12 @@ const UserSchema  = new mongoose.Schema({
 		default: 'static/images/default.png'
 	}
 	
+	role: {
+		type: String,
+		enum: ['user','moderator','admin'],
+		default: 'user',
+	}
+		
 	
 });
 
