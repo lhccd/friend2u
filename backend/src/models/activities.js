@@ -39,11 +39,11 @@ const ActivitySchema  = new mongoose.Schema({
     fromAge: {
         type: Number,
         min: 18,
-        required: true
+        default: 18
     },
     toAge: {
         type: Number,
-        required: true
+        default: 150
     },
     description: {
         type: String,
@@ -69,7 +69,7 @@ const ActivitySchema  = new mongoose.Schema({
         max: 4,
         validate: {
             validator: Number.isInteger,
-            message: 'The physical condition is NOT allowed to have decimals!'
+            message: props => `The physical condition (${props.value}) is NOT allowed to have decimals!`
         }
     },
     // For categorie: Food.
@@ -79,7 +79,57 @@ const ActivitySchema  = new mongoose.Schema({
         //default: 'Japanese'
     },
     // For categorie: Entertainment.
-    title: String
+    title: String,
+
+
+    // Additional internal information about the activity.
+    // List of participants.
+    participants: [String],
+
+    // Status: 0=Open for joining, 1=Selecting a joined person,
+    // 2=Finished, 3=Blocked.
+    status: {
+        type: Number,
+        min: 0,
+        max: 3,
+        validate: {
+            validator: Number.isInteger,
+            message: props => `The status (${props.value}) is NOT allowed to have decimals!`
+        },
+        required: true
+    },
+
+    // Storing the ID of the creator.
+    creator: String,
+
+    // Storing the selected persons ID.
+    selPerson: String,
+
+    // Storing the vote from the selPerson for the creator.
+    voteForCreator: {
+        type: Number,
+        min: 0,
+        max: 2,
+        validate: {
+            validator: Number.isInteger,
+            message: props => `The voteForCreator (${props.value}) is NOT allowed to have decimals!`
+        },
+        default: 1
+    },
+
+    // Storing the vote from the creator for the selPerson.
+    voteForselPerson: {
+        type: Number,
+        min: 0,
+        max: 2,
+        validate: {
+            validator: Number.isInteger,
+            message: props => `The voteForselPerson (${props.value}) is NOT allowed to have decimals!`
+        },
+        default: 1
+    }
+
+
 
 
 

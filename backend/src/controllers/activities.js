@@ -62,6 +62,47 @@ const update = (req, res) => {
         }));
 };
 
+
+const joined = (req, res) => {
+    if (Object.keys(req.body).length === 0)
+    {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body is empty'
+        });
+    }
+
+    ActivityModel.findByIdAndUpdate(req.params.id, { $push: {participants: req.body.newParticipant}},{
+        new: true,
+        runValidators: true}).exec()
+        .then(activity => res.status(200).json(activity))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        }));
+
+}
+
+const unjoin = (req, res) => {
+    if (Object.keys(req.body).length === 0)
+    {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body is empty'
+        });
+    }
+
+    ActivityModel.findByIdAndUpdate(req.params.id, { $pull: {participants: req.body.newParticipant}},{
+        new: true,
+        runValidators: true}).exec()
+        .then(activity => res.status(200).json(activity))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        }));
+
+}
+
 // Remove an existing activity.
 const remove = (req, res) => {
     ActivityModel.findByIdAndRemove(req.params.id).exec()
@@ -87,6 +128,8 @@ module.exports = {
     create,
     read,
     update,
+    joined,
+    unjoin,
     remove,
     list
 };
