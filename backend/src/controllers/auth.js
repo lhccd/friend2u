@@ -7,6 +7,10 @@ const config     = require('../config');
 const UserModel  = require('../models/user');
 const requiredProperties  = require('../models/user_config');
 
+//Now we use a list
+//Must be lift to a DB
+const tokenList = {}
+
 
 //TO DO
 //this is from the movie app. It must be changed
@@ -15,7 +19,9 @@ const login = async (req,res) => {
         error: 'Bad Request',
         message: 'The request body must contain a password property'
     });
-
+	
+	//Login with username only
+	//Can be added email login
     if (!Object.prototype.hasOwnProperty.call(req.body, 'username')) return res.status(400).json({
         error: 'Bad Request',
         message: 'The request body must contain a username property'
