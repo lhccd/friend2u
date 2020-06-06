@@ -18,7 +18,6 @@ const UserSchema  = new mongoose.Schema({
     
     email: {
 		type: String,
-<<<<<<< HEAD:backend/src/models/user.js
 		validate: /^.+\@.+\..+$/,
 		unique: true,
 	},
