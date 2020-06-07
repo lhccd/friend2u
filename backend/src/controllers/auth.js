@@ -46,8 +46,8 @@ const login = async (req,res) => {
 			
 			//Otherwise we generate the tokens
 			//The access token contains only the id and the username of the user
-			const accessToken  = jwt.sign({id: user._id, username: user.username}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
-			const refreshToken = jwt.sign({id: user._id, username: user.username}, config.refreshTokenSecret, {expiresIn: config.refreshTokenLife});
+			const accessToken  = jwt.sign({id: user._id, username: user.username, role: user.role}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
+			const refreshToken = jwt.sign({id: user._id, username: user.username, role: user.role}, config.refreshTokenSecret, {expiresIn: config.refreshTokenLife});
 			
 			console.log('[*] User logged in: ' + accessToken); 
 			
@@ -71,8 +71,6 @@ const token = async (req,res) => {
     // refresh the damn token
     const refreshToken = req.body.refreshToken
     // if refresh token exists
-    console.log(tokenList)
-    console.log(refreshToken)
     
     if((refreshToken) && (refreshToken in tokenList)) {
 		
@@ -86,7 +84,7 @@ const token = async (req,res) => {
 			}
 
 			// if everything is good, save to request for use in other routes
-			const accessToken  = jwt.sign({id: decoded.id, username: decoded.username}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
+			const accessToken  = jwt.sign({id: decoded.id, username: decoded.username, role: decoded.role}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
 			const response = {
 				"token": accessToken,
 			}
@@ -136,54 +134,27 @@ const register = async (req,res) => {
 		}
 		
 	});
-	
-	/*
-    try {
-        let retUser = await UserModel.create(user);
-
-        // if user is registered without errors
-        // create a token
-        //const token = jwt.sign({id: retUser._id, username: retUser.username}, config.JwtSecret, {
-        //    expiresIn: 86400 // expires in 24 hours
-        //});
-
-        //res.status(200).json({token: token});
-    } catch(err) {
-        if (err.code == 11000) {
-            return res.status(400).json({
-                error: 'User exists',
-                message: err.message
-            });
-        } else {
-            return res.status(500).json({
-                error: 'Internal server error',
-                message: err.message
-            });
-        }
-    }
-    */
 };
 
 
 const me = async (req, res) => {
-    try {
-        let user = await UserModel.findById(req.userId).select('username').exec();
+    return res.status(200).json({id:req.id, username: req.username, role: req.role})
+}
 
-        if (!user) return res.status(404).json({
-            error: 'Not Found',
-            message: `User not found`
-        });
+const moderator = (req,res) => {
+	return res.status(200).json({message: 'Hello moderator ' + req.username})
+}
 
-        return res.status(200).json(user);
-    } catch(err) {
-        return res.status(500).json({
-            error: 'Internal Server Error',
-            message: err.message
-        });
-    }
-};
 
+//For the logout the refresh token is required so that it can be deleted from the array/storage.
+//The access token is not deleted but the short expiration is set for this reason.
 const logout = (req, res) => {
+	const refreshToken = req.body.refreshToken
+    
+    if((refreshToken) && (refreshToken in tokenList)) {
+		delete tokenList[refreshToken];
+    }
+	
     res.status(200).send({ token: null });
 };
 
@@ -193,5 +164,6 @@ module.exports = {
     register,
     token,
     logout,
-    me
+    me,
+    moderator
 };

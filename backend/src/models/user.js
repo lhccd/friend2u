@@ -54,13 +54,18 @@ const schema  = {
 	profilePicture: {
 		type: String,
 		default: 'static/images/default.png'
-	}
+	},
 	
+	role: {
+		type: String,
+		enum: ['user','moderator','admin'],
+		default: 'user',
+	}
+
 	
 };
 
 for (var prop of requiredProperties){
-	console.log(prop)
 	schema[prop].required = true;
 }
 

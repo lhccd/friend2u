@@ -1,6 +1,6 @@
 "use strict";
 
-//const jwt    = require('jsonwebtoken');
+const jwt    = require('jsonwebtoken');
 
 const config = require ('../config');
 
@@ -18,13 +18,13 @@ const allowCrossDomain = (req, res, next) => {
     }
 };
 
-/*
+
 const checkAuthentication = (req, res, next) => {
 
     // check header or url parameters or post parameters for token
     let token = ""
     if(req.headers.authorization) {
-        token = req.headers.authorization.substring(4);
+        token = req.headers.authorization;
     }
 
     if (!token)
@@ -34,21 +34,29 @@ const checkAuthentication = (req, res, next) => {
         });
 
     // verifies secret and checks exp
-    jwt.verify(token, config.JwtSecret, (err, decoded) => {
-        if (err) return res.status(401).send({
+    console.log(config.accessTokenSecret)
+    jwt.verify(token, config.accessTokenSecret, (err, decoded) => {
+        if (err){
+			console.log(err)
+			return res.status(401).send({
             error: 'Unauthorized',
             message: 'Failed to authenticate token.'
-        });
+			});
+		}
 
         // if everything is good, save to request for use in other routes
-        req.userId = decoded.id;
+        req.id = decoded.id;
+        req.username = decoded.username;
+        req.role = decoded.role;
         next();
     });
 
-
 };
 
-*/
+const isUserModerator = (req,res,next) => {
+	if(req.role == 'moderator') next();
+	else return res.status(403).json({message: "You don't have the permission to access this content"})
+}
 
 const errorHandler = (err, req, res, next) => {
     if (res.headersSent) {
@@ -61,6 +69,7 @@ const errorHandler = (err, req, res, next) => {
 
 module.exports = {
     allowCrossDomain,
-    //checkAuthentication,
+    checkAuthentication,
+    isUserModerator,
     errorHandler
 };
