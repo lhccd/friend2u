@@ -4,15 +4,16 @@ const mongoose = require('mongoose');
 
 const requiredProperties = require('./user_config')
 
-const UserSchema  = new mongoose.Schema({
-	required: requiredProperties,
-	
+const bcrypt = require('bcrypt');
+const SALT_WORK_FACTOR = 10;
+
+const schema  = {	
     username: {
         type: String,
         unique: true,
     },
     
-    hashedPassword: {
+    password: {
         type: String,
     },
     
@@ -53,17 +54,21 @@ const UserSchema  = new mongoose.Schema({
 	profilePicture: {
 		type: String,
 		default: 'static/images/default.png'
-	}
+	},
+
 	
 	role: {
 		type: String,
 		enum: ['user','moderator','admin'],
 		default: 'user',
-	}
-		
-	
-});
+	}	
+};
 
+for (var prop of requiredProperties){
+	schema[prop].required = true;
+}
+
+const UserSchema  = new mongoose.Schema(schema)
 
 //We create the hashed password directly when we insert a new user.
 //We also use salt.
