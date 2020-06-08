@@ -1,6 +1,4 @@
 backend/node_modules/*
-<<<<<<< HEAD
 .idea/*
-=======
-.idea/*
->>>>>>> auth
+backend/dump/*
+

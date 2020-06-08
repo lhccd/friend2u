@@ -69,8 +69,8 @@ const login = async (req,res) => {
 
 
 const token = async (req,res) => {
-    // refresh the damn token
-    const refreshToken = req.body.refreshToken
+    // refresh the token
+    const refreshToken = req.body.token
     // if refresh token exists
     
     if((refreshToken) && (refreshToken in tokenList)) {
@@ -153,7 +153,7 @@ const moderator = (req,res) => {
 //For the logout the refresh token is required so that it can be deleted from the array/storage.
 //The access token is not deleted but the short expiration is set for this reason.
 const logout = (req, res) => {
-	const refreshToken = req.body.refreshToken
+	const refreshToken = req.body.token
     
     if((refreshToken) && (refreshToken in tokenList)) {
 		delete tokenList[refreshToken];

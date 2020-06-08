@@ -13,7 +13,7 @@ router.post('/token', AuthController.token);
 
 router.get('/me', middlewares.checkAuthentication , AuthController.me);
 router.get('/moderator', [middlewares.checkAuthentication, middlewares.isUserModerator] , AuthController.moderator);
-router.get('/logout', middlewares.checkAuthentication, AuthController.logout);
+router.post('/logout', AuthController.logout);
 
 
 module.exports = router;

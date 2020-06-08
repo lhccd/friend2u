@@ -36,12 +36,20 @@ const checkAuthentication = (req, res, next) => {
     // verifies secret and checks exp
     console.log(config.accessTokenSecret)
     jwt.verify(token, config.accessTokenSecret, (err, decoded) => {
-        if (err){
+		if(err){
+			var response = {};
+			
+			if(err.name == 'TokenExpiredError') response = {
+					error: 'TokenExpired',
+					message: 'The provided token is no longer valid',
+				}
+			else response = {
+				error: 'Unauthorized',
+				message: 'Failed to authenticate token.'
+			};
+
 			console.log(err)
-			return res.status(401).send({
-            error: 'Unauthorized',
-            message: 'Failed to authenticate token.'
-			});
+			return res.status(401).send(response);
 		}
 
         // if everything is good, save to request for use in other routes
@@ -54,7 +62,7 @@ const checkAuthentication = (req, res, next) => {
 };
 
 const isUserModerator = (req,res,next) => {
-	if(req.role == 'moderator') next();
+	if(req.role === 'moderator') next();
 	else return res.status(403).json({message: "You don't have the permission to access this content"})
 }
 
