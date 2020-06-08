@@ -103,6 +103,25 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
     });
 };
 
+
+//Updating the password
+UserSchema.methods.updatePassword = function(oldPassword, newPassword, cb) {
+	var user = this;
+	
+    bcrypt.compare(oldPassword, this.password, function(err, isMatch) {
+        if (err) return cb(err);
+        if(!isMatch) return cb(404);
+        
+        user.password = newPassword;
+        
+        user.save((err) => {
+			cb(err);
+		})
+        
+        
+    });
+};
+
 UserSchema.set('versionKey', false);
 
 

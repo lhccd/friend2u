@@ -10,10 +10,11 @@ const AuthController = require('../controllers/auth');
 router.post('/login', AuthController.login);
 router.post('/register', AuthController.register);
 router.post('/token', AuthController.token);
+router.post('/changePassword', middlewares.checkAuthentication, AuthController.changePassword);
 
 router.get('/me', middlewares.checkAuthentication , AuthController.me);
 router.get('/moderator', [middlewares.checkAuthentication, middlewares.isUserModerator] , AuthController.moderator);
-router.get('/logout', middlewares.checkAuthentication, AuthController.logout);
+router.post('/logout', middlewares.checkAuthentication, AuthController.logout);
 
 
 module.exports = router;

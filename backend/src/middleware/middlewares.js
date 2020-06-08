@@ -34,13 +34,13 @@ const checkAuthentication = (req, res, next) => {
         });
 
     // verifies secret and checks exp
-    console.log(config.accessTokenSecret)
+    console.log(token)
     jwt.verify(token, config.accessTokenSecret, (err, decoded) => {
         if (err){
 			console.log(err)
 			return res.status(401).send({
-            error: 'Unauthorized',
-            message: 'Failed to authenticate token.'
+				error: 'Unauthorized',
+				message: 'Failed to authenticate token.'
 			});
 		}
 
