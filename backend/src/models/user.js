@@ -53,7 +53,7 @@ const schema  = {
 	
 	profilePicture: {
 		type: String,
-		default: 'static/images/default.png'
+		default: 'https://friend2u.s3.amazonaws.com/profile_pictures/default.png'
 	},
 
 	
