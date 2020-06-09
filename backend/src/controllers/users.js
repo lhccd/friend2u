@@ -80,14 +80,19 @@ const remove = (req, res) => {
         }));
 };
 
+// List all the users
 const list  = (req, res) => {
-    UserModel.find({}).exec()
-        .then(users => res.status(200).json(users))
-        .catch(error => res.status(500).json({
-            error: 'Internal server error',
-            message: error.message
-        }));
+    UserModel.find({}).then(users => {
+        users.forEach((user) => {
+            user = user.toObject();
+            delete user.password;
+            res.status(200).json(user);  
+        })}).catch(error => res.status(500).json({
+                    error: 'Internal server error',
+                    message: error.message
+                  }));
 };
+
 
 module.exports = {
     create,
