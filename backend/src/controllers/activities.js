@@ -130,7 +130,7 @@ const alreadyJoined = (req, res) => {
 }
 // Returns true if activity with corresponding id exists 
 // and false otherwise
-const internActivityExists = (req, res) => {
+const ActivityExists = (req, res) => {
     ActivityModel.findById(req.params.id).exec()
         .then(activity => {
             if (!activity) {
@@ -138,6 +138,7 @@ const internActivityExists = (req, res) => {
             } else {
                 res.status(200).json({result: true})
             }
+            //console.log(res)
         })
         .catch(error => res.status(500).json({
             error: 'Internal Server Error - activities_read',
@@ -169,7 +170,7 @@ const unjoin = (req, res) => {
 
 }
 
-// Remove a person from the participants-list.
+// Set vote for participant.
 const creatorVoteForParticipant = (req, res) => {
     if (Object.keys(req.body).length === 0)
     {
@@ -189,6 +190,74 @@ const creatorVoteForParticipant = (req, res) => {
         }));
 
 }
+
+// Set vote for creator.
+const participantVoteForCreator = (req, res) => {
+    if (Object.keys(req.body).length === 0)
+    {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body is empty'
+        });
+    }
+
+    ActivityModel.findByIdAndUpdate(req.params.id, { voteForCreator: req.body.voteForCreator},{
+        new: true,
+        runValidators: true}).exec()
+        .then(activity => res.status(200).json(activity))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error - activities_participantVoteForCreator',
+            message: error.message
+        }));
+
+}
+
+
+// Change the status of an activity;
+// Do NOT forget to also set the selected person,
+// when setting the status from 0 to 1!
+const changeStatus = (req, res) => {
+    if (Object.keys(req.body).length === 0)
+    {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body is empty'
+        });
+    }
+
+    ActivityModel.findByIdAndUpdate(req.params.id, { status: req.body.newStatus},{
+        new: true,
+        runValidators: true}).exec()
+        .then(activity => {res.status(200).json(activity)})
+        .catch(error => res.status(500).json({
+            error: 'Internal server error - activities_creatorVoteForParticipant',
+            message: error.message
+        }));
+
+}
+
+// Set the selected person for an activity
+const setSelectedPerson = (req, res) => {
+    if (Object.keys(req.body).length === 0)
+    {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body is empty'
+        });
+    }
+
+    ActivityModel.findByIdAndUpdate(req.params.id, { selPerson: req.body.selPerson},{
+        new: true,
+        runValidators: true}).exec()
+        .then(activity => {res.status(200).json(activity)})
+        .catch(error => res.status(500).json({
+            error: 'Internal server error - activities_creatorVoteForParticipant',
+            message: error.message
+        }));
+
+}
+
+
 
 // Remove an existing activity.
 const remove = (req, res) => {
@@ -210,17 +279,51 @@ const list  = (req, res) => {
         }));
 };
 
+// Find activities within a radius;
+// Minimum is fixed to 0m, but maximum has to be provided in body.
+const getActivitiesInRadius = ((req, res) => {
+    if (Object.keys(req.body).length === 0)
+    {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body is empty'
+        });
+    }
+
+    ActivityModel.find({
+        location: {
+            $near: {
+                // Note: First comes longitude and then latitude!
+                // Distances are given in Meteres
+                $geometry: { type: "Point",  coordinates: [ req.body.long, req.body.lat ] },
+                $minDistance: 0,
+                $maxDistance: req.body.maxDistance
+                }
+            }
+        })
+    .exec()
+    .then(activities => res.status(200).json(activities))
+    .catch(error => res.status(500).json({
+        error: 'Internal server error - activities_list',
+        message: error.message
+    }));
+})
+
 
 module.exports = {
     create,
     read,
-    internActivityExists,
+    ActivityExists,
     update,
     joined,
     listOfJoinedPersons,
     alreadyJoined,
     unjoin,
     creatorVoteForParticipant,
+    participantVoteForCreator,
     remove,
-    list
+    list,
+    setSelectedPerson,
+    changeStatus,
+    getActivitiesInRadius
 };

@@ -127,7 +127,21 @@ const ActivitySchema  = new mongoose.Schema({
             message: props => `The voteForselPerson (${props.value}) is NOT allowed to have decimals!`
         },
         default: 1
-    }
+    },
+
+    // Storing the location of the Activity by usage of an GeoJSON-Object;
+    // See also: https://mongoosejs.com/docs/geojson.html
+    location: {
+        type: {
+          type: String, // Don't do `{ location: { type: String } }`
+          enum: ['Point'], // 'location.type' must be 'Point'
+          default: 'Point'
+        },
+        coordinates: {
+          type: [Number],
+          required: true
+        },
+      }
 
 
 
@@ -151,6 +165,8 @@ const ActivitySchema  = new mongoose.Schema({
         */
 });
 
+
+ActivitySchema.index({ location: '2dsphere' });
 
 
 // Disable versioning of db-entries, but 

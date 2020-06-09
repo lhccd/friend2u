@@ -1,0 +1,36 @@
+{
+        "fromAge": 30,
+        "toAge": 40,
+        "category": "Sport",
+        "activityName": "Hiking to Neureuth",
+        "dateTime": "11.06.2020 18:00",
+        "approxTime": false,
+        "duration": 20,
+        "prefGender": "Male",
+        "description": "Lorem ipsum",
+        "price": 1,
+        "phyCondition": 4,
+        "status": 0,
+        "location": {
+        	"coordinates": [11.75739884, 47.71386555]
+        }
+}
+
+
+{
+        "fromAge": 18,
+        "toAge": 25,
+        "category": "Food",
+        "activityName": "Going to eat at Block House",
+        "dateTime": "10.06.2020 21:30",
+        "approxTime": true,
+        "duration": 60,
+        "prefGender": "NotDeclared",
+        "description": "Lorem ipsum",
+        "price": 3,
+        "kitchen": "Other",
+        "status": 0,
+	"location": {
+		"coordinates": [11.58399403, 48.15590521]
+	}
+}

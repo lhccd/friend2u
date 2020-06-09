@@ -5,7 +5,7 @@ const request = require('request')
 const config = require('../config')
 const JoinedActivityModel = require('../models/joinedActivities')
 // Required, because of check, whether a user already joined an activity.
-// const ActivityModel = require('./activities')
+const ActivityModel = require('../models/activities')
 
 const join = (req, res, next) => {
     // Check whether there is something to store in our DB.
@@ -14,6 +14,56 @@ const join = (req, res, next) => {
         message: 'The request body is empty'
     });
 
+
+    // Before adding a user to the JoinedActivityModel, we are checking, whether the given
+    // ID for the activity actually exists and also whether it is the first time, that
+    // the user wants to join this activity; Douplicated entries should be prevented.
+    ActivityModel.findById(req.params.id).exec()
+        .then(activity => {
+            if (!activity) {
+                return res.status(400).json({
+                    error: 'Bad Request',
+                    message: 'The request cannot be executed as the requested activity does not exitst!'
+                });
+            } else {
+                console.log('Activity does exist!')
+
+
+                ActivityModel.findById(req.params.id).exec()
+                    .then(result => {
+                        if(result.participants.indexOf(req.body.newParticipant) > -1) {
+                            return res.status(400).json({
+                                error: 'Bad Request',
+                                message: 'The request cannot be executed as the user already joined this acitivty!'
+                            });
+                        } else {
+                            
+                            JoinedActivityModel.create({activityID: req.params.id, joinedPersonID: req.body.newParticipant})
+                                .then(activity => {
+                                    //res.status(201).json(activity);
+                                    next();
+                                })
+                                .catch(error => res.status(500).json({
+                                    error: 'Internal server error - joinedActivities_join',
+                                    message: error.message
+                                }));
+
+
+                        }
+                    })
+                    .catch(error => res.status(500).json({
+                        error: 'Internal server error - activities_alreadyJoined',
+                        message: error.message
+                    }));
+
+            }
+        })
+        .catch(error => res.status(500).json({
+            error: 'Internal Server Error - activities_read',
+            message: error.message
+        }));
+
+/*
     // Check, whether ActivityID exitsts.
     var actExists = false;
     // Check, whether user already joined the activity.
@@ -23,7 +73,29 @@ const join = (req, res, next) => {
         else {
             //console.log('AE: '+result);
             actExists=result;
+/*
+            var reqAE = {
+                params: {
+                    id: req.params.id
+                }
+            }
+            */
 
+            //var resAE = ActivityModel.internActivityExists(req.params.id)
+
+            //console.log('resAE: '+resAE)
+
+            
+            
+
+/*
+            ActivityModel.internActivityExists(reqAE, (resAE) => {
+                //console.log(resAE)
+            })
+            */
+
+            //console.log(resAE)
+/*
             userJoinedAlready(config.port, req.params.id, req.body, (err, result) => {
                 if(err) {console.log(err); }
                 else {
@@ -60,7 +132,7 @@ const join = (req, res, next) => {
     });
 
     
-    
+    */
     
 
     
