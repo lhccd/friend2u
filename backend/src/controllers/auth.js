@@ -43,8 +43,13 @@ const login = async (req,res) => {
 			
 			//Otherwise we generate the tokens
 			//The access token contains only the id and the username of the user
-			const accessToken  = jwt.sign({id: user._id, username: user.username, role: user.role}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
-			const refreshToken = jwt.sign({id: user._id, username: user.username, role: user.role}, config.refreshTokenSecret, {expiresIn: config.refreshTokenLife});
+			
+			const payload = {id: user._id, username: user.username, role: user.role}
+			
+			if(user.banUntilDate) payload.banTime = user.banUntilDate;
+			
+			const accessToken  = jwt.sign(payload, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
+			const refreshToken = jwt.sign(payload, config.refreshTokenSecret, {expiresIn: config.refreshTokenLife});
 			
 			console.log('[*] User logged in: ' + accessToken); 
 			

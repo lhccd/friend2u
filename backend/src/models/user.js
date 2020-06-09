@@ -60,7 +60,11 @@ const schema  = {
 		type: String,
 		enum: ['user','moderator','admin'],
 		default: 'user',
-	}
+	},
+	
+	banUntilDate: {
+		type: Number
+	},
 
 	
 };
