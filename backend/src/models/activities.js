@@ -1,4 +1,4 @@
-//"use strict";
+"use strict";
 
 const mongoose = require('mongoose');
 
@@ -86,12 +86,12 @@ const ActivitySchema  = new mongoose.Schema({
     // List of participants.
     participants: [String],
 
-    // Status: 0=Open for joining, 1=Selecting a joined person,
-    // 2=Finished, 3=Blocked.
+    // Status: 0=Open for joining, 1=Person selected, 2=Blocked;
+    // Activity can be seen as finished, when person was selected (status==1) and duration has expired.
     status: {
         type: Number,
         min: 0,
-        max: 3,
+        max: 2,
         validate: {
             validator: Number.isInteger,
             message: props => `The status (${props.value}) is NOT allowed to have decimals!`
