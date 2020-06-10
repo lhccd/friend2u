@@ -3,10 +3,15 @@
 const express  = require('express');
 const router   = express.Router();
 
-//const middlewares    = require('../middlewares');
+const middlewares    = require('../middleware/middlewares');
+const activityMiddlewares    = require('../middleware/activities');
+
 const ActivityHandler = require('../controllers/activities');
 const JoinedActivityHandler = require('../controllers/joinedActivities')
 
+
+//TO DO
+//Add the middleware where necessary
 
 router.get('/', ActivityHandler.list); // List all activities
 router.post('/', ActivityHandler.create); // Create a new activitie
