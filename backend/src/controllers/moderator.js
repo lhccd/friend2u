@@ -55,9 +55,8 @@ const removeActivity = (req,res) => {
 //--------------------------------------------------------------------------------------------
 
 const listReports = (req,res,type) => {
-	var schema = (type == 'user')?UserReportSchema:ActivityReportSchema;
 	
-	schema.find({}, (err, reports) => {
+	schema.find({category: type}, (err, reports) => {
 		if(err) return res.status(500).send(err);
 		
 		return res.status(200).json({list: reports})
