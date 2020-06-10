@@ -34,7 +34,7 @@ const checkAuthentication = (req, res, next) => {
         });
 
     // verifies secret and checks exp
-    console.log(config.accessTokenSecret)
+    console.log(token)
     jwt.verify(token, config.accessTokenSecret, (err, decoded) => {
 		if(err){
 			var response = {};
@@ -49,9 +49,27 @@ const checkAuthentication = (req, res, next) => {
 			};
 
 			console.log(err)
+<<<<<<< HEAD
 			return res.status(401).send(response);
+=======
+			return res.status(401).send({
+				error: 'Unauthorized',
+				message: 'Failed to authenticate token.'
+			});
+>>>>>>> auth
 		}
-
+		
+		console.log(decoded.banTime)
+		console.log(Date.now())
+		
+		if(decoded.banTime && decoded.banTime > Date.now()){
+			return res.status(403).send({
+				error: 'Forbidden',
+				message: "This user is banned",
+				time: decoded.banTime,
+			});
+		} 
+		
         // if everything is good, save to request for use in other routes
         req.id = decoded.id;
         req.username = decoded.username;

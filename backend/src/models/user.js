@@ -61,7 +61,17 @@ const schema  = {
 		type: String,
 		enum: ['user','moderator','admin'],
 		default: 'user',
+<<<<<<< HEAD
 	}	
+=======
+	},
+	
+	banUntilDate: {
+		type: Number
+	},
+
+	
+>>>>>>> auth
 };
 
 for (var prop of requiredProperties){
@@ -99,6 +109,25 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
         if (err) return cb(err);
         cb(null, isMatch);
+    });
+};
+
+
+//Updating the password
+UserSchema.methods.updatePassword = function(oldPassword, newPassword, cb) {
+	var user = this;
+	
+    bcrypt.compare(oldPassword, this.password, function(err, isMatch) {
+        if (err) return cb(err);
+        if(!isMatch) return cb(404);
+        
+        user.password = newPassword;
+        
+        user.save((err) => {
+			cb(err);
+		})
+        
+        
     });
 };
 
