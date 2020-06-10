@@ -3,7 +3,7 @@
 const UserModel = require('../models/user');
 
 
-//create for testing
+//create only for testing other methods
 const create = (req, res) => {
     // Check whether there is something to store in our DB.
     if (Object.keys(req.body).length === 0) return res.status(400).json({
@@ -13,7 +13,7 @@ const create = (req, res) => {
 
     // Try to crate an user.
     UserModel.create(req.body)
-        .then(activity => res.status(201).json(activity))
+        .then(user=> res.status(201).json(user))
         .catch(error => res.status(500).json({
             error: 'Internal server error',
             message: error.message
@@ -21,7 +21,7 @@ const create = (req, res) => {
 };
 
 
-// Reading an existing User.
+// Reading an existing User. 
 const read = (req, res) => {
     UserModel.findById(req.params.id).exec()
         .then(user => {
@@ -30,7 +30,8 @@ const read = (req, res) => {
                 error: 'Not Found',
                 message: `User not found`
             });
-
+            user = user.toObject();
+            delete user.password;
             res.status(200).json(user)
         })
         .catch(error => res.status(500).json({
@@ -51,8 +52,15 @@ const update = (req, res) => {
     }
 
     console.log(req.body);
+    
+    const editableUser = {
+        birthday: req.body.birthday,
+        name: req.body.name,
+        surname: req.body.surname,
+        gender: req.body.gender,   
+    }
 
-    UserModel.findByIdAndUpdate(req.params.id,req.body,{
+    UserModel.findByIdAndUpdate(req.params.id,{$set: editableUser},{
         new: true,
         runValidators: true}).exec()
         .then(user => res.status(200).json(user))
@@ -72,14 +80,19 @@ const remove = (req, res) => {
         }));
 };
 
+// List all the users
 const list  = (req, res) => {
-    UserModel.find({}).exec()
-        .then(users => res.status(200).json(users))
-        .catch(error => res.status(500).json({
-            error: 'Internal server error',
-            message: error.message
-        }));
+    UserModel.find({}).then(users => {
+        users.forEach((user) => {
+            user = user.toObject();
+            delete user.password;
+            res.status(200).json(user);  
+        })}).catch(error => res.status(500).json({
+                    error: 'Internal server error',
+                    message: error.message
+                  }));
 };
+
 
 module.exports = {
     create,
