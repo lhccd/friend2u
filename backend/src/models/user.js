@@ -61,9 +61,6 @@ const schema  = {
 		type: String,
 		enum: ['user','moderator','admin'],
 		default: 'user',
-<<<<<<< HEAD
-	}	
-=======
 	},
 	
 	banUntilDate: {
@@ -71,7 +68,6 @@ const schema  = {
 	},
 
 	
->>>>>>> auth
 };
 
 for (var prop of requiredProperties){

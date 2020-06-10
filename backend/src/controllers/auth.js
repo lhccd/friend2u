@@ -18,12 +18,6 @@ const authenticationFailedCB = (res,err) => {
 	return res.status(500).json(err);
 }
 
-<<<<<<< HEAD
-//TO DO
-//this is from the movie app. It must be changed
-=======
-
->>>>>>> auth
 const login = async (req,res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) return res.status(400).json({
         error: 'Bad Request',
@@ -37,18 +31,7 @@ const login = async (req,res) => {
         error: 'Bad Request',
         message: 'The request body must contain a username property'
     });
-<<<<<<< HEAD
-
-    const cb = (err) => {
-		if(err === 404){
-			return res.status(401).json("Authentication failed");
-		}
-		console.log(err)
-		return res.status(500).json(err);
-	}
-=======
  
->>>>>>> auth
     
     UserSchema.findOne({username: req.body.username}, (err, user) => {
 		if(err) return authenticationFailedCB(res,err);
@@ -225,17 +208,9 @@ const changePassword = (req,res) => {
 //For the logout the refresh token is required so that it can be deleted from the array/storage.
 //The access token is not deleted but the short expiration is set for this reason.
 const logout = (req, res) => {
-<<<<<<< HEAD
-	const refreshToken = req.body.token
-    
-    if((refreshToken) && (refreshToken in tokenList)) {
-		delete tokenList[refreshToken];
-    }
-=======
 	const refreshToken = req.body.refreshToken
 	const id = req.id
 	const all = req.query.all;
->>>>>>> auth
 	
 	const query = {
 		user: id

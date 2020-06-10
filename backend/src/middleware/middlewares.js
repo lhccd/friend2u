@@ -49,14 +49,10 @@ const checkAuthentication = (req, res, next) => {
 			};
 
 			console.log(err)
-<<<<<<< HEAD
-			return res.status(401).send(response);
-=======
 			return res.status(401).send({
 				error: 'Unauthorized',
 				message: 'Failed to authenticate token.'
 			});
->>>>>>> auth
 		}
 		
 		console.log(decoded.banTime)
