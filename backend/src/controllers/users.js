@@ -25,7 +25,7 @@ const create = (req, res) => {
 const read = (req, res) => {
     UserModel.findById(req.params.id).exec()
         .then(user => {
-
+            
             if (!user) return res.status(404).json({
                 error: 'Not Found',
                 message: `User not found`
@@ -82,12 +82,15 @@ const remove = (req, res) => {
 
 // List all the users
 const list  = (req, res) => {
-    UserModel.find({}).then(users => {
+   UserModel.find({}).then(users => {
+        var listusers = new Array();
         users.forEach((user) => {
             user = user.toObject();
             delete user.password;
-            res.status(200).json(user);  
-        })}).catch(error => res.status(500).json({
+            listusers.push(user);
+            })
+            res.status(200).json(listusers);  
+        }).catch(error => res.status(500).json({
                     error: 'Internal server error',
                     message: error.message
                   }));
