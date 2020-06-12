@@ -3,16 +3,33 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react": "16.8.4",
+    "react-dom": "16.8.4",
+    "react-router-dom": "4.2.2",
+    "react-md": "1.2.11",
+    "webfontloader": "1.6.28",
+    "styled-components": "3.1.6"
+  },
+  "devDependencies": {
+    "babel-core": "6.25.0",
+    "babel-loader": "7.1.1",
+    "babel-polyfill": "^6.0.16",
+    "babel-preset-env": "1.6.0",
+    "babel-preset-react": "6.24.1",
+    "clean-webpack-plugin": "0.1.17",
+    "css-loader": "0.28.7",
+    "extract-text-webpack-plugin": "3.0.1",
+    "html-loader": "0.4.5",
+    "html-webpack-plugin": "2.29.0",
+    "style-loader": "0.19.0",
+    "svg-url-loader": "^6.0.0",
+    "webpack": "3.3.0",
+    "webpack-dev-server": "2.9.1",
+    "webpack-merge": "4.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "webpack-dev-server --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
