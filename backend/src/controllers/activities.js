@@ -2,6 +2,7 @@
 
 const ActivityModel = require('../models/activities');
 const UserModel = require('../models/user');
+const stringSimilarity = require('string-similarity');
 
 // Creating a new DB-Entrie for a new activity.
 const create = (req, res) => {
@@ -380,7 +381,9 @@ const test = ((req, res) => {
             $gte: new Date(req.body.fromTime) //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()-req.dtpm))
         },
         category: req.body.category,
-        activityName: { $search: req.body.activityName },
+        // Searching for the activity name;
+        // Search-query does also accept partial name.
+        $text: { $search: req.body.activityName },
         status: 0
     })
     .exec()
@@ -391,13 +394,19 @@ const test = ((req, res) => {
             res.status(200).json(ressearch)
         }
         else {
+            // Count how many activities have already been searched through.
+            var ac = 0;
+
+            // Loop over all found activities.
             for(var i=0; i<activities.length; i++) {
-                        
+                    
+                /*
                 console.log(activities.length)
                 console.log(activities[i]["creator"])
                 console.log(i)
 
                 var curact = activities[i]
+                */
 
 
                 UserModel.findById(activities[i]["creator"]).exec()
@@ -408,30 +417,102 @@ const test = ((req, res) => {
                             message: error.message
                         })
                     } else {
+
+                        var x = -1;
+
+                        // Search for index of the activity based on the creator_id;
+                        // This has to be done, because index i might not hold the correct
+                        // value anymore, due to the asynchronous behaviour.
+                        for(var j=0; j<activities.length; j++) {
+                            //console.log("user._id: "+user._id+"; creator_id: "+activities[j]["creator"])
+                            if(user._id == activities[j]["creator"]) {
+                                x = j;
+                                //console.log("x="+x)
+                            }
+                        }
                         
+                        /*
                         console.log(user)
+                        console.log(x)
 
                         console.log(getAge(user["birthday"]))
                         console.log(req.body.fromAge)
                         console.log(curact)
-                        console.log(i)
+                        console.log(j)
+                        */
 
                         var ageofuser = getAge(user["birthday"])
 
+                        // Match the age-span of the user.
                         if(ageofuser>=req.body.fromAge && ageofuser<=req.body.toAge) {
-                            ressearch.push(activities[i-1])
+                            // Match the price-span.
+                            if(activities[x]["price"]<=req.body.maxPrice && activities[x]["price"]>=req.body.minPrice) {
+                                // Match category-specific entries.
+                                switch(req.body.category) {
+                                    case "Sport":
+                                        // Physical condition has to match upper and lower bound.
+                                        if(activities[x]["phyCondition"]<=req.body.maxPrice && activities[x]["phyCondition"]>=req.body.minPrice) {
+                                            ressearch.push(activities[x]);
+                                        }
+                                        break;
+                                    case "Food":
+                                        // Kitchen-type has to match exactly.
+                                        if(!activities[x]["kitchen"].localeCompare(req.body.kitchen)) {
+                                            ressearch.push(activities[x]);
+                                        }
+                                        break;
+                                    case "Entertainment":
+                                        // String-compare library is able to compare to strings according to their similarity;
+                                        // The output of this function is between 0 (not similar) and 1 (identical).
+                                        console.log("String similarity index: "+stringSimilarity.compareTwoStrings(activities[x]["title"], req.body.title))
+                                        if(stringSimilarity.compareTwoStrings(activities[x]["title"], req.body.title)>0.5) {
+                                            ressearch.push(activities[x]);
+                                        }
+                                        break;
+                                    case "Other":
+                                        // There is nothing to compare here, therefore the activity will directly be added.
+                                        ressearch.push(activities[x]);
+                                        break;
+                                    default:
+                                        return res.status(500).json({
+                                            error: 'Internal Server Error - activities_match_category',
+                                        });
+                                }
+                            }
                         }
-
-                        // Search for specific category entries.
-                        // Price smaller than...
-
-                        res.status(200).json(ressearch)
-                        
+                        ac++;
+                        console.log("ac++=="+ac)
+                        // Should all activities have been searched through, return the final result.
+                        if(ac == activities.length) res.status(200).json(ressearch);
                     }
                     //console.log(res)
+
+
+
+
+
+                    // Still ToDo:
+                    // - Use stringsimilarity also for activityname,
+                    // - Up to now only the user preferences are checked against the creator-profile,
+                    //   this has also to be done the other way round!
+                    //   I will do that probably tomorrow (16.06.2020)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 })
                 .catch(error => res.status(500).json({
-                    error: 'Internal Server Error - activities_read',
+                    error: 'Internal Server Error - activities_read_test',
                     message: error.message
                 }));
             }
