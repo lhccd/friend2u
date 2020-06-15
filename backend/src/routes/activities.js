@@ -18,6 +18,7 @@ router.post('/', ActivityHandler.create); // Create a new activitie
 router.get('/userjoined/', JoinedActivityHandler.getJoinedActivities); // Get a list of joined activities for a specific user.
 router.get('/userActivityRelation', JoinedActivityHandler.list);
 router.get('/withinRadius', ActivityHandler.getActivitiesInRadius); // All activities within a specified radius are returned.
+router.get('/test', ActivityHandler.test)
 router.get('/:id', ActivityHandler.read); // Read a activitie by Id
 router.put('/:id', ActivityHandler.update); // Update a activitie by Id
 router.post('/join/:id', JoinedActivityHandler.join, ActivityHandler.joined); // Add a user to the participants-list.

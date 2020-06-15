@@ -166,7 +166,7 @@ const ActivitySchema  = new mongoose.Schema({
 });
 
 
-ActivitySchema.index({ location: '2dsphere' });
+ActivitySchema.index({ location: '2dsphere', activityName: 'text' });
 
 
 // Disable versioning of db-entries, but 
