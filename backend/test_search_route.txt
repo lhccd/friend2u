@@ -1,0 +1,20 @@
+Test for the search-route (Exchange the id of the searcher according to your current situation):
+
+{
+    "fromTime": "2020-10-06T13:30:00.000Z",
+    "toTime": "2020-11-06T19:00:00.000Z",
+    "category": "Entertainment",
+    "activityName": "watch movie cinema munich",
+    "fromAge": 18,
+    "toAge": 32,
+    "maxPrice": 5,
+    "minPrice": 1,
+    "title": "Top Gun",
+    "gender": "NotDeclared",
+    "searcherID": "5ee6a6a79df02f51788dc33c",
+    "long": 11.619857,
+    "lat": 48.151173,
+    "maxDistance": 10000
+}
+
+PS: The dates can be given in every format you like, as long as "new Date(-your string-)" is able to convert it proberly.
