@@ -163,7 +163,7 @@ export default class HttpService {
             
             let body = {refreshToken: refreshToken}
 			
-			fetch(url, {method: 'POST', headers: header}, body: JSON.stringify(body)).then((resp) => {
+			fetch(url, {method: 'POST', headers: header}).then((resp) => {
 				if(resp.status === 200) return resp.json()
 			}).then((resp) => {
 				window.localStorage['accessToken'] = resp.accessToken;
