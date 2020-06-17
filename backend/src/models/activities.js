@@ -16,6 +16,8 @@ const ActivitySchema  = new mongoose.Schema({
     },
     activityName: {
         type: String,
+        index: true,
+        text: true,
         required: true
     },
     dateTime: {
@@ -79,7 +81,11 @@ const ActivitySchema  = new mongoose.Schema({
         //default: 'Japanese'
     },
     // For categorie: Entertainment.
-    title: String,
+    title: {
+        type: String,
+        index: true,
+        text: true
+    },
 
 
     // Additional internal information about the activity.
@@ -166,7 +172,7 @@ const ActivitySchema  = new mongoose.Schema({
 });
 
 
-ActivitySchema.index({ location: '2dsphere' });
+ActivitySchema.index({ location: '2dsphere'});
 
 
 // Disable versioning of db-entries, but 

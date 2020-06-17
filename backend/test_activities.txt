@@ -13,7 +13,8 @@
         "status": 0,
         "location": {
         	"coordinates": [11.75739884, 47.71386555]
-        }
+        },
+	"creator": "5ee6a3d39df02f51788dc338"
 }
 
 
@@ -32,5 +33,26 @@
         "status": 0,
 	"location": {
 		"coordinates": [11.58399403, 48.15590521]
-	}
+	},
+	"creator": "5ee6a6a79df02f51788dc33c"
+}
+
+
+{
+        "fromAge": 30,
+        "toAge": 40,
+        "category": "Entertainment",
+        "activityName": "Watching a movie in Mathäser Munich",
+        "dateTime": "10.06.2020 22:00",
+        "approxTime": true,
+        "duration": 120,
+        "prefGender": "NotDeclared",
+        "description": "Best Movie Ever",
+        "price": 4,
+        "title": "Top Gun 2",
+        "status": 0,
+	"location": {
+		"coordinates": [11.580220, 48.139130]
+	},
+	"creator": "5ee6a6a79df02f51788dc33c"
 }
