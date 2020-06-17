@@ -94,10 +94,10 @@ const login = async (req,res) => {
 
 const token = async (req,res) => {
     // refresh the token
-    const refreshToken = req.body.token
+    const refreshToken = req.body.refreshToken
     // if refresh token exists
     
-    if((refreshToken) && (refreshToken in tokenList)) {
+    if(refreshToken) {
 		
 		jwt.verify(refreshToken, config.refreshTokenSecret, (err, decoded) => {
 			if (err){
@@ -111,15 +111,15 @@ const token = async (req,res) => {
 			// if everything is good, save to request for use in other routes
 			const accessToken  = jwt.sign({id: decoded.id, username: decoded.username, role: decoded.role}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
 			const response = {
-				"token": accessToken,
+				"accessToken": accessToken,
 			}
 			// update the token in the list
-			tokenList[refreshToken].token = token
+			//tokenList[refreshToken].token = token
 			res.status(200).json(response);    
 		});
 		
     } else {
-        res.status(404).send('Invalid request')
+        res.status(401).send('Invalid request')
     }
 }
 

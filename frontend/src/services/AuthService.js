@@ -28,6 +28,7 @@ export default class UserService {
                 username: user,
                 password: pass
             }, function(data) {
+				console.log(data)
                 resolve(data);
             }, function(textStatus) {
                 reject(textStatus);

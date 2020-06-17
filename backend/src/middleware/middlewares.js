@@ -22,27 +22,29 @@ const allowCrossDomain = (req, res, next) => {
 const checkAuthentication = (req, res, next) => {
 
     // check header or url parameters or post parameters for token
-    let token = ""
+    let token = "";
     if(req.headers.authorization) {
-        token = req.headers.authorization;
+		var tokenArray = req.headers.authorization.split(" ");
+		if(tokenArray.length !== 2 || tokenArray[0] !== 'Bearer')
+			return res.status(401).send({
+				error: 'Unauthorized',
+				message: 'No token provided in the request. Did you add \'Beare\' before the token?'
+			});
+        token = tokenArray[1];
     }
 
-    if (!token)
-        return res.status(401).send({
-            error: 'Unauthorized',
-            message: 'No token provided in the request'
-        });
-
     // verifies secret and checks exp
-    console.log(token)
     jwt.verify(token, config.accessTokenSecret, (err, decoded) => {
 		if(err){
 			var response = {};
-			
-			if(err.name == 'TokenExpiredError') response = {
+			if(err.name === 'TokenExpiredError'){
+				if(req.url === '/token') return next();
+				
+				response = {
 					error: 'TokenExpired',
 					message: 'The provided token is no longer valid',
 				}
+			}
 			else response = {
 				error: 'Unauthorized',
 				message: 'Failed to authenticate token.'
