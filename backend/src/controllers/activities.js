@@ -381,7 +381,7 @@ const search = (async(req, res) => {
                                 switch(req.body.category) {
                                     case "Sport":
                                         // Physical condition has to match upper and lower bound.
-                                        if(resdtandc[i]["phyCondition"]<=req.body.maxPrice && resdtandc[i]["phyCondition"]>=req.body.minPrice) {
+                                        if(resdtandc[i]["phyCondition"]<=req.body.maxPhyCondition && resdtandc[i]["phyCondition"]>=req.body.minPhyCondition) {
                                             ressearch.push(resdtandc[i]);
                                         }
                                         break;
