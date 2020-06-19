@@ -92,9 +92,10 @@ const login = async (req,res) => {
 
 
 
-const token = async (req,res) => {
+const refresh_token = async (req,res) => {
     // refresh the token
     const refreshToken = req.body.refreshToken
+    
     // if refresh token exists
     
     if(refreshToken) {
@@ -102,7 +103,7 @@ const token = async (req,res) => {
 		jwt.verify(refreshToken, config.refreshTokenSecret, (err, decoded) => {
 			if (err){
 				console.log(err)
-				return res.status(401).send({
+				return res.status(401).json({
 					error: 'Unauthorized',
 					message: 'Failed to authenticate token.'
 				});
@@ -115,11 +116,15 @@ const token = async (req,res) => {
 			}
 			// update the token in the list
 			//tokenList[refreshToken].token = token
+			console.log("sendin access token")
 			res.status(200).json(response);    
 		});
 		
     } else {
-        res.status(401).send('Invalid request')
+        res.status(401).json({
+					error: 'Unauthorized',
+					message: 'Invalid request'
+				});
     }
 }
 
@@ -249,7 +254,7 @@ const logout = (req, res) => {
 module.exports = {
     login,
     register,
-    token,
+    refresh_token,
     logout,
     me,
     moderator,

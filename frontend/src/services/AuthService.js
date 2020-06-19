@@ -1,6 +1,7 @@
 "use strict";
 
 import HttpService from './HttpService';
+import TokenService from './TokenService';
 
 export default class UserService {
 
@@ -37,7 +38,8 @@ export default class UserService {
     }
 
     static logout(){
-        window.localStorage.removeItem('jwtToken');
+        window.localStorage.removeItem('accessToken');
+        window.localStorage.removeItem('refreshToken');
     }
 
     static getCurrentUser() {
@@ -52,7 +54,18 @@ export default class UserService {
         };
     }
 
-    static isAuthenticated() {
-        return !!window.localStorage['jwtToken'];
-    }
+	static isUserAuthenticated() {
+		return new Promise((resolve,reject) => {
+			TokenService.refreshToken().then((token) => {
+				console.log(token)
+				if(token) resolve(true)
+				else resolve(false)
+			})
+			.catch((err) => {
+				console.log(err)
+				reject(err);
+			})
+		})
+	}
+	
 }

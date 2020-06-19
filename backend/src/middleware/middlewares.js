@@ -38,7 +38,7 @@ const checkAuthentication = (req, res, next) => {
 		if(err){
 			var response = {};
 			if(err.name === 'TokenExpiredError'){
-				if(req.url === '/token') return next();
+				if(req.url === '/refresh_token') return next();
 				
 				response = {
 					error: 'TokenExpired',

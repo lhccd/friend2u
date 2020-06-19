@@ -6,27 +6,28 @@ import './App.css';
 import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 
 import { UserLoginView } from "./views/UserLoginView";
+import { Homepage } from "./components/Homepage";
+
+import authSplashScreen from './authSplashScreen';
 
 
 export default class App extends React.Component {
 
     constructor(props) {
         super(props);
-        
-        console.log('hereaaa')
 
         this.state = {
             title: 'Movie Example App',
+
+            
             routes: [
-                /*{ component: MovieListView , path: '/', exact: true},
-                { component: MovieDetailView , path: '/show/:id'},
-                { render: (props) => {
-                        if(UserService.isAuthenticated()) {
-                            return (<MovieFormView {... props} />)
-                        }
-                        else {
-                            return (<Redirect to={'/login'}/>)
-                        }} , path: '/edit/:id'},
+                //{ component: Homepage , path: '/home', exact: true},
+                //{ component: MovieDetailView , path: '/show/:id'},
+                /*{ render: (props) => {
+					authenticated = await AuthService.isUserAuthenticated()
+					if(this.state.loading) return (<Homepage {... props} />)
+                    else return (<Redirect to={'/login'}/>)
+                  } , path: '/'},
                 { render: (props) => {
                     if(UserService.isAuthenticated()) {
                         return (<MovieFormView {... props} />)
@@ -35,6 +36,9 @@ export default class App extends React.Component {
                         return (<Redirect to={'/login'}/>)
                     }}, path: '/add',},*/
                 { component: UserLoginView, path: '/login'},
+                { component: authSplashScreen(Homepage), path: '/', exact: true},
+                { component: authSplashScreen(Homepage), path: '/aaa'},
+                { component: Homepage, path: '/bbb'},
                 //{ component: UserSignupView, path: '/register'}
             ]
         };
