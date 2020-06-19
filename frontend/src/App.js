@@ -6,6 +6,7 @@ import './App.css';
 import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 
 import { UserLoginView } from "./views/UserLoginView";
+import {HomepageView} from "./views/HomepageView";
 
 
 export default class App extends React.Component {
@@ -18,6 +19,7 @@ export default class App extends React.Component {
         this.state = {
             title: 'Movie Example App',
             routes: [
+                {component: HomepageView, path:'/', exact: true},
                 /*{ component: MovieListView , path: '/', exact: true},
                 { component: MovieDetailView , path: '/show/:id'},
                 { render: (props) => {
