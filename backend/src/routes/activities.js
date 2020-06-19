@@ -20,6 +20,7 @@ router.get('/userActivityRelation', JoinedActivityHandler.list);
 router.get('/withinRadius', ActivityHandler.getActivitiesInRadius); // All activities within a specified radius are returned.
 router.get('/search', ActivityHandler.search) // Searching for activities with all possible filters; Should one filter not be applied, then one should provide the max range in the json-body, e.g. fromAge = 18 and toAge = 150 (min./max. allowed values in schema).
 router.get('/test', ActivityHandler.test) // !!! Do NOT call it in production !!!
+router.get('/getVotes', ActivityHandler.getVotes) // Get the vote of a user, by specifing its id inside the body.
 router.get('/:id', ActivityHandler.read); // Read a activitie by Id
 router.put('/:id', ActivityHandler.update); // Update a activitie by Id
 router.post('/join/:id', JoinedActivityHandler.join, ActivityHandler.joined); // Add a user to the participants-list.
