@@ -561,46 +561,18 @@ const getVotes  = async (req, res) => {
     // Counting the votes for user as creator.
     var userActivities = await ActivityModel
     .find({
-        creator: req.body.id
+        $or:[ {creator: req.body.id}, {selPerson: req.body.id} ]
+        
     })
 
     for(var i=0; i<userActivities.length; i++) {
         if(userActivities[i].voteForCreator == 0) {
-            //console.log(userActivities[i].voteForCreator)
             downVotes++;
         }
         else if(userActivities[i].voteForCreator == 1) {
-            //console.log(userActivities[i].voteForCreator)
             notYetDecided++;
         }
         else if(userActivities[i].voteForCreator == 2) {
-            //console.log(userActivities[i].voteForCreator)
-            upVotes++;
-        }
-        else {
-            return res.status(500).json({
-                error: 'Internal Server Error - activities_get_Votes_wrong_Votenumber',
-            });
-        }
-    }
-
-    // Counting the votes for a user as selectedPerson.
-    var userActivities = await ActivityModel
-    .find({
-        selPerson: req.body.id
-    })
-
-    for(var i=0; i<userActivities.length; i++) {
-        if(userActivities[i].voteForCreator == 0) {
-            //console.log(userActivities[i].voteForCreator)
-            downVotes++;
-        }
-        else if(userActivities[i].voteForCreator == 1) {
-            //console.log(userActivities[i].voteForCreator)
-            notYetDecided++;
-        }
-        else if(userActivities[i].voteForCreator == 2) {
-            //console.log(userActivities[i].voteForCreator)
             upVotes++;
         }
         else {
