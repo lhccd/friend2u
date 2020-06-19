@@ -7,6 +7,7 @@ import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-route
 
 import { UserLoginView } from "./views/UserLoginView";
 import {HomepageView} from "./views/HomepageView";
+import { routes } from "./routes/routes";
 
 
 export default class App extends React.Component {
@@ -17,10 +18,12 @@ export default class App extends React.Component {
         console.log('hereaaa')
 
         this.state = {
-            title: 'Movie Example App',
-            routes: [
+            title: 'Friend2U App',
+            routes: routes,
+               /* [
                 {component: HomepageView, path:'/', exact: true},
-                /*{ component: MovieListView , path: '/', exact: true},
+
+                /!*{ component: MovieListView , path: '/', exact: true},
                 { component: MovieDetailView , path: '/show/:id'},
                 { render: (props) => {
                         if(UserService.isAuthenticated()) {
@@ -35,10 +38,10 @@ export default class App extends React.Component {
                     }
                     else {
                         return (<Redirect to={'/login'}/>)
-                    }}, path: '/add',},*/
+                    }}, path: '/add',},*!/
                 { component: UserLoginView, path: '/login'},
                 //{ component: UserSignupView, path: '/register'}
-            ]
+            ]*/
         };
     }
 
