@@ -4,14 +4,18 @@ export default class HttpService {
     constructor() {
     }
 
-    static apiURL() {return 'http://localhost:3000'; }
+    static OurapiURL() {return 'http://localhost:3000'; }
 
     static get(url, onSuccess, onError) {
+        console.log(url)
+        console.log("Get_HttpService")
         let token = window.localStorage['accessToken'];
         let header = new Headers();
         if(token) {
             header.append('Authorization', `Bearer ${token}`);
         }
+
+        console.log(this.OurapiURL())
 
         fetch(url, {
              method: 'GET',
@@ -147,7 +151,7 @@ export default class HttpService {
     }
     
     static checkIfAuthorized(res) {
-		const url = this.apiUrl() + "/auth/token";
+		const url = this.OurapiURL() + "/auth/token";
 		
 		return new Promise((resolve,reject) => {
 			if(res.status !== 401) resolve();

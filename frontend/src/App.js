@@ -7,6 +7,8 @@ import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-route
 
 import { UserLoginView } from "./views/UserLoginView";
 import {HomepageView} from "./views/HomepageView";
+import { ActivityListView } from "./views/ActivityListView";
+
 
 
 export default class App extends React.Component {
@@ -17,11 +19,11 @@ export default class App extends React.Component {
         console.log('hereaaa')
 
         this.state = {
-            title: 'Movie Example App',
+            title: 'Friend2U App',
             routes: [
                 {component: HomepageView, path:'/', exact: true},
-                /*{ component: MovieListView , path: '/', exact: true},
-                { component: MovieDetailView , path: '/show/:id'},
+                { component: ActivityListView, path: '/activities', exact: true},
+                /*{ component: MovieDetailView , path: '/show/:id'},
                 { render: (props) => {
                         if(UserService.isAuthenticated()) {
                             return (<MovieFormView {... props} />)

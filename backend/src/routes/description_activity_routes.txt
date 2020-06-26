@@ -1,0 +1,89 @@
+Functions of the activity_backend:
+
+GET,/: List all activities.
+-JSON-Body:
+    {}
+
+GET,/:id: Get activity by id.
+-JSON-Body:
+    {}
+
+PUT,/:id: Update an activity.
+
+DELETE,/:id: Delete an activity.
+    {}
+
+POST,/: Create a activity.
+-JSON-Body: (Example)
+    {
+        "fromAge": 18,
+        "toAge": 25,
+        "category": "Food",
+        "activityName": "Going to eat at Block House",
+        "dateTime": "10.06.2020 21:30",  //Look out, how the date and time is stored!
+        "approxTime": true,
+        "duration": 60,
+        "prefGender": "NotDeclared",
+        "description": "Lorem ipsum",
+        "price": 3,
+        "kitchen": "Other",  //Specific activity-argument.
+        "status": 0,
+        "location": {
+            "coordinates": [11.58399403, 48.15590521]  //Longtitude and THEN Latidude!
+        }
+    }
+
+POST,/join/:id: Add a user to the participants-list of a specific activity.
+-JSON-Body:
+    {
+        "newParticipant": "ID_of_user_who_wants_to_join"
+    }
+
+GET,/join/:id: Get a list of joined persons from a specific activity.
+    {}
+
+DELETE,/unjoin/:id: Remove a user from the participants-list of a specific activity.
+    {
+        "oldParticipant": "ID_of_user_to_delete"
+    }
+
+GET,/userjoined: Get a list of joined activities for a specific user.
+-JSON-Body:
+    {
+        "user": "ID_of_User_to_find_joined_activities"
+    }
+
+GET,/search: Searching for activities with all possible filters; Should one filter not be applied, then one should provide the max range in the json-body, e.g. fromAge = 18 and toAge = 150 (min./max. allowed values in schema).
+-JSON-Body: (Example)
+    {
+        "fromTime": "2020-10-06T13:30:00.000Z",
+        "toTime": "2020-11-06T19:00:00.000Z",
+        "category": "Entertainment",
+        "activityName": "watch movie cinema munich",
+        "fromAge": 18,
+        "toAge": 32,
+        "maxPrice": 5,
+        "minPrice": 1,
+        "title": "Top Gun",
+        "gender": "NotDeclared",
+        "searcherID": "5ee6a6a79df02f51788dc33c",
+        "long": 11.619857,
+        "lat": 48.151173,
+        "maxDistance": 10000
+    }
+
+GET,/getVotes: Get the vote of a user, by specifing its id inside the body.
+-JSON-Body:
+    {
+        "id": "id_of_the_user_to_get_votes_from"
+    }
+
+PUT,/setSelectedPerson/:id: Set the selected person for an activity.
+    {
+        "selPerson": "ID_of_selPerson"
+    }
+
+PUT,/updateStatus/:id: Change the status of an activity; For valuerepresentation look into the controller.
+    {
+        "newStatus": "0|1|2" // Choose one of the values.
+    }
