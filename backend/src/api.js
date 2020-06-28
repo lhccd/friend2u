@@ -10,6 +10,7 @@ const auth  = require('./routes/auth');
 const activities = require('./routes/activities');
 const users = require('./routes/users');
 const moderator = require('./routes/moderator');
+const reports = require('./routes/reports');
 
 const api = express();
 
@@ -36,8 +37,7 @@ api.use('/auth', auth);
 api.use('/activities', activities);
 api.use('/users', users);
 api.use('/moderator', moderator);
-
-
+api.use('/reports', reports);
 //Serving static files
 //TO DO
 //
