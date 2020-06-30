@@ -6,7 +6,7 @@ export default class HttpService {
 
     static OurapiURL() {return 'http://localhost:3000'; }
 
-    static get(url, onSuccess, onError) {
+    static async get(url, onSuccess, onError) {
         console.log(url)
         console.log("Get_HttpService")
         let token = window.localStorage['accessToken'];
@@ -17,6 +17,7 @@ export default class HttpService {
 
         console.log(this.OurapiURL())
 
+        /*
         fetch(url, {
              method: 'GET',
              headers: header
@@ -33,6 +34,66 @@ export default class HttpService {
          }).catch((e) => {
              onError(e.message);
          });
+         */
+
+         try{
+             let resp = await fetch(url, {
+             method: 'GET',
+             headers: header
+            })
+
+            var result = await resp.json()
+
+            onSuccess(result)
+         } catch(error) {
+             console.log(error)
+         }
+         
+    }
+
+
+    static async modGet(url, data, onSuccess, onError) {
+        
+        console.log(data)
+        console.log(JSON.stringify(data))
+        let header = new Headers();
+        console.log(header)
+        header.append('Content-Type', 'application/json');
+        
+        try {
+            let resp = await fetch(url, {
+                method: 'PUT',
+                headers: header,
+                body: JSON.stringify(data),
+            });
+
+            var result = await resp.json()
+            //console.log(await resp.json())
+
+            onSuccess(result)
+
+            /*
+            if(this.checkIfUnauthorized(resp)) {
+                window.location = '/#login';
+                return;
+            }
+            else {
+                resp = await resp.json();
+            }
+
+            if(resp.error) {
+                onError(resp.error);
+            }
+            else {
+                if(resp.hasOwnProperty('token')) {
+                    window.localStorage['jwtToken'] = resp.token;
+                }
+                onSuccess(resp);
+                
+            }*/
+        } catch(err) {
+            onError(err.message);
+        }
     }
 
     static async put(url, data, onSuccess, onError) {

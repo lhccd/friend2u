@@ -1,8 +1,10 @@
 "use strict";
 
 import React from 'react';
-import { TableRow, TableColumn, FontIcon, Button } from 'react-md';
+import { TableRow, TableColumn, FontIcon, Button, DataTable, TableHeader, TableBody } from 'react-md';
 import { Link } from 'react-router-dom';
+import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import HttpService from '../services/HttpService';
 
 //import { SimpleLink } from './SimpleLink';
 
@@ -13,16 +15,94 @@ export class ActivityListRow extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            address: "",
+            first: true,
+            price: ""
+        }
+    }
+
+
+    async getLocation(location) {
+
+
+        var query = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+location.coordinates[1]+","+location.coordinates[0]+"&key=AIzaSyCm-HwLhA8qvL4JPcBl9aKojPcHSKOdwY8"
+        console.log("Searching for: "+encodeURI(query))
+
+        var header = new Headers()
+
+        try{
+            let resp = await fetch(query, {
+            method: 'GET',
+            headers: header
+           })
+
+           var res = await resp.json()
+           console.log(res.results[0].formatted_address)
+           this.setState({ ["address"]: res.results[0].formatted_address })
+
+        } catch(error) {
+            console.log(error)
+        }
+        
+    }
+
+    setPriceSymbols(price) {
+        console.log("Price")
+        console.log(price)
+        var symbols = ""
+        for(var i=0; i<price; i++) {
+            symbols+="€"
+        }
+        console.log(symbols)
+        this.setState({ ["price"]: symbols })
     }
 
     render() {
+        console.log("ALW: ")
+        console.log(this.props.activity)
+
+        if(this.state.first) {
+            this.getLocation(this.props.activity.location)
+            this.setPriceSymbols(this.props.activity.price)
+            this.setState({ ["first"]: false })
+        }
+
+        
+        
         return (
+            
             <TableRow key={this.props.key}>
-                <TableColumn><Link to={`/show/${this.props.acitivity._id}`}><FontIcon>image</FontIcon></Link></TableColumn>
+
+                <TableColumn>
+                    
+                        <TableBody>
+                            <TableRow>
+                                <TableColumn width={250}>
+                                    Category: {this.props.activity.category}
+                                </TableColumn>
+                                <TableColumn width={500}>
+                                    Activityname: {this.props.activity.activityName}
+                                </TableColumn>
+                                <TableColumn width={250}>
+                                    Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()};
+                                </TableColumn>
+                                <TableColumn>
+                                    Address: {this.state.address}<Link to={`/show/${this.props.activity._id}`}><FontIcon>image</FontIcon></Link>
+                                </TableColumn>
+                                <TableColumn>
+                                    Price: {this.state.price.toString()}
+                                </TableColumn>
+                            </TableRow>
+                        </TableBody>
+                    
+                </TableColumn>
                
 
             </TableRow>
         );
+        
+        
     }
 }
 

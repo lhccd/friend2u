@@ -37,6 +37,22 @@ export default class ActivityService {
             });
         });
     }
+
+    static searchActivities(filters) {
+        return new Promise((resolve, reject) => {
+            HttpService.modGet(`${ActivityService.baseURL()}/search`, filters, function(data) {
+                if(data != undefined || Object.keys(data).length !== 0) {
+                    resolve(data);
+                    console.log(data.body)
+                }
+                else {
+                    reject('Error while retrieving the activity');
+                }
+            }, function(textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
     
     static deleteActivity(id) {
         return new Promise((resolve, reject) => {

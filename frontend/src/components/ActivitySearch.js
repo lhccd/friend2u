@@ -30,7 +30,7 @@ export class ActivitySearch extends React.Component {
   
     handleChange(event) {
       //console.log(event.target.value)
-      console.log(event.target)
+      //console.log(event.target)
       // Adopt the "to_time" accordingly, as it has always to be
       // ahead of the "from_time".
       if(event.target.name === "fromTime") {
@@ -51,11 +51,14 @@ export class ActivitySearch extends React.Component {
     handleSubmit(event) {
       console.log(this.state)
       //alert('A name was submitted: ' + this.state.value);
+      this.props.onSearch(this.state)
       event.preventDefault();
+
+      
     }
 
     handleMapChange(event) {
-      //console.log("MapChange: "+event)
+      console.log("PositionChange: ")
       console.log(event)
       this.setState({ ["coords"]: event})
     }
@@ -71,7 +74,7 @@ export class ActivitySearch extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label>
             Activityname:
-            <input type="text" name="act_name" placeholder="Search for activityname" value={this.state.value} onChange={this.handleChange} />
+            <input type="text" name="actName" placeholder="Search for activityname" value={this.state.value} onChange={this.handleChange} />
             From Time:
             <input type="datetime-local" name="fromTime" value={this.state.fromTime} min={cT} onChange={this.handleChange}/>
             To Time:

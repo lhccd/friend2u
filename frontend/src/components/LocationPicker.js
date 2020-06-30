@@ -32,18 +32,17 @@ export class MapContainer extends React.Component {
 
       handleMapSubmit(event) {
         var query = "https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURI(this.state["search"])+"&key=AIzaSyCm-HwLhA8qvL4JPcBl9aKojPcHSKOdwY8"
-
+        var loc = this.state.position
         console.log("Searching for: "+encodeURI(this.state["search"]))
         httpGetAsync(query, (res) => {
           var out = JSON.parse(res)
-          var loc = { lat: out.results[0].geometry.location.lat, lng: out.results[0].geometry.location.lng}
+          loc = out.results[0].geometry.location//{ lat: out.results[0].geometry.location.lat, lng: out.results[0].geometry.location.lng}
           console.log(loc)
-          this.setState({ ["position"]: loc });
+          this.setState({ ["position"]: loc })
           this.setState({ ["mapPos"]: loc })
+          this.props.onLocChange(loc)
         })
-        
         event.preventDefault();
-        this.props.onLocChange(loc)
       }
 
 

@@ -15,10 +15,9 @@ export const ActivityList = ({data, onDelete}) => (
         <DataTable plain style={dataTableStyle}>
             <TableHeader>
                 <TableRow>
-                    <TableColumn></TableColumn>
-                    <TableColumn>Name</TableColumn>
-                    <TableColumn>Edit</TableColumn>
-                    <TableColumn>Remove</TableColumn>
+                    <TableColumn>Searchresults:</TableColumn>
+                    
+                    
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -28,3 +27,12 @@ export const ActivityList = ({data, onDelete}) => (
     </Page>
 );
 
+
+/*
+
+<TableColumn>Name</TableColumn>
+                    <TableColumn>Edit</TableColumn>
+                    <TableColumn>Remove</TableColumn>
+
+
+                    */

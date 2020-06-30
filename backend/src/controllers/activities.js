@@ -314,6 +314,10 @@ const getActivitiesInRadius = ((req, res) => {
 
 // Search for an activity with specified parameters.
 const search = (async(req, res) => {
+
+    console.log("Request was made with: ")
+    console.log(req.body)
+
     if (Object.keys(req.body).length === 0)
     {
         return res.status(400).json({
@@ -418,6 +422,7 @@ const search = (async(req, res) => {
 
     // After all activities have been searched through,
     // we can finally return the result.
+    console.log(ressearch)
     return res.status(200).json(ressearch)
 })
 
