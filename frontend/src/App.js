@@ -6,6 +6,9 @@ import './App.css';
 import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 
 import { UserLoginView } from "./views/UserLoginView";
+import { UserSignupView } from "./views/UserSignupView";
+import { ModeratorView } from "./views/ModeratorView";
+
 import { Homepage } from "./components/Homepage";
 
 import authSplashScreen from './authSplashScreen';
@@ -18,7 +21,8 @@ export default class App extends React.Component {
 
         this.state = {
             title: 'Movie Example App',
-
+            
+            role: null,
             
             routes: [
                 //{ component: Homepage , path: '/home', exact: true},
@@ -35,14 +39,23 @@ export default class App extends React.Component {
                     else {
                         return (<Redirect to={'/login'}/>)
                     }}, path: '/add',},*/
-                { component: UserLoginView, path: '/login'},
+                { render: (props) => {
+						return <UserLoginView {...props} setRole={(role) => this.setRole(role)} />
+					},
+					path: '/login'
+				},
                 { component: authSplashScreen(Homepage), path: '/', exact: true},
                 { component: authSplashScreen(Homepage), path: '/aaa'},
                 { component: Homepage, path: '/bbb'},
-                //{ component: UserSignupView, path: '/register'}
+                { component: UserSignupView, path: '/register'},
+                { component: authSplashScreen(ModeratorView), path: '/moderator'}
             ]
         };
     }
+    
+    setRole(role) {
+		this.setState({role: role})
+	}
 
     componentDidMount(){
         document.title = this.state.title;
@@ -50,13 +63,11 @@ export default class App extends React.Component {
 
     render() {
         return(
-            <div>
-                <Router>
-                    <Switch>
-                        {this.state.routes.map((route, i) => (<Route key={i} {...route}/>) )}
-                    </Switch>
-                </Router>
-            </div>
+			<Router>
+				<Switch>
+					{this.state.routes.map((route, i) => (<Route key={i} {...route}/>))}
+				</Switch>
+			</Router>
         );
     }
 }

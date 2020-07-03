@@ -23,15 +23,22 @@ export class UserLoginView extends React.Component {
             let tokens = await AuthService.login(user.username, user.password);
             if(tokens.hasOwnProperty('accessToken') && tokens.hasOwnProperty('refreshToken')){
 				TokenService.setTokens(tokens.accessToken,tokens.refreshToken);
-			}
+				this.props.setRole(AuthService.getUserRole(tokens.accessToken))
 			
-			const {location} = this.props;
-            if(location.state && location.state.from) {
-				this.props.history.push(location.state.from);
-			} else {
-				this.props.history.push('/');
+				const {location} = this.props;
+				if(location.state && location.state.from) {
+					this.props.history.push(location.state.from);
+				} else {
+					this.props.history.push('/');
+				}
+			}
+			else{
+				this.setState({
+					error: 'Wrong credentials!'
+				});
 			}
         } catch(err) {
+			console.log("Error");
             console.error(err);
             this.setState({
                 error: err

@@ -5,7 +5,6 @@ import React from 'react';
 import Header from './Header';
 import { Footer } from './Footer';
 
-
 export default class Page extends React.Component {
 
     constructor(props) {
@@ -24,7 +23,7 @@ export default class Page extends React.Component {
 
     render() {
         return (
-            <section>
+            <section style={this.props.style}>
                 {this.props.children}
             </section>
         );

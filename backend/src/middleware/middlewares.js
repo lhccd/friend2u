@@ -28,7 +28,7 @@ const checkAuthentication = (req, res, next) => {
 		if(tokenArray.length !== 2 || tokenArray[0] !== 'Bearer')
 			return res.status(401).send({
 				error: 'Unauthorized',
-				message: 'No token provided in the request. Did you add \'Beare\' before the token?'
+				message: 'No token provided in the request. Did you add \'Bearer\' before the token?'
 			});
         token = tokenArray[1];
     }

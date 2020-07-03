@@ -7,31 +7,42 @@ export default class HttpService {
     }
 
     static apiURL() {return 'http://localhost:3000'; }
-
-    static get(url, onSuccess, onError) {
-        let token = window.localStorage['accessToken'];
+    
+    static async get(url, onSuccess, onError) {
+		console.log("get")
+        let token = await TokenService.refreshToken();
         let header = new Headers();
         if(token) {
             header.append('Authorization', `Bearer ${token}`);
         }
 
-        fetch(url, {
-             method: 'GET',
-             headers: header
-         }).then((resp) => {
-			 return this.checkIfAuthorized(resp);
-		 }).then((authorized) => {
-			 if(!authorized) window.location = '/#login';
-			 else return resp.json();
-		 }).then((resp) => {
-             if(resp.error) {
-                 onError(resp.error);
-             }
-             else onSuccess(resp);
-         }).catch((e) => {
-             onError(e.message);
-         });
-    }
+        try{
+			let res = await fetch(url, {
+				method: 'GET',
+				headers: header,
+			})
+			
+			
+			if(!this.isResAuthenticated(res)) {
+				console.log("here")
+				window.location = '/#login';
+                return;
+			}
+			
+			let json = await res.json()
+			
+			if(json.error) {
+                onError(res.error);
+            }
+            else{
+				onSuccess(json);
+			}
+		}
+		catch(err){
+			console.log(err)
+			return onError(err.message);
+		}
+	}
 
     static async put(url, data, onSuccess, onError) {
         let token = window.localStorage['jwtToken'];
@@ -92,7 +103,6 @@ export default class HttpService {
 			
 			
 			if(!this.isResAuthenticated(res)) {
-				console.log("here")
 				window.location = '/#login';
                 return;
 			}
@@ -100,7 +110,7 @@ export default class HttpService {
 			let json = await res.json()
 			
 			if(json.error) {
-                onError(resp.error);
+                onError(res.error);
             }
             else{
 				onSuccess(json);

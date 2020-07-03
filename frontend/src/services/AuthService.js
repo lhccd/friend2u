@@ -10,11 +10,17 @@ export default class UserService {
 
     static baseURL() {return 'http://localhost:3000/auth'; }
 
-    static register(user, pass) {
+    static register(user) {
         return new Promise((resolve, reject) => {
             HttpService.post(`${UserService.baseURL()}/register`, {
-                username: user,
-                password: pass
+                username: user.username,
+                password: user.password,
+                email: user.email,
+                birthday: user.birthday,
+                name: user.name,
+                surname: user.surname,
+                gender: user.gender,
+                mobile: user.mobile,
             }, function(data) {
                 resolve(data);
             }, function(textStatus) {
@@ -29,7 +35,6 @@ export default class UserService {
                 username: user,
                 password: pass
             }, function(data) {
-				console.log(data)
                 resolve(data);
             }, function(textStatus) {
                 reject(textStatus);
@@ -58,14 +63,19 @@ export default class UserService {
 		return new Promise((resolve,reject) => {
 			TokenService.refreshToken().then((token) => {
 				console.log(token)
-				if(token) resolve(true)
-				else resolve(false)
+				if(token) resolve(token)
+				else resolve()
 			})
 			.catch((err) => {
 				console.log(err)
 				reject(err);
 			})
 		})
+	}
+	
+	static getUserRole(token) {
+		let decodedToken = TokenService.decodeToken(token);
+		return decodedToken.role
 	}
 	
 }

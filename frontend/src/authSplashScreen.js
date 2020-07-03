@@ -1,4 +1,8 @@
 import React from 'react';
+import {Fragment} from 'react';
+
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 
 import AuthService from './services/AuthService';
 
@@ -22,20 +26,23 @@ export default function authSplashScreen(WrappedComponent) {
       this.state = {
         loading: true,
         authenticated: false,
+        role: null,
       };
     }
 
     async componentDidMount() {
       try {
-        let authenticated = await AuthService.isUserAuthenticated();
-        if(authenticated) this.setState({authenticated: true});
+        let token = await AuthService.isUserAuthenticated();
+        if(token){
+			this.setState({authenticated: true, role: AuthService.getUserRole(token)});
+		}
         
         //Just to simulate the loading screen
         setTimeout(() => {
           this.setState({
             loading: false,
           });
-        }, 1500)
+        }, 10)
         
       } catch (err) {
         console.log(err);
@@ -46,13 +53,22 @@ export default function authSplashScreen(WrappedComponent) {
         }, 1500)
       }
     }
+    
+    renderAuthenticated() {
+		return (
+			   <Fragment>
+				<Header />
+				<WrappedComponent {...this.props} role={this.state.role} />
+				<Footer />
+			   </Fragment>)
+	}
 
     render() {
       // while checking user session, show "loading" message
       if (this.state.loading) return LoadingMessage();
 
       // otherwise, show the desired route
-      if(this.state.authenticated) return <WrappedComponent {...this.props} />;
+      if(this.state.authenticated) return this.renderAuthenticated();
       
       const { history, location } = this.props;
 	  

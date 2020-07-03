@@ -43,6 +43,11 @@ export default class TokenService {
 		return decodedToken.exp*1000 >= now.getTime();
 	}
 	
+	static decodeToken(token) {
+		let decodedToken = jwt(token, {complete: true});
+		return decodedToken;
+	}
+	
 
 	static async refreshToken() {
 		let accessToken = window.localStorage['accessToken'];
