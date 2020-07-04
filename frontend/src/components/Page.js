@@ -1,9 +1,9 @@
 "use strict";
 
 import React from 'react';
-
-import { Header } from './Header';
-import { Footer } from './Footer';
+import { Container } from 'react-bootstrap';
+import {Header} from './Header';
+import {Footer} from './Footer';
 
 export default class Page extends React.Component {
 
@@ -15,18 +15,19 @@ export default class Page extends React.Component {
         }
     }
 
-    componentDidMount(){
-       this.setState({
-           title: document.title
-       });
+    componentDidMount() {
+        this.setState({
+            title: document.title
+        });
     }
 
     render() {
         return (
-            <section style={this.props.style}>
-                {this.props.children}
-                <Footer />
-            </section>
+            <Container>
+                <Header/>
+                   {this.props.children}
+                {/*<Footer/>*/}
+            </Container>
         );
     }
 }
