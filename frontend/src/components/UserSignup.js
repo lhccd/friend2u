@@ -10,6 +10,10 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import { isPossiblePhoneNumber } from 'react-phone-number-input'
+
 const style = { maxWidth: 800, margin: 'auto' };
 
 
@@ -22,30 +26,48 @@ class UserSignup extends React.Component {
             username: '',
             password: '',
             passwordRepeat: '',
+            email: '',
+            name: '',
+            surname: '',
             birthday: '',
+            gender: '',
+            mobile: '',
+            isOver18: true,
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
+        this.handleChangeMobile = this.handleChangeMobile.bind(this);
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+    
+    getAge(birthday) {
+		var today = new Date();
+		var age = today.getFullYear() - birthday.getFullYear();
+		var m = today.getMonth() - birthday.getMonth();
+		if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+			age--;
+		}
+		return age;
+	}
 
     handleChange(event) {
 		let fieldName = event.target.name;
 		let fieldVal = event.target.value;
-		console.log(fieldVal)
         this.setState({[fieldName]: fieldVal});
     }
     
     handleChangeDate(date) {
-        this.setState(Object.assign({}, this.state, {birthday: date}));
+        this.setState(Object.assign({}, this.state, {birthday: date, isOver18: this.getAge(date) >= 18}));
+    }
+    
+     
+    handleChangeMobile(mobile) {
+		this.setState({mobile: mobile})
     }
     
     handleChangePasswordMatch(event) {
-		console.log(this.state.passwordRepeat)
-		console.log(this.state.password)
-		
 		if(this.state.passwordRepeat === this.state.password){
 			this.setState({passwordMatch: true})
 		}
@@ -62,29 +84,30 @@ class UserSignup extends React.Component {
             password: this.state.password,
             email: this.state.email,
             birthday: this.state.birthday,
-            name: "test",
-            surname: "test",
-            gender: "male",
-            mobile: "+123456789",
+            name: this.state.name,
+            surname: this.state.surname,
+            gender: this.state.gender,
+            mobile: this.state.mobile,
         };
+        
+        console.log(user)
 
         this.props.onSubmit(user);
     }
     
-    handleCheckParameters(){
-		return this.state.username == undefined || 
-			   this.state.username == '' ||
+    areParametersNotOk(){
+		return this.state.passwordRepeat !== this.state.password ||
 			   
-			   this.state.password == undefined ||
-			   this.state.password == '' ||
+			   !this.state.isOver18 ||
 			   
-			   this.state.birthday == undefined ||
-			   this.state.birthday == '';
-		
+			   ['username','email','password','passwordRepeat','name','surname','gender','birthday','mobile'].some((prop) => {
+						return this.state[prop] === undefined || this.state[prop] === '';
+					});
 	}
 
     render() {
-		let passwordMatch = this.state.passwordRepeat === this.state.password
+		let passwordMatch = this.state.passwordRepeat === this.state.password;
+		let { isOver18 } = this.state;
 		
         return (
             <Page const style={{width: '100%',height: '100%',padding: 100}}>
@@ -92,7 +115,8 @@ class UserSignup extends React.Component {
 				<Card.Header as="h5">Sign up</Card.Header>
 				<Card.Body>
 				  <Form className="text-left" onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
-				  				  
+				  	
+				  	{/* Username */}
 					<Form.Row>
 						<Form.Group as={Col}>
 							<Form.Label>Username</Form.Label>
@@ -100,13 +124,14 @@ class UserSignup extends React.Component {
 								type="text"
 								name="username"
 								placeholder="Enter username"
-								//value={this.state.username}
-								onChange={this.handleChange}
 								errortext="Login is required"
+								onChange={this.handleChange}
+								className={this.props.duplicateKey === 'username' ? 'is-invalid' : ''}
 							 />
 						</Form.Group>
 					</Form.Row>
 				  
+				    {/* Email */}
 					<Form.Row>
 						<Form.Group as={Col}>
 							<Form.Label>Email</Form.Label>
@@ -115,11 +140,12 @@ class UserSignup extends React.Component {
 								name="email"
 								placeholder="Enter email"
 								onChange={this.handleChange}
-								errortext="Login is required"
+								className={this.props.duplicateKey === 'email' ? 'is-invalid' : ''}
 							 />
 						</Form.Group>
 					</Form.Row>
 				  
+				    {/* Password */}
 					<Form.Row>
 						<Form.Group as={Col}>
 							<Form.Label>Password</Form.Label>
@@ -127,10 +153,8 @@ class UserSignup extends React.Component {
 								type="password"
 								name="password"
 								placeholder="Enter password"
-								//value={this.state.username}
-								onChange={this.handleChange}
-								errortext="Login is required"
 								className={!passwordMatch ? 'is-invalid' : ''}
+								onChange={this.handleChange}
 							 />
 						</Form.Group>
 
@@ -140,42 +164,71 @@ class UserSignup extends React.Component {
 								type="password"
 								name="passwordRepeat"
 								placeholder="Repeat password"
-								id="PasswordField"
-								type="password"
 								required={true}
+								className={!passwordMatch ? 'is-invalid' : ''}
 								onChange={this.handleChange}
-								errortext="Password is required"
 							/>
 						</Form.Group>
-						
-						<AlertMessage>{this.props.error ? `${this.props.error}` : ''}</AlertMessage>
 					</Form.Row>
 				    
-				    <Form.Group>
-						<Form.Row>
-							<Col>
+				    {/* Name and Surname */}
+				    <Form.Row>
+						<Form.Group as={Col}>
 							  <Form.Label>First name</Form.Label>
-							  <Form.Control placeholder="Enter first name" />
-							</Col>
-							<Col>
-							  <Form.Label>Last Name</Form.Label>
-							  <Form.Control placeholder="Enter Last name" />
-							</Col>
-						</Form.Row>
-					</Form.Group>
+							  <Form.Control
+								placeholder="Enter first name"
+								type="text"
+								name="name"
+								required={true}
+								onChange={this.handleChange}
+							  />
+						</Form.Group>
+						<Form.Group as={Col}>
+							  <Form.Label>Surname</Form.Label>
+							  <Form.Control
+								placeholder="Enter surname"
+								type="text"
+								name="surname"
+								required={true}
+								onChange={this.handleChange}
+							  />
+						</Form.Group>
+					</Form.Row>
 					
+					{/* Birthday Gender Mobile */}
 					<Form.Row>
 						<Form.Group as={Col}>
 							<Form.Label>Birthday</Form.Label>
-						    <DatePicker
-								selected={this.state.birthday}
-								onChange={this.handleChangeDate}
+						    <Form.Group>
+								<DatePicker
+									selected={this.state.birthday}
+									onChange={this.handleChangeDate}
+								/>
+								<AlertMessage>{!isOver18 ? 'You must be over 18 to sign up!' : ''}</AlertMessage>
+							</Form.Group>
+						</Form.Group>
+
+						<Form.Group as={Col}>
+							<Form.Label>Gender</Form.Label>
+						    <Form.Group onChange={this.handleChange}>
+								{['male','female','other'].map((t) => <Form.Check inline key={`gender-${t}`} name="gender" value={t} label={t} type='radio' /> )}
+								<Form.Check inline  name="gender" value='notDelcared' label='I prefer not to declare it' type='radio' />
+							</Form.Group>
+						</Form.Group>
+						
+						<Form.Group as={Col}>
+						  <Form.Label>Mobile</Form.Label>
+							<PhoneInput
+								defaultCountry="DE"
+								onChange={this.handleChangeMobile}
 							/>
 						</Form.Group>
 					</Form.Row>
 					
+					
+					
 				    <Button variant="primary" type="submit"
-							disabled={this.handleCheckParameters() || !passwordMatch ? true : false}>
+							disabled={this.areParametersNotOk()? true : false}>
 				    	Submit
 			  	    </Button>
 				    <Link to={'/login'} className="md-cell">Back to login</Link>

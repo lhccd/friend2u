@@ -22,8 +22,10 @@ export default class UserService {
                 gender: user.gender,
                 mobile: user.mobile,
             }, function(data) {
+				console.log(data)
                 resolve(data);
             }, function(textStatus) {
+				console.log(textStatus)
                 reject(textStatus);
             });
         });

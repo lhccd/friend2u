@@ -110,7 +110,7 @@ export default class HttpService {
 			let json = await res.json()
 			
 			if(json.error) {
-                onError(res.error);
+                onError(json);
             }
             else{
 				onSuccess(json);

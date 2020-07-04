@@ -163,9 +163,11 @@ const register = async (req,res) => {
     UserSchema.create(newUser, (err, user) => {
 		if(err){
 			if (err.code == 11000) {
+				console.log(err)
 				return res.status(400).json({
 					error: 'User exists',
-					message: err.message
+					duplicateKey: Object.keys(err.keyPattern)[0],
+					
 				});
 			} else {
 				return res.status(500).json({
