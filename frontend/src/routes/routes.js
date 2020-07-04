@@ -2,7 +2,7 @@ import { HomepageView } from "../views/HomepageView";
 import {UserLoginView} from "../views/UserLoginView";
 import { UserSignupView } from "../views/UserSignupView";
 import { ModeratorView } from "../views/ModeratorView";
-import { authSplashScreen } from '../authSplashScreen';
+import authSplashScreen from '../authSplashScreen';
 import { ReportUserView } from "../views/ReportUserView";
 import { ReportActivityView } from "../views/ReportActivityView"
 
