@@ -108,9 +108,9 @@ class UserSignup extends React.Component {
     render() {
 		let passwordMatch = this.state.passwordRepeat === this.state.password;
 		let { isOver18 } = this.state;
-		
+		//<Page const style={{width: '100%',height: '100%',padding: 100}}>
         return (
-            <Page const style={{width: '100%',height: '100%',padding: 100}}>
+
             <Card style={style}>
 				<Card.Header as="h5">Sign up</Card.Header>
 				<Card.Body>
@@ -236,7 +236,6 @@ class UserSignup extends React.Component {
 			      </Form>
 				</Card.Body>
 			</Card>
-            </Page>
         );
     }
 };

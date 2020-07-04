@@ -63,9 +63,9 @@ export default function authSplashScreen(WrappedComponent) {
     renderAuthenticated() {
 		return (
 			   <Fragment>
-				<Header />
-				<WrappedComponent {...this.props} role={this.state.role} />
-				<Footer />
+                <Page>
+                    <WrappedComponent {...this.props} role={this.state.role} />
+                </Page>
 			   </Fragment>)
 	}
 

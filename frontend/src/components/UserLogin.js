@@ -49,58 +49,55 @@ class UserLogin extends React.Component {
 
         this.props.onSubmit(user);
     }
-
+//<Page const style={{width: '100%',height: '100%',padding: 100}}></Page>
     render() {
-        return (
-            <Page const style={{width: '100%',height: '100%',padding: 100}}>
-            <Card style={style} className="text-center">
-				<Card.Header as="h5">Login</Card.Header>
-				<Card.Body>
-				  <Form className="text-left" onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
-					<Form.Row>
-						<Form.Group as={Col}>
-							<Form.Label>Username</Form.Label>
-							<Form.Control
-								type="text"
-								name="username"
-								placeholder="Enter username"
-								label="Login"
-								id="LoginField"
-								type="text"
-								//value={this.state.username}
-								onChange={this.handleChange}
-								errortext="Login is required"
-							 />
-						  </Form.Group>
-					</Form.Row>
 
-					<Form.Row>
-					  <Form.Group as={Col}>
-						<Form.Label>Password</Form.Label>
-						<Form.Control
-							type="Password"
-							name="password"
-							placeholder="Enter password"
-							id="PasswordField"
-							type="password"
-							className="md-row"
-							required={true}
-							//value={this.state.password}
-							onChange={this.handleChange}
-							errortext="Password is required"
-						/>
-					  </Form.Group>
-					</Form.Row>
-				    <Button variant="primary" type="submit"
-							disabled={this.state.username == undefined || this.state.username == '' || this.state.password == undefined || this.state.password == '' ? true : false}>
-				    	Submit
-			  	    </Button>
-				    <Link to={'/register'} className="md-cell">Not registered yet?</Link>
-                    <AlertMessage>{this.props.error ? `${this.props.error}` : ''}</AlertMessage>
-			      </Form>
-				</Card.Body>
-			</Card>
-            </Page>
+        return (
+				<Card style={style} className="text-center">
+					<Card.Header as="h5">Login</Card.Header>
+					<Card.Body>
+					  <Form className="text-left" onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
+						<Form.Row>
+							<Form.Group as={Col}>
+								<Form.Label>Username</Form.Label>
+								<Form.Control
+									type="text"
+									name="username"
+									placeholder="Enter username"
+									label="Login"
+									id="LoginField"
+									//value={this.state.username}
+									onChange={this.handleChange}
+									errortext="Login is required"
+								 />
+							  </Form.Group>
+						</Form.Row>
+
+						<Form.Row>
+						  <Form.Group as={Col}>
+							<Form.Label>Password</Form.Label>
+							<Form.Control
+								type="Password"
+								name="password"
+								placeholder="Enter password"
+								id="PasswordField"
+								className="md-row"
+								required={true}
+								//value={this.state.password}
+								onChange={this.handleChange}
+								errortext="Password is required"
+							/>
+						  </Form.Group>
+						</Form.Row>
+						<Button variant="primary" type="submit"
+								disabled={this.state.username == undefined || this.state.username == '' || this.state.password == undefined || this.state.password == '' ? true : false}>
+							Submit
+						</Button>
+						<Link to={'/register'} className="md-cell">Not registered yet?</Link>
+						<AlertMessage>{this.props.error ? `${this.props.error}` : ''}</AlertMessage>
+					  </Form>
+					</Card.Body>
+				</Card>
         );
     }
 };

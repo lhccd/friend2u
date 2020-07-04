@@ -11,9 +11,8 @@ export class AuthenticatedHome extends React.Component{
 
     render() {
         return (
-            <Header />
-            
-
-    )
+            <>
+            </>
+        )
     }
 }
