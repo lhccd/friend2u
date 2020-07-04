@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import React from 'react';
-//import "bootstrap/dist/css/bootstrap.min.css"
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
@@ -51,13 +51,11 @@ export default class App extends React.Component {
 
     render() {
         return(
-            <div>
-                <Router>
-                    <Switch>
-                        {this.state.routes.map((route, i) => (<Route key={i} {...route}/>) )}
-                    </Switch>
-                </Router>
-            </div>
+            <Router>
+                <Switch>
+                    {this.state.routes.map((route, i) => (<Route key={i} {...route}/>) )}
+                </Switch>
+            </Router>
         );
     }
 }
