@@ -23,6 +23,7 @@ export default class App extends React.Component {
             title: 'Movie Example App',
             
             role: null,
+            authenticated: false,
             
             routes: [
                 //{ component: Homepage , path: '/home', exact: true},
@@ -38,16 +39,17 @@ export default class App extends React.Component {
                     }
                     else {
                         return (<Redirect to={'/login'}/>)
-                    }}, path: '/add',},*/
+                    }}, path: '/add',},
                 { render: (props) => {
 						return <UserLoginView {...props} setRole={(role) => this.setRole(role)} />
 					},
 					path: '/login'
-				},
-                { component: authSplashScreen(Homepage), path: '/', exact: true},
+				},*/
+                { component: authSplashScreen(UserLoginView), path: '/login', exact: true},
+                { component: authSplashScreen(UserSignupView), path: '/login', exact: true},
+                { component: authSplashScreen(Homepage), test: 'aaa', path: '/', exact: true},
                 { component: authSplashScreen(Homepage), path: '/aaa'},
                 { component: Homepage, path: '/bbb'},
-                { component: UserSignupView, path: '/register'},
                 { component: authSplashScreen(ModeratorView), path: '/moderator'}
             ]
         };

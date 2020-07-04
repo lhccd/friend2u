@@ -23,10 +23,12 @@ export default function authSplashScreen(WrappedComponent) {
   return class extends React.Component {
     constructor(props) {
       super(props);
+ 
       this.state = {
         loading: true,
         authenticated: false,
         role: null,
+        componentName: WrappedComponent.name
       };
     }
 
@@ -54,6 +56,10 @@ export default function authSplashScreen(WrappedComponent) {
       }
     }
     
+    setRole(role) {
+		this.setState({role: role})
+	}
+    
     renderAuthenticated() {
 		return (
 			   <Fragment>
@@ -68,7 +74,13 @@ export default function authSplashScreen(WrappedComponent) {
       if (this.state.loading) return LoadingMessage();
 
       // otherwise, show the desired route
-      if(this.state.authenticated) return this.renderAuthenticated();
+      if(WrappedComponent.name === 'UserLoginView' || WrappedComponent.name === 'UserSignupView') {
+		  if(this.state.authenticated) return <Redirect to={{pathname: '/'}}/>
+		  else return <WrappedComponent {...this.props} setRole={(role) => this.setRole(role)} />
+	  }
+      else{
+		  if(this.state.authenticated) return this.renderAuthenticated();
+      }
       
       const { history, location } = this.props;
 	  

@@ -1,7 +1,7 @@
 "use strict";
 
 import React from 'react';
-import { Form, Button, Card } from 'react-bootstrap';
+import { Form, Button, Card, Col } from 'react-bootstrap';
 import { withRouter, Link } from 'react-router-dom';
 
 import { AlertMessage } from './AlertMessage';
@@ -56,40 +56,41 @@ class UserLogin extends React.Component {
             <Card style={style} className="text-center">
 				<Card.Header as="h5">Login</Card.Header>
 				<Card.Body>
-				  <Form onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
-					<Form.Group>
-					<Form.Label>Email address</Form.Label>
-					<Form.Control
-						type="text"
-						name="username"
-						placeholder="Enter username"
-						label="Login"
-						id="LoginField"
-						type="text"
-						//value={this.state.username}
-						onChange={this.handleChange}
-						errortext="Login is required"
-                     />
-					<Form.Text className="text-muted">
-					  We'll never share your email with anyone else.
-					</Form.Text>
-				  </Form.Group>
+				  <Form className="text-left" onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
+					<Form.Row>
+						<Form.Group as={Col}>
+							<Form.Label>Username</Form.Label>
+							<Form.Control
+								type="text"
+								name="username"
+								placeholder="Enter username"
+								label="Login"
+								id="LoginField"
+								type="text"
+								//value={this.state.username}
+								onChange={this.handleChange}
+								errortext="Login is required"
+							 />
+						  </Form.Group>
+					</Form.Row>
 
-				  <Form.Group>
-					<Form.Label>Password</Form.Label>
-					<Form.Control
-						type="Password"
-						name="password"
-						placeholder="Enter password"
-						id="PasswordField"
-						type="password"
-						className="md-row"
-						required={true}
-						//value={this.state.password}
-						onChange={this.handleChange}
-						errortext="Password is required"
-					/>
-				    </Form.Group>
+					<Form.Row>
+					  <Form.Group as={Col}>
+						<Form.Label>Password</Form.Label>
+						<Form.Control
+							type="Password"
+							name="password"
+							placeholder="Enter password"
+							id="PasswordField"
+							type="password"
+							className="md-row"
+							required={true}
+							//value={this.state.password}
+							onChange={this.handleChange}
+							errortext="Password is required"
+						/>
+					  </Form.Group>
+					</Form.Row>
 				    <Button variant="primary" type="submit"
 							disabled={this.state.username == undefined || this.state.username == '' || this.state.password == undefined || this.state.password == '' ? true : false}>
 				    	Submit
