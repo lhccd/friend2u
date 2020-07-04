@@ -21,7 +21,7 @@ export class HomepageView extends React.Component {
         }
         console.log("working?")
         return (
-            <Homepage></Homepage>
+            <div></div>
         );
     }
 }
