@@ -21,8 +21,8 @@ export class Header extends React.Component {
             }
             
             .nav-item {
-                margin: 3px;
-                padding: 3px;
+                margin: auto;
+                padding: auto;
             }
             
             .nav-item .navdropdown {

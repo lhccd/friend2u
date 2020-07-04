@@ -23,11 +23,11 @@ export default class Page extends React.Component {
 
     render() {
         return (
-            <Container>
-                <Header/>
-                   {this.props.children}
-                <Footer/>
-            </Container>
+                <React.Fragment>
+                    <Header/>
+                       {this.props.children}
+                    <Footer/>
+                </React.Fragment>
         );
     }
 }

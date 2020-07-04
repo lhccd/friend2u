@@ -1,11 +1,3 @@
-#App {
-    width: fit-content;
-    height: 100vh;
-    margin: 0;
-    padding: auto;
-    text-align: center;
-}
-
 .App-logo {
   height: auto;
   pointer-events: none;
