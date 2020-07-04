@@ -6,6 +6,7 @@ export class Footer extends React.Component{
         super(props);
     }
 
+
   render(){
  /*   return(
         <footer className="App-footer">

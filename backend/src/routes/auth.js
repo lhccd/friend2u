@@ -9,7 +9,7 @@ const AuthController = require('../controllers/auth');
 
 router.post('/login', AuthController.login);
 router.post('/register', AuthController.register);
-router.post('/token', middlewares.checkAuthentication, AuthController.token);
+router.post('/refresh_token', middlewares.checkAuthentication, AuthController.refresh_token);
 router.post('/changePassword', middlewares.checkAuthentication, AuthController.changePassword);
 
 router.get('/me', middlewares.checkAuthentication , AuthController.me);

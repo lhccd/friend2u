@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom';
 import '../css/Header.css';
 import {NavBar, Nav, NavItem} from 'react-bootstrap';
 
-
 export class Header extends React.Component{
 
     constructor(props) {
@@ -34,6 +33,7 @@ export class Header extends React.Component{
                     </li>
                 </ul>
             </Nav>
+
             /*<div className='navbar navbar-default'>
                 <ul>
                     <li class="navbar-brand">

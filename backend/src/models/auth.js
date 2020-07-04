@@ -8,7 +8,7 @@ const schema  = {
         unique: true,
     },
     
-    refreshTokens: [String]
+    refreshToken: String
 	
 };
 

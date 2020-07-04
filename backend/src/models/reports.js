@@ -23,7 +23,7 @@ const ReportSchema  = new mongoose.Schema({
         required: true
     },
     issuer: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId, ref: 'User.username',
     },
     reported: {
         type: String,

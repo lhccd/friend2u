@@ -11,7 +11,7 @@ const requiredProperties  = require('../models/user_config');
 
 const authenticationFailedCB = (res,err) => {
 	if(err === 404){
-		return res.status(401).json("Authentication failed");
+		return res.status(404).json("Authentication failed");
 	}
 	console.log(err)
 	return res.status(500).json(err);
@@ -44,7 +44,7 @@ const login = async (req,res) => {
 			//Otherwise we generate the tokens
 			//The access token contains only the id and the username of the user
 			
-			const payload = {id: user._id, username: user.username, role: user.role}
+			const payload = {id: user._id, username: user.username, username: user.username, role: user.role}
 			
 			if(user.banUntilDate) payload.banTime = user.banUntilDate;
 			
@@ -62,15 +62,16 @@ const login = async (req,res) => {
 			
 			
 			//The idea is that when you login, your refresh token is stored.
-			//In this way you can manage different access and revoke tokens
+			//For the moment we only allow one access at a time do the old refresh token is replaced by the new one
+			//
+			// It could be possible to add a refresh token for device.
+			//
 			const query = {
 				user: user._id
 			};
 			
 			const update = {
-				$push: {
-					refreshTokens: refreshToken,
-				}
+				refreshToken: refreshToken
 			};
 			
 			const options = {
@@ -91,17 +92,30 @@ const login = async (req,res) => {
 
 
 
-const token = async (req,res) => {
+const refresh_token = async (req,res) => {
     // refresh the token
     const refreshToken = req.body.refreshToken
-    // if refresh token exists
     
     if(refreshToken) {
+		
+		//check if token exists
+		try{
+			const user = await AuthSchema.findOne({user: req.id});
+			console.log(user)
+			if(!user.refreshToken || user.refreshToken !== refreshToken) throw new Error("Invalid token!")
+		}
+		catch(err){
+			console.log(err)
+			return res.status(401).json({
+				error: 'Unauthorized',
+				message: 'Failed to authenticate token.'
+			});
+		}
 		
 		jwt.verify(refreshToken, config.refreshTokenSecret, (err, decoded) => {
 			if (err){
 				console.log(err)
-				return res.status(401).send({
+				return res.status(401).json({
 					error: 'Unauthorized',
 					message: 'Failed to authenticate token.'
 				});
@@ -114,11 +128,15 @@ const token = async (req,res) => {
 			}
 			// update the token in the list
 			//tokenList[refreshToken].token = token
+			console.log("sending access token")
 			res.status(200).json(response);    
 		});
 		
     } else {
-        res.status(401).send('Invalid request')
+        res.status(401).json({
+			error: 'Unauthorized',
+			message: 'Invalid request'
+		});
     }
 }
 
@@ -129,6 +147,8 @@ const token = async (req,res) => {
 const register = async (req,res) => {
 	
 	var newUser = {}
+	
+	console.log('here')
 	
 	for(var prop of requiredProperties){
 		if (!Object.prototype.hasOwnProperty.call(req.body, prop)) return res.status(400).json({
@@ -142,9 +162,11 @@ const register = async (req,res) => {
     UserSchema.create(newUser, (err, user) => {
 		if(err){
 			if (err.code == 11000) {
+				console.log(err)
 				return res.status(400).json({
 					error: 'User exists',
-					message: err.message
+					duplicateKey: Object.keys(err.keyPattern)[0],
+					
 				});
 			} else {
 				return res.status(500).json({
@@ -209,12 +231,19 @@ const changePassword = (req,res) => {
 const logout = (req, res) => {
 	const refreshToken = req.body.refreshToken
 	const id = req.id
-	const all = req.query.all;
+	//const all = req.query.all;
 	
 	const query = {
 		user: id
 	};
 	
+	var update = {
+		$unset: {
+			refreshToken: 1,
+		}
+	}
+	
+	/*
 	var update = {}
 	if(all)
 		update = {
@@ -228,6 +257,7 @@ const logout = (req, res) => {
 				refreshTokens: refreshToken,
 			}
 		};
+	*/
 	
 	const options = {
 		new: true,
@@ -248,7 +278,7 @@ const logout = (req, res) => {
 module.exports = {
     login,
     register,
-    token,
+    refresh_token,
     logout,
     me,
     moderator,
