@@ -7,6 +7,8 @@ import { MenuButton } from 'react-md';
 import {Jumbotron} from './Jumbotron';
 import styled from 'styled-components';
 
+import AuthService from '../services/AuthService';
+
 export class Header extends React.Component {
     constructor(props) {
         super(props);
@@ -40,6 +42,10 @@ export class Header extends React.Component {
             }
            
         `;
+        
+        let { role } = this.props; 
+        
+        console.log("role: " + role)
 
         return (
             <React.Fragment>
@@ -67,13 +73,15 @@ export class Header extends React.Component {
                             </Nav.Item>
                         </Nav>
                         <Nav>
-                            <Nav.Item class="ml-auto">
+                            <Nav.Item className="ml-auto">
                                 <NavDropdown title="My Account" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="#/report_user">Report user</NavDropdown.Item>
                                     <NavDropdown.Item href="#/report_activity">Report activity</NavDropdown.Item>
                                     <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                                    {role === 'moderator'?<NavDropdown.Item href="#/moderator">Moderator console</NavDropdown.Item>:''}
                                     <NavDropdown.Divider/>
                                     <NavDropdown.Item href="#/report">Test</NavDropdown.Item>
+                                    <NavDropdown.Item onClick={() => {console.log("logging out");AuthService.logout();window.location = "/#login"}} >Logout</NavDropdown.Item>
                                 </NavDropdown>
                             </Nav.Item>
                         </Nav>

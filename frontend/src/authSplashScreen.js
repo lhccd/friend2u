@@ -8,6 +8,10 @@ import AuthService from './services/AuthService';
 
 import { Redirect } from 'react-router-dom';
 
+import Page from './components/Page'
+
+import styled from "styled-components";
+
 
 //Loading mes
 function LoadingMessage() {
@@ -30,6 +34,8 @@ export default function authSplashScreen(WrappedComponent) {
         role: null,
         componentName: WrappedComponent.name
       };
+      
+      this.setRole.bind(this)
     }
 
     async componentDidMount() {
@@ -63,7 +69,7 @@ export default function authSplashScreen(WrappedComponent) {
     renderAuthenticated() {
 		return (
 			   <Fragment>
-                <Page>
+				<Page role={this.state.role}>
                     <WrappedComponent {...this.props} role={this.state.role} />
                 </Page>
 			   </Fragment>)
@@ -74,13 +80,15 @@ export default function authSplashScreen(WrappedComponent) {
       if (this.state.loading) return LoadingMessage();
 
       // otherwise, show the desired route
-      if(WrappedComponent.name === 'UserLoginView' || WrappedComponent.name === 'UserSignupView') {
+      if(WrappedComponent.name === 'UserLoginView') {
 		  if(this.state.authenticated) return <Redirect to={{pathname: '/'}}/>
 		  else return <WrappedComponent {...this.props} setRole={(role) => this.setRole(role)} />
 	  }
-      else{
-		  if(this.state.authenticated) return this.renderAuthenticated();
-      }
+      else if(WrappedComponent.name === 'UserSignupView') {
+		  if(this.state.authenticated) return <Redirect to={{pathname: '/'}}/>
+		  else return <WrappedComponent {...this.props} />
+	  }
+      else if(this.state.authenticated) return this.renderAuthenticated();
       
       const { history, location } = this.props;
 	  

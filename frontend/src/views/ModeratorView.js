@@ -65,14 +65,11 @@ export class ModeratorView extends React.Component {
 		if(show) this.getReportListById(id)
 		this.setState({showModal: show})
 	}
-
-    render() {
-		const {role}     = this.props;
+	
+	renderModerator() {
 		const {category, showModal, reports, reportsModal} = this.state;
 		
-        return (
-          <div>{role === 'moderator'?
-			  <Moderator
+		return <Moderator
 				category={category}
 				reports={reports}
 				getReports={this.getReportList}
@@ -80,13 +77,17 @@ export class ModeratorView extends React.Component {
 				showModal={showModal}
 				toggleModal={this.toggleModal}
 				reportsModal={reportsModal}
-			  >
-			  </Moderator>:
-			  <NotAuthorized></NotAuthorized>}
-          
-          <button onClick={() => {console.log("logging out");AuthService.logout();window.location = "/#login"}}>logout</button>
-          </div>
-        );
+			  />;
+	}
+	
+	renderNotAuthorized() {
+		return <NotAuthorized/>;
+	}
+
+    render() {
+		const {role}     = this.props;
+		
+        return role === 'moderator'?this.renderModerator():this.renderNotAuthorized();
     }
 }
 

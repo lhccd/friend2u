@@ -1,6 +1,7 @@
 "use strict";
 
 import React from 'react';
+import { Fragment } from 'react';
 import AuthService from '../services/AuthService';
 
 import Page from './Page';
@@ -18,7 +19,7 @@ export class Moderator extends React.Component{
 
   render(){
     return(
-		<Page>
+		<Fragment>
 			<Nav variant="tabs" activeKey={this.props.category} onSelect={this.props.handleSelect}>
 			  <Nav.Item>
 				<Nav.Link eventKey="users">Users</Nav.Link>
@@ -38,7 +39,7 @@ export class Moderator extends React.Component{
 			<Button onClick={this.props.getReports} >new reports</Button>
 			
 			<ReportModal show={this.props.showModal} toggleModal={this.props.toggleModal} reports={this.props.reportsModal}  />
-		</Page>
+		</Fragment>
     );
   }
 }

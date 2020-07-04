@@ -24,7 +24,7 @@ export default class Page extends React.Component {
     render() {
         return (
                 <React.Fragment>
-                    <Header/>
+                    <Header role={this.props.role}/>
                        {this.props.children}
                     <Footer/>
                 </React.Fragment>

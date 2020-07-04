@@ -8,7 +8,7 @@ export class HomepageView extends React.Component {
 
     constructor(props) {
         super(props);
-
+        console.log(props.role)
         this.state = {
             loading: false,
             data: []
