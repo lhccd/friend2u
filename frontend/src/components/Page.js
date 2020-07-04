@@ -26,7 +26,7 @@ export default class Page extends React.Component {
             <Container>
                 <Header/>
                    {this.props.children}
-                {/*<Footer/>*/}
+                <Footer/>
             </Container>
         );
     }
