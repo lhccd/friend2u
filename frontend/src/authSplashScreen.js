@@ -67,11 +67,13 @@ export default function authSplashScreen(WrappedComponent) {
 	}
     
     renderAuthenticated() {
+        //Trying something else
+        // <Page role={this.state.role}>
+        //                     <WrappedComponent {...this.props} role={this.state.role} />
+        //                 </Page>
 		return (
 			   <Fragment>
-				<Page role={this.state.role}>
-                    <WrappedComponent {...this.props} role={this.state.role} />
-                </Page>
+                   <WrappedComponent {...this.props} role={this.state.role} />
 			   </Fragment>)
 	}
 

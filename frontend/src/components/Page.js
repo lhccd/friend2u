@@ -23,7 +23,10 @@ export default class Page extends React.Component {
 
     render() {
         return (
-                <React.Fragment>
+                <React.Fragment style={{
+                    color: 'blue',
+                    background: '#353a3f',
+                }}>
                     <Header role={this.props.role}/>
                        {this.props.children}
                     <Footer/>

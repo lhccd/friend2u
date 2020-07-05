@@ -38,50 +38,50 @@ export class ReportUserPage extends React.Component {
         `
         return (
             <Styles>
-            <Page>
-                <h1 className="h1">The user is ...</h1>
-                <Container>
-                <Form className="frm">
-                    <Row>
-                        <Col>
-                    <Form.Check inline label="Seems untrustworthy" type={"checkbox"}/>
+                <Page>
+                    <h1 className="h1">The user is ...</h1>
+                    <Container>
+                    <Form className="frm">
+                        <Row>
+                            <Col>
+                        <Form.Check inline label="Seems untrustworthy" type={"checkbox"}/>
+                            </Col>
+                            <Col>
+                        <Form.Check inline label="is positioned in the wrong category" type={"checkbox"}/>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                        <Form.Check inline label="is used as advertisement" type={"checkbox"}/>
                         </Col>
                         <Col>
-                    <Form.Check inline label="is positioned in the wrong category" type={"checkbox"}/>
+                        <Form.Check inline label="is not available anymore" type={"checkbox"}/>
                         </Col>
-                    </Row>
-                    <Row>
+                        </Row>
+                        <Row>
+                            <Col>
+                        <Form.Check inline label="is spam" type={"checkbox"}/>
+                        </Col>
                         <Col>
-                    <Form.Check inline label="is used as advertisement" type={"checkbox"}/>
-                    </Col>
-                    <Col>
-                    <Form.Check inline label="is not available anymore" type={"checkbox"}/>
-                    </Col>
-                    </Row>
-                    <Row>
+                        <Form.Check inline label="consists of sexual content" type={"checkbox"}/>
+                        </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                        <Form.Check inline label="is forbidden" type={"checkbox"}/>
+                        </Col>
                         <Col>
-                    <Form.Check inline label="is spam" type={"checkbox"}/>
-                    </Col>
-                    <Col>
-                    <Form.Check inline label="consists of sexual content" type={"checkbox"}/>
-                    </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                    <Form.Check inline label="is forbidden" type={"checkbox"}/>
-                    </Col>
-                    <Col>
-                    <Form.Check inline label="is fraudulent" type={"checkbox"}/>
-                    </Col>
-                    </Row>
-                </Form>
+                        <Form.Check inline label="is fraudulent" type={"checkbox"}/>
+                        </Col>
+                        </Row>
+                    </Form>
 
-                <InputGroup>
-                    <FormControl as="textarea" aria-label="With textarea" placeholder="Please write a description to Your report..."/>
-                </InputGroup>
-                </Container>
-                <Button variant="primary">Submit</Button>
-            </Page>
+                    <InputGroup>
+                        <FormControl as="textarea" aria-label="With textarea" placeholder="Please write a description to Your report..."/>
+                    </InputGroup>
+                    </Container>
+                    <Button variant="primary">Submit</Button>
+                </Page>
             </Styles>
         );
     }

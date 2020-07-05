@@ -5,7 +5,7 @@ import jumbotronBg from '../media/jumbotronBg.jpg';
 
 const Styles = styled.div`
     .jumbo {
-        background: url(${jumbotronBg}) no-repeat fixed bottom;
+        background: url(${jumbotronBg});
         background-size: cover;
         color: #efefef;
         text-align: center;

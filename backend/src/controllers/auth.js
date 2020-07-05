@@ -44,7 +44,7 @@ const login = async (req,res) => {
 			//Otherwise we generate the tokens
 			//The access token contains only the id and the username of the user
 			
-			const payload = {id: user._id, username: user.username, username: user.username, role: user.role}
+			const payload = {id: user._id, username: user.username, role: user.role}
 			
 			if(user.banUntilDate) payload.banTime = user.banUntilDate;
 			
