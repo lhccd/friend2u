@@ -13,6 +13,6 @@ const dataTableStyle = {
 
 export const ReportList = ({reports, toggleModal}) => (
     <Fragment>
-		{reports.map((r) => <ReportListRow key={`reportitem-${r._id}`} count={r.count} toggleModal={toggleModal} />)}
+		{reports.map((r) => <ReportListRow key={`reportitem-${r._id}`} id={r._id} username={r.reported[0].username} count={r.count} toggleModal={toggleModal} />)}
     </Fragment>
 );

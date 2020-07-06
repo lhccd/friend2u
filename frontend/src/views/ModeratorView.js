@@ -17,11 +17,16 @@ export class ModeratorView extends React.Component {
 			category: 'users',
 			reports: [],
 			showModal: false,
-			reportsModal: []
+			reportsModal: [],
+			showingUser: {
+				id: '',
+				username: ''
+			},
 		}
 		
 		this.handleChangeCategory = this.handleChangeCategory.bind(this);
 		this.getReportList = this.getReportList.bind(this);
+		this.banUser = this.banUser.bind(this);
 		this.toggleModal = this.toggleModal.bind(this);
     }
     
@@ -29,7 +34,6 @@ export class ModeratorView extends React.Component {
 		try{
 			let reports = await ReportService.getReportList(this.state.category)
 			reports = this.state.reports.concat(reports)
-			console.log(reports[0].reports[0]._id)
 			this.setState({reports: reports[0].reports})
 		}
 		catch(err){
@@ -40,13 +44,27 @@ export class ModeratorView extends React.Component {
 		}
 	}
 	
-	async getReportListById(id){
+	async getReportListById(id, username){
 		try{
 			let reports = await ReportService.getReportList(this.state.category,null,id)
 			console.log(reports)
-			this.setState({reportsModal: reports.reports})
+			this.setState({reportsModal: reports.reports, showingUser: {id: id, username: username}})
 			//console.log(reports[0].reports[0]._id)
 			//this.setState({reports: reports[0].reports})
+		}
+		catch(err){
+            console.error(err);
+            this.setState({
+                error: err
+            });
+		}
+	}
+    
+	async banUser(id, time){
+		try{
+			let reports = await ReportService.banUser(this.state.showingUser.id,time)
+			console.log(reports)
+			this.setState({reportsModal: [], showingUser: {id: '', username: ''}, showModal: false})
 		}
 		catch(err){
             console.error(err);
@@ -60,22 +78,24 @@ export class ModeratorView extends React.Component {
 		this.setState({category: category})
 	}
 	
-	toggleModal(show,id) {
+	toggleModal(show,id,username) {
 		//TODO: Retrieve reports
-		if(show) this.getReportListById(id)
+		if(show) this.getReportListById(id, username)
 		this.setState({showModal: show})
 	}
 	
 	renderModerator() {
-		const {category, showModal, reports, reportsModal} = this.state;
+		const {category, showModal, reports, reportsModal, showingUser} = this.state;
 		
 		return <Moderator
 				category={category}
 				reports={reports}
 				getReports={this.getReportList}
+				banUser={this.banUser}
 				handleSelect={this.handleChangeCategory}
 				showModal={showModal}
 				toggleModal={this.toggleModal}
+				showingUser={showingUser}
 				reportsModal={reportsModal}
 			  />;
 	}
@@ -85,7 +105,7 @@ export class ModeratorView extends React.Component {
 	}
 
     render() {
-		const {role}     = this.props;
+		const {role} = this.props;
 		
         return role === 'moderator'?this.renderModerator():this.renderNotAuthorized();
     }

@@ -38,6 +38,26 @@ export default class ReportService {
             });
         });
     }
+    
+    static banUser(id, time) {
+		let url = `${this.baseURL()}/user/block`
+		
+		const data = {
+			banningUser: id,
+			//time: time
+		}
+		
+        return new Promise((resolve, reject) => {
+            HttpService.post(url,
+				data,
+				function(data) {
+					console.log(data)
+					resolve(data);
+				}, function(textStatus) {
+					reject(textStatus);
+            });
+        });
+    }
 
 
 }

@@ -32,14 +32,13 @@ const blockUser = (req,res) => {
 const unblockUser = (req,res) => {
 	if (!Object.prototype.hasOwnProperty.call(req.body, 'unbanningUser')) return res.status(400).json({
         error: 'Bad Request',
-        message: 'The request body must contain a banningUser property'
+        message: 'The request body must contain a unbanningUser property'
     });
+
     
-    var time = req.body.time || DEFAULT_TIME;
-    
-    UserSchema.findOneAndUpdate({_id: req.body.banningUser, role: 'user'}, {$unset: {banUntilDate: ""}},(err, user) => {
+    UserSchema.findOneAndUpdate({_id: req.body.unbanningUser, role: 'user'}, {$unset: {banUntilDate: ""}},(err, user) => {
 		if(err) return res.status(400).json({"error": "The user doesn't exist"});
-	
+		console.log(user)
 		return res.status(200).json({"message": "user unbanned"})	
 	})
     
@@ -65,7 +64,9 @@ const listReports = (req,res,type) => {
 	if(req.query.timestamp) query.createdAt = { $gt : req.query.timestamp }
 	if(req.params.id) query.reported = req.params.id
 	
-	ReportSchema.find(query, null, {limit: limit}, (err, reports) => {
+	console.log('here')
+	
+	ReportSchema.find(query, null, {limit: limit}).populate('reported', 'username').exec((err, reports) => {
 		if(err) return res.status(500).send(err);
 		
 		let ret = {}
@@ -93,13 +94,30 @@ const groupReportsById = (req,res,type) => {
 	}
 	
 	const aggregatorOpts = [
-    {
-        $group: {
-            _id: "$reported",
-            count: { $sum: 1 }
-        }
-    }
-]
+		{
+			$group: {
+				_id: "$reported",
+				count: { $sum: 1 }
+			}
+		},
+		{
+			$limit: limit,
+		},
+		{
+			$lookup: {
+				from: UserSchema.collection.name,
+				localField: '_id',
+				foreignField: '_id',
+				as: 'reported'
+			}
+		},
+		{
+			"$project": {
+				"reported.username": 1,
+				"count": 1.
+			 }
+		 }
+	]
 	
 	ReportSchema.aggregate(aggregatorOpts, (err, reports) => {
 		if(err) return res.status(500).send(err);

@@ -4,21 +4,19 @@ import React from 'react';
 import { Fragment } from 'react';
 import { Card, Button, Text } from 'react-bootstrap';
 
-import Page from './Page'
-
 const dataTableStyle = {
   'marginBottom': '36px'
 };
 
-export const ReportListRow = ({id, count, toggleModal}) => (
-<Card key={id}>
+export const ReportListRow = ({id, username, count, toggleModal}) => (
+<Card>
   <Card.Header>User</Card.Header>
   <Card.Body>
-    <Card.Title>{id}</Card.Title>
+    <Card.Title>{username}</Card.Title>
     <Card.Text>
       There have been <strong>{count}</strong> reports about this user
     </Card.Text>
-    <Button variant="primary" onClick={() => toggleModal(true, id)}>List all reports</Button>
+    <Button variant="primary" onClick={() => toggleModal(true, id, username)}>List all reports</Button>
   </Card.Body>
 </Card>
 );

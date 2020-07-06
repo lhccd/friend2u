@@ -38,7 +38,13 @@ export class Moderator extends React.Component{
 			
 			<Button onClick={this.props.getReports} >new reports</Button>
 			
-			<ReportModal show={this.props.showModal} toggleModal={this.props.toggleModal} reports={this.props.reportsModal}  />
+			<ReportModal
+				banUser={this.props.banUser}
+				showingUser={this.props.showingUser}
+				show={this.props.showModal}
+				toggleModal={this.props.toggleModal}
+				reports={this.props.reportsModal}
+			/>
 		</Fragment>
     );
   }
