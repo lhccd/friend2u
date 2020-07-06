@@ -17,20 +17,25 @@ export class ActivityListRow extends React.Component {
         super(props);
         this.state = {
             address: "",
-            first: true,
-            price: ""
+            first: true
         }
+
+        this.setPriceSymbols = this.setPriceSymbols.bind(this);
+        this.getLocation = this.getLocation.bind(this);
     }
 
 
     async getLocation(location) {
 
 
+        console.log(location)
+        
         var query = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+location.coordinates[1]+","+location.coordinates[0]+"&key=AIzaSyCm-HwLhA8qvL4JPcBl9aKojPcHSKOdwY8"
         console.log("Searching for: "+encodeURI(query))
 
+    
         var header = new Headers()
-
+        
         try{
             let resp = await fetch(query, {
             method: 'GET',
@@ -38,7 +43,9 @@ export class ActivityListRow extends React.Component {
            })
 
            var res = await resp.json()
-           console.log(res.results[0].formatted_address)
+           var out = res.results[0].formatted_address
+           //console.log(out)
+           //return res.results[0].formatted_address
            this.setState({ ["address"]: res.results[0].formatted_address })
 
         } catch(error) {
@@ -55,20 +62,21 @@ export class ActivityListRow extends React.Component {
             symbols+="€"
         }
         console.log(symbols)
-        this.setState({ ["price"]: symbols })
+        return symbols
+        //this.setState({ ["price"]: symbols })
     }
 
     render() {
         console.log("ALW: ")
-        console.log(this.props.activity)
-
+        console.log(this.props.activity)   
+        
+        
         if(this.state.first) {
             this.getLocation(this.props.activity.location)
-            this.setPriceSymbols(this.props.activity.price)
             this.setState({ ["first"]: false })
         }
 
-        
+
         
         return (
             
@@ -76,7 +84,7 @@ export class ActivityListRow extends React.Component {
 
                 <TableColumn>
                     
-                        <TableBody>
+                <TableBody>
                             <TableRow>
                                 <TableColumn width={250}>
                                     Category: {this.props.activity.category}
@@ -84,17 +92,20 @@ export class ActivityListRow extends React.Component {
                                 <TableColumn width={500}>
                                     Activityname: {this.props.activity.activityName}
                                 </TableColumn>
-                                <TableColumn width={250}>
-                                    Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()};
+                                <TableColumn width={150}>
+                                    Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}
                                 </TableColumn>
                                 <TableColumn>
-                                    Address: {this.state.address}<Link to={`/show/${this.props.activity._id}`}><FontIcon>image</FontIcon></Link>
+                                    Address: {this.state.address}
                                 </TableColumn>
                                 <TableColumn>
-                                    Price: {this.state.price.toString()}
+                                    <Link to={`/detail/${this.props.activity._id}`}><FontIcon>image</FontIcon></Link>
+                                </TableColumn>
+                                <TableColumn>
+                                    Price: {this.setPriceSymbols(this.props.activity.price)}
                                 </TableColumn>
                             </TableRow>
-                        </TableBody>
+                </TableBody>
                     
                 </TableColumn>
                

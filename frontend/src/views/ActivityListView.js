@@ -27,6 +27,7 @@ export class ActivityListView extends React.Component {
         console.log("Let's try to get activites.")
         
         ActivityService.getActivities().then((data) => {
+            console.log('Heeeelooooo')
             this.setState({
                 data: [...data],
                 loading: false
@@ -79,7 +80,7 @@ export class ActivityListView extends React.Component {
         console.log("Test_filter:")
         console.log(test_filters)
 
-        ActivityService.searchActivities(test_filters)
+        ActivityService.searchActivities(filters)
         .then((data) => {
             console.log("Returned data")
             console.log(data)

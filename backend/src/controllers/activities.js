@@ -12,13 +12,17 @@ const create = (req, res) => {
         message: 'The request body is empty'
     });
 
+    console.log("create the following: ")
+    console.log(req.body)
     // Try to crate an activity.
+    /*
     ActivityModel.create(req.body)
         .then(activity => res.status(201).json(activity))
         .catch(error => res.status(500).json({
             error: 'Internal server error - activities_create',
             message: error.message
         }));
+        */
 };
 
 // Reading an existing activity.
@@ -317,6 +321,7 @@ const search = (async(req, res) => {
 
     console.log("Request was made with: ")
     console.log(req.body)
+    console.log(req.params)
 
     if (Object.keys(req.body).length === 0)
     {

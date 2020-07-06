@@ -1,3 +1,4 @@
 backend/node_modules/*
 .idea/*
 backend/dump/*  
+frontend/node_modules/*

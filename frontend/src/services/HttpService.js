@@ -44,6 +44,8 @@ export default class HttpService {
 
             var result = await resp.json()
 
+            console.log(result)
+
             onSuccess(result)
          } catch(error) {
              console.log(error)
@@ -136,9 +138,11 @@ export default class HttpService {
     static async post(url, data, onSuccess, onError) {
         let token = window.localStorage['jwtToken'];
         let header = new Headers();
+        /*
         if(token) {
             header.append('Authorization', `JWT ${token}`);
         }
+        */
         header.append('Content-Type', 'application/json');
 
         try {
@@ -147,6 +151,12 @@ export default class HttpService {
                 headers: header,
                 body: JSON.stringify(data)
             });
+
+            var result = await resp.json()
+            //console.log(await resp.json())
+
+            onSuccess(result)
+            /*
 
             if(this.checkIfUnauthorized(resp)) {
                 window.location = '/#login';
@@ -165,6 +175,8 @@ export default class HttpService {
                 }
                 onSuccess(resp);
             }
+
+            */
         } catch(err) {
             onError(e.message);
         }

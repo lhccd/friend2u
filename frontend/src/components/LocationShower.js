@@ -1,29 +1,50 @@
 import React, { useRef } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import ReactCSSTransitionGroup from 'react-transition-group';
-import { Button, Card , Row, Col, Form } from 'react-bootstrap';
  
 
 
-export class LocationPicker extends React.Component {
+export class LocationShower extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-              position: { lat: 48.14137159149285, lng: 11.5969768950502 },
-              mapPos: { lat: 48.14137159149285, lng: 11.5969768950502 },
-              search: "",
-              showMap: "none"
+              mapPos: { lat: this.props.coords[1], lng: this.props.coords[0] },
+              showMap: "none",
+              address: "",
+              first: true
             }
-        this.onClick = this.onClick.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleMapSubmit = this.handleMapSubmit.bind(this);
-        this.handleMap = this.handleMap.bind(this);
+        
+        this.handleMap = this.handleMap.bind(this)
 
         // Create some references to be able to access html-components.
         this.searchButtonRef = React.createRef();
         this.mapRef = React.createRef();
       }
+
+      async getLocation(location) {
+
+
+        var query = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+location[1]+","+location[0]+"&key=AIzaSyCm-HwLhA8qvL4JPcBl9aKojPcHSKOdwY8"
+        console.log("Searching for: "+encodeURI(query))
+
+        var header = new Headers()
+
+        try{
+            let resp = await fetch(query, {
+            method: 'GET',
+            headers: header
+           })
+
+           var res = await resp.json()
+           console.log(res.results[0].formatted_address)
+           this.setState({ ["address"]: res.results[0].formatted_address })
+
+        } catch(error) {
+            console.log(error)
+        }
+        
+    }
     
 
       handleChange(event) {
@@ -31,38 +52,9 @@ export class LocationPicker extends React.Component {
         this.setState({ [event.target.name]: event.target.value });
       }
 
-      handleMapSubmit(event) {
-        var query = "https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURI(this.state["search"])+"&key=AIzaSyCm-HwLhA8qvL4JPcBl9aKojPcHSKOdwY8"
-        var loc = this.state.position
-        console.log("Searching for: "+encodeURI(this.state["search"]))
-        httpGetAsync(query, (res) => {
-          var out = JSON.parse(res)
-          loc = out.results[0].geometry.location//{ lat: out.results[0].geometry.location.lat, lng: out.results[0].geometry.location.lng}
-          console.log(out)
-          console.log(loc)
-          this.setState({ ["position"]: loc })
-          this.setState({ ["mapPos"]: loc })
-          this.props.onLocChange(loc)
-        })
-        event.preventDefault();
-      }
-
-
-      onClick(t, map, coord) {
-        const { latLng } = coord;
-        const lat = latLng.lat();
-        const lng = latLng.lng();
-        const newcoords = {lat: lat, lng: lng}
-        console.log("Marker set to: lat="+newcoords.lat+"; lng="+newcoords.lng)
-    
-        this.setState({ ["position"]: newcoords });
-        this.props.onLocChange(newcoords)
-      }
-
-
       handleMap(event) {
         //console.log(this.state.showMap)
-        console.log(this.state)
+        //console.log(this.state)
         console.log(this.searchButtonRef)
         if(this.state.showMap === "none") {
           console.log("none")
@@ -79,10 +71,6 @@ export class LocationPicker extends React.Component {
           this.searchButtonRef.current.textContent = "Show Map"
         }
       }
-
-      getLocation() {
-        return this.state.position
-      }
     
       render() {
         const mapStyle = {
@@ -90,11 +78,16 @@ export class LocationPicker extends React.Component {
           //transitionTimingFunction: 'ease-in-out',
           transition: '2s ease-in-out'
         }
+
+        if(this.state.first) {
+          this.getLocation(this.props.coords)
+          this.setState({ ["first"]: false })
+        }
+
+        console.log(this.state)
         return (
           <div>
-            Choose the location:
-            <input type="text" name="search" placeholder="Search location" value={this.state.search} onChange={this.handleChange}/>
-            <Button onClick={this.handleMapSubmit}>Find location</Button>
+            Address: {this.state.address}
             <div>
               <button type="button" name="ShowMap" ref={this.searchButtonRef} onClick={this.handleMap}>Show map</button>
                 <div ref={this.mapRef} style={mapStyle}>
@@ -103,11 +96,11 @@ export class LocationPicker extends React.Component {
               style={{ width: "50rem", height: "30rem" }}
               className={"map"}
               zoom={14}
-              onClick={this.onClick}
-              initialCenter={{ lat: 48.14137159149285, lng: 11.5969768950502 }}
+              
+              initialCenter={this.state.mapPos}
               center = {this.state.mapPos}
             >
-            <Marker position={this.state.position}/>
+            <Marker position={this.state.mapPos}/>
             </Map>
                 </div>
             </div>
@@ -274,7 +267,7 @@ export class LocationPicker extends React.Component {
  
 export default GoogleApiWrapper({
   apiKey: ("AIzaSyCm-HwLhA8qvL4JPcBl9aKojPcHSKOdwY8")
-})(LocationPicker)
+})(LocationShower)
 
 
 
