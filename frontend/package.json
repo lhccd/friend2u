@@ -5,10 +5,11 @@
   "dependencies": {
     "bootstrap": "^4.5.0",
     "jwt-decode": "^2.2.0",
-    "react": "16.8.4",
-    "react-bootstrap": "^1.0.1",
     "react-bootstrap-date-picker": "^5.1.0",
     "react-datepicker": "^3.0.0",
+    "google-maps-react": "^2.0.6",
+    "react": "16.8.4",
+    "react-bootstrap": "^1.0.1",
     "react-dom": "16.8.4",
     "react-md": "^1.2.11",
     "react-phone-number-input": "^3.0.24",
@@ -37,7 +38,7 @@
     "webpack-merge": "4.1.0"
   },
   "scripts": {
-    "start": "webpack-dev-server --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0",
     "build": "webpack --config webpack.prod.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

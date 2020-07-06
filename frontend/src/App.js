@@ -8,6 +8,9 @@ import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-route
 import { UserLoginView } from "./views/UserLoginView";
 import {HomepageView} from "./views/HomepageView";
 import { routes } from "./routes/routes";
+import { ActivityListView } from "./views/ActivityListView";
+import { ActivityDetailedView } from './views/ActivityDetailedView';
+import { ActivityCreateView } from './views/ActivityCreateView'
 
 
 
@@ -19,6 +22,29 @@ export default class App extends React.Component {
         this.state = {
             title: 'Friend2U App',
             routes: routes,
+            routes: [
+                {component: HomepageView, path:'/', exact: true},
+                { component: ActivityListView, path: '/activities/search', exact: true},
+                { component: ActivityDetailedView , path: '/detail/:id'},
+                { component: ActivityCreateView, path: '/activities/create' }
+                /*
+                { render: (props) => {
+                        if(true) { //UserService.isAuthenticated()) {
+                            return (<MovieFormView {... props} />)
+                        }
+                        else {
+                            return (<Redirect to={'/login'}/>)
+                        }} , path: '/edit/:id'},
+                { render: (props) => {
+                    if(UserService.isAuthenticated()) {
+                        return (<MovieFormView {... props} />)
+                    }
+                    else {
+                        return (<Redirect to={'/login'}/>)
+                    }}, path: '/add',},
+                { component: UserLoginView, path: '/login'}, */
+                //{ component: UserSignupView, path: '/register'}
+            ]
         };
     }
     

@@ -6,43 +6,99 @@ export default class HttpService {
     constructor() {
     }
 
-    static apiURL() {return 'http://localhost:3000'; }
-    
+    static OurapiURL() {return 'http://localhost:3000'; }
+
     static async get(url, onSuccess, onError) {
-		console.log("get")
-        let token = await TokenService.refreshToken();
+        console.log(url)
+        console.log("Get_HttpService")
+        let token = window.localStorage['accessToken'];
         let header = new Headers();
         if(token) {
             header.append('Authorization', `Bearer ${token}`);
         }
 
-        try{
-			let res = await fetch(url, {
-				method: 'GET',
-				headers: header,
-			})
-			
-			
-			if(!this.isResAuthenticated(res)) {
-				console.log("here")
-				window.location = '/#login';
+        console.log(this.OurapiURL())
+
+        /*
+        fetch(url, {
+             method: 'GET',
+             headers: header
+         }).then((resp) => {
+			 return this.checkIfAuthorized(resp);
+		 }).then((authorized) => {
+			 if(!authorized) window.location = '/#login';
+			 else return resp.json();
+		 }).then((resp) => {
+             if(resp.error) {
+                 onError(resp.error);
+             }
+             else onSuccess(resp);
+         }).catch((e) => {
+             onError(e.message);
+         });
+         */
+
+         try{
+             let resp = await fetch(url, {
+             method: 'GET',
+             headers: header
+            })
+
+            var result = await resp.json()
+
+            console.log(result)
+
+            onSuccess(result)
+         } catch(error) {
+             console.log(error)
+         }
+         
+    }
+
+
+    static async modGet(url, data, onSuccess, onError) {
+        
+        console.log(data)
+        console.log(JSON.stringify(data))
+        let header = new Headers();
+        console.log(header)
+        header.append('Content-Type', 'application/json');
+        
+        try {
+            let resp = await fetch(url, {
+                method: 'PUT',
+                headers: header,
+                body: JSON.stringify(data),
+            });
+
+            var result = await resp.json()
+            //console.log(await resp.json())
+
+            onSuccess(result)
+
+            /*
+            if(this.checkIfUnauthorized(resp)) {
+                window.location = '/#login';
                 return;
-			}
-			
-			let json = await res.json()
-			
-			if(json.error) {
-                onError(res.error);
             }
-            else{
-				onSuccess(json);
-			}
-		}
-		catch(err){
-			console.log(err)
-			return onError(err.message);
-		}
-	}
+            else {
+                resp = await resp.json();
+            }
+
+            if(resp.error) {
+                onError(resp.error);
+            }
+            else {
+                if(resp.hasOwnProperty('token')) {
+                    window.localStorage['jwtToken'] = resp.token;
+                }
+                onSuccess(resp);
+                
+            }*/
+        } catch(err) {
+            onError(err.message);
+        }
+    }
 
     static async put(url, data, onSuccess, onError) {
         let token = window.localStorage['jwtToken'];
@@ -89,21 +145,28 @@ export default class HttpService {
 		console.log("post")
         let token = await TokenService.refreshToken();
         let header = new Headers();
+        /*
         if(token) {
             header.append('Authorization', `Bearer ${token}`);
         }
+        */
         header.append('Content-Type', 'application/json');
 
-        try{
-			let res = await fetch(url, {
-				method: 'POST',
-				headers: header,
-				body: JSON.stringify(data)
-			})
-			
-			
-			if(!this.isResAuthenticated(res)) {
-				window.location = '/#login';
+        try {
+            let resp = await fetch(url, {
+                method: 'POST',
+                headers: header,
+                body: JSON.stringify(data)
+            });
+
+            var result = await resp.json()
+            //console.log(await resp.json())
+
+            onSuccess(result)
+            /*
+
+            if(this.checkIfUnauthorized(resp)) {
+                window.location = '/#login';
                 return;
 			}
 			
@@ -112,14 +175,24 @@ export default class HttpService {
 			if(json.error) {
                 onError(json);
             }
-            else{
-				onSuccess(json);
-			}
-		}
-		catch(err){
-			console.log(err)
-			return onError(err.message);
-		}
+            else {
+                resp = await resp.json();
+            }
+
+            if(resp.error) {
+                onError(resp.error);
+            }
+            else {
+                if(resp.hasOwnProperty('token')) {
+                    window.localStorage['jwtToken'] = resp.token;
+                }
+                onSuccess(resp);
+            }
+
+            */
+        } catch(err) {
+            onError(e.message);
+        }
     }
 
 
@@ -162,9 +235,15 @@ export default class HttpService {
 		return res.status !== 401;
 	}
 
-	//In order to check if user is authorized we try to refresh the token (if it was expired)
-    static async checkIfAuthorized(res) {
-		if(res.status !== 401) return true;
+        if(res.status === 401) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    static checkIfAuthorized(res) {
+		const url = this.OurapiURL() + "/auth/token";
 		
 		let message = await res.json();
 		if(message.error !== 'TokenExpired') return false 

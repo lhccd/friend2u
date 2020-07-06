@@ -12,13 +12,17 @@ const create = (req, res) => {
         message: 'The request body is empty'
     });
 
+    console.log("create the following: ")
+    console.log(req.body)
     // Try to crate an activity.
+    /*
     ActivityModel.create(req.body)
         .then(activity => res.status(201).json(activity))
         .catch(error => res.status(500).json({
             error: 'Internal server error - activities_create',
             message: error.message
         }));
+        */
 };
 
 // Reading an existing activity.
@@ -314,6 +318,11 @@ const getActivitiesInRadius = ((req, res) => {
 
 // Search for an activity with specified parameters.
 const search = (async(req, res) => {
+
+    console.log("Request was made with: ")
+    console.log(req.body)
+    console.log(req.params)
+
     if (Object.keys(req.body).length === 0)
     {
         return res.status(400).json({
@@ -418,6 +427,7 @@ const search = (async(req, res) => {
 
     // After all activities have been searched through,
     // we can finally return the result.
+    console.log(ressearch)
     return res.status(200).json(ressearch)
 })
 
