@@ -28,7 +28,6 @@ export class ActivityCreateView extends React.Component {
     render() {
         return (
             <div>
-                <h1>Hello</h1>
                 <ActivityCreate onCreate={(activity) => this.createActivity(activity)}></ActivityCreate>
             </div>
             

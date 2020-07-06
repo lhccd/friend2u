@@ -169,7 +169,6 @@ export class ActivityCreate extends React.Component {
         var cT = this.getCurrentTime()
         return (
             <div>
-                <h1>Hello Create Your Activity</h1>
                 <Form>
                     <Form.Row>
 

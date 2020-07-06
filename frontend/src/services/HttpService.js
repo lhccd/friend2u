@@ -235,15 +235,9 @@ export default class HttpService {
 		return res.status !== 401;
 	}
 
-        if(res.status === 401) {
-            return true;
-        }
-        
-        return false;
-    }
-    
-    static checkIfAuthorized(res) {
-		const url = this.OurapiURL() + "/auth/token";
+	//In order to check if user is authorized we try to refresh the token (if it was expired)
+    static async checkIfAuthorized(res) {
+		if(res.status !== 401) return true;
 		
 		let message = await res.json();
 		if(message.error !== 'TokenExpired') return false 
