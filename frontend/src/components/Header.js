@@ -49,7 +49,7 @@ export class Header extends React.Component {
 
         return (
             <React.Fragment>
-                <Navbar className="bg-dark justify-content-between" variant="dark">
+                <Navbar className="bg-dark justify-content-between" variant="dark" style={{fontSize: "20px"}}>
                     <Navbar.Brand href="/">
                         <img
                             alt=""

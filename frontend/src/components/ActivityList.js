@@ -11,7 +11,7 @@ const dataTableStyle = {
 };
 
 export const ActivityList = ({data, onDelete}) => (
-    <Page>
+    <React.Fragment>
         <DataTable plain style={dataTableStyle}>
             <TableHeader>
                 <TableRow>
@@ -24,7 +24,7 @@ export const ActivityList = ({data, onDelete}) => (
                 {data.map((activity, i) => <ActivityListRow key={i} activity={activity} onDelete={(id) => onDelete(id)} />)}
             </TableBody>
         </DataTable>
-    </Page>
+    </React.Fragment>
 );
 
 
