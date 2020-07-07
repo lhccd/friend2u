@@ -22,11 +22,8 @@ export default class App extends React.Component {
         this.state = {
             title: 'Friend2U App',
             routes: routes,
-            routes: [
-                {component: HomepageView, path:'/', exact: true},
-                { component: ActivityListView, path: '/activities/search', exact: true},
-                { component: ActivityDetailedView , path: '/detail/:id'},
-                { component: ActivityCreateView, path: '/activities/create' }
+            //routes: []
+
                 /*
                 { render: (props) => {
                         if(true) { //UserService.isAuthenticated()) {
@@ -44,7 +41,6 @@ export default class App extends React.Component {
                     }}, path: '/add',},
                 { component: UserLoginView, path: '/login'}, */
                 //{ component: UserSignupView, path: '/register'}
-            ]
         };
     }
     

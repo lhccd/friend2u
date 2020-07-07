@@ -38,7 +38,6 @@ export class ReportUserPage extends React.Component {
         `
         return (
             <Styles>
-                <Page>
                     <h1 className="h1">The user is ...</h1>
                     <Container>
                     <Form className="frm">
@@ -81,7 +80,6 @@ export class ReportUserPage extends React.Component {
                     </InputGroup>
                     </Container>
                     <Button variant="primary">Submit</Button>
-                </Page>
             </Styles>
         );
     }

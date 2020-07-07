@@ -88,7 +88,6 @@ const Styles = styled.div`
 
 export const Homepage = () => (
     <Styles>
-		<Page>
             {/*<Nav justify>
                 <Nav.Item><Nav.Link href="/"><Image src={logo} width="46px"/></Nav.Link></Nav.Item>
                 <Nav.Item><Nav.Link href="/search">Search</Nav.Link></Nav.Item>
@@ -158,7 +157,6 @@ export const Homepage = () => (
                     <li>Friend2U is an activity-based platform instead of communication platform.</li>
                     <li>Rather a 'setup an activity and find a companion with same interests' solution</li>
                 </ul>*/}
-        </Page>
     </Styles>
 );
 

@@ -39,7 +39,6 @@ export class ReportActivityPage extends React.Component {
 
         return (
             <Styles>
-            <Page>
                 <h1 className="h1">The activity is ...</h1>
                 <Container>
                 <Form className="frm">
@@ -82,7 +81,6 @@ export class ReportActivityPage extends React.Component {
                 </InputGroup>
                 </Container>
                 <Button variant="primary">Submit</Button>
-            </Page>
             </Styles>
         );
     }

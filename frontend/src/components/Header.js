@@ -2,8 +2,8 @@ import React from 'react';
 import logo from '../media/f2uLogo.svg';
 import {Link} from 'react-router-dom';
 
-import { Nav, Navbar, NavDropdown, Image, Form, FormControl, Button } from 'react-bootstrap';
-import { MenuButton } from 'react-md';
+import {Nav, Navbar, NavDropdown, Image, Form, FormControl, Button} from 'react-bootstrap';
+import {MenuButton} from 'react-md';
 import {Jumbotron} from './Jumbotron';
 import styled from 'styled-components';
 
@@ -42,14 +42,14 @@ export class Header extends React.Component {
             }
            
         `;
-        
-        let { role } = this.props; 
-        
+
+        let {role} = this.props;
+
         console.log("role: " + role)
 
         return (
             <React.Fragment>
-                <Navbar expand bg="dark" variant="dark" >
+                <Navbar className="bg-dark justify-content-between" variant="dark">
                     <Navbar.Brand href="/">
                         <img
                             alt=""
@@ -59,33 +59,40 @@ export class Header extends React.Component {
                             className="d-inline-block align-top"
                         />
                     </Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Item>
-                                <Nav.Link href="/search">Search</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/create">Create</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/activityhistory">My Activity History</Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                        <Nav>
-                            <Nav.Item className="ml-auto">
-                                <NavDropdown title="My Account" id="basic-nav-dropdown">
-                                    <NavDropdown.Item href="#/report_user">Report user</NavDropdown.Item>
-                                    <NavDropdown.Item href="#/report_activity">Report activity</NavDropdown.Item>
-                                    <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                    {role === 'moderator'?<NavDropdown.Item href="#/moderator">Moderator console</NavDropdown.Item>:''}
-                                    <NavDropdown.Divider/>
-                                    <NavDropdown.Item href="#/report">Test</NavDropdown.Item>
-                                    <NavDropdown.Item onClick={() => {console.log("logging out");AuthService.logout();window.location = "/#login"}} >Logout</NavDropdown.Item>
-                                </NavDropdown>
-                            </Nav.Item>
-                        </Nav>
-                    </Navbar.Collapse>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                    <Nav>
+                        <Nav.Item>
+                            <Nav.Link href="#/activities/search">Search</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                    <Nav>
+                        <Nav.Item>
+                            <Nav.Link href="#/activities/create">Create</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                    <Nav>
+                        <Nav.Item>
+                            <Nav.Link href="#/activityhistory">My Activity History</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                    <Nav>
+                        <Nav.Item>
+                            <NavDropdown title="My Account" id="basic-nav-dropdown">
+                                <NavDropdown.Item href="#/report_user">Report user</NavDropdown.Item>
+                                <NavDropdown.Item href="#/report_activity">Report activity</NavDropdown.Item>
+                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                                {role === 'moderator' ?
+                                    <NavDropdown.Item href="#/moderator">Moderator console</NavDropdown.Item> : ''}
+                                <NavDropdown.Divider/>
+                                <NavDropdown.Item href="#/report">Test</NavDropdown.Item>
+                                <NavDropdown.Item onClick={() => {
+                                    console.log("logging out");
+                                    AuthService.logout();
+                                    window.location = "/#login"
+                                }}>Logout</NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav.Item>
+                    </Nav>
                 </Navbar>
             </React.Fragment>
         )
