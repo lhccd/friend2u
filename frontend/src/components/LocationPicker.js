@@ -12,7 +12,8 @@ export class LocationPicker extends React.Component {
             position: {lat: 48.14137159149285, lng: 11.5969768950502},
             mapPos: {lat: 48.14137159149285, lng: 11.5969768950502},
             search: "",
-            showMap: "none"
+            showMap: "none",
+            maxDistance: "1000"
         }
         this.onClick = this.onClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -28,6 +29,9 @@ export class LocationPicker extends React.Component {
     handleChange(event) {
         console.log(event.target)
         this.setState({[event.target.name]: event.target.value});
+        if(event.target.name === "maxDistance") {
+          this.props.onDistChange(event.target.value)
+        }
     }
 
     handleMapSubmit(event) {
@@ -93,6 +97,8 @@ export class LocationPicker extends React.Component {
                 Choose the location:
                 <input type="text" name="search" placeholder="Search location" value={this.state.search}
                        onChange={this.handleChange}/>
+                {(this.props.distanceSelect) ? <input type="number" name="maxDistance" placeholder="Distance to search in" value={this.state.maxDistance}
+                        onChange={this.handleChange}/> : ""}
                 <Button onClick={this.handleMapSubmit}>Find location</Button>
                 <div className="m-auto">
                     {/*<button type="button" name="ShowMap" ref={this.searchButtonRef} onClick={this.handleMap}>Show map</button>*/}

@@ -1,6 +1,7 @@
 import React from 'react';
 import LocationPicker from './LocationPicker';
 import {Button, Card, Row, Container, Col, Form, Alert, Dropdown} from 'react-bootstrap';
+import UserService from '../services/AuthService';
 
 export class ActivityCreate extends React.Component {
     constructor(props) {
@@ -107,6 +108,10 @@ export class ActivityCreate extends React.Component {
     }
 
     handleSubmit(event) {
+
+        //creator
+        console.log("Infos about me: ")
+        console.log(UserService.getCurrentUser())
 
 
         var error = false

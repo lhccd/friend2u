@@ -39,6 +39,8 @@ export default class ActivityService {
     }
 
     static searchActivities(filters) {
+        console.log("Activity Service - Searching with: ")
+        console.log(filters)
         return new Promise((resolve, reject) => {
             HttpService.modGet(`${ActivityService.baseURL()}/search`, filters, function(data) {
                 if(data != undefined || Object.keys(data).length !== 0) {
