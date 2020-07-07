@@ -24,11 +24,19 @@ export default class Page extends React.Component {
     render() {
         return (
                 <React.Fragment style={{
-                    color: 'blue',
-                    background: '#353a3f',
+                    minHeight: '100vh',
+					display: 'flex',
+					flexDirection: 'column',
                 }}>
                     <Header role={this.props.role}/>
-                       {this.props.children}
+                       <div style={{
+								minHeight: '90vh',
+								display: 'flex',
+								flexDirection: 'column',
+						   }}
+						>
+							{this.props.children}
+						</div>
                     <Footer/>
                 </React.Fragment>
         );

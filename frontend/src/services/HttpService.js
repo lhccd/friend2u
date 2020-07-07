@@ -32,7 +32,7 @@ export default class HttpService {
 			let json = await res.json()
 			
 			if(json.error) {
-                onError(res.error);
+                onError(json);
             }
             else{
 				onSuccess(json);
@@ -122,41 +122,42 @@ export default class HttpService {
 		}
     }
 
-
-
-    static async remove(url, onSuccess, onError) {
-        let token = window.localStorage['jwtToken'];
+	static async remove(url, onSuccess, onError) {
+		console.log("remove")
+        let token = await TokenService.refreshToken();
         let header = new Headers();
         if(token) {
-            header.append('Authorization', `JWT ${token}`);
+            header.append('Authorization', `Bearer ${token}`);
         }
 
-        try {
-            let resp = await fetch(url, {
-                method: 'DELETE',
-                headers: header
-            });
-
-            if(this.checkIfUnauthorized(resp)) {
-                window.location = '/#login';
+        try{
+			let res = await fetch(url, {
+				method: 'DELETE',
+				headers: header,
+			})
+			
+			
+			if(!this.isResAuthenticated(res)) {
+				window.location = '/#login';
                 return;
+			}
+			
+			
+			
+			let json = await res.json()
+			
+			if(json.error) {
+                onError(json);
             }
-            else {
-                resp = await resp.json();
-            }
-
-            if(resp.error) {
-                onError(resp.error);
-            }
-            else {
-                onSuccess(resp)
-            }
-        } catch(err) {
-            onError(err.message);
-        }
-    }
-
-	
+            else{
+				onSuccess(json);
+			}
+		}
+		catch(err){
+			console.log(err)
+			return onError(err.message);
+		}
+	}	
 	
 	static checkIfAuthorized(res) {
 		return res.status !== 401;
