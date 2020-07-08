@@ -9,7 +9,7 @@ import TokenService from '../services/TokenService';
 
 import { withRouter } from 'react-router-dom';
 
-
+import history from "../history.js";
 
 export class UserLoginView extends React.Component {
 
@@ -27,9 +27,12 @@ export class UserLoginView extends React.Component {
 				this.props.setRole(AuthService.getUserRole(tokens.accessToken))
 			
 				const {location} = this.props;
+				console.log(history)
+				
 				if(location.state && location.state.from) {
 					this.props.history.push(location.state.from);
-				} else {
+				}
+				else {
 					this.props.history.push('/');
 				}
 			}

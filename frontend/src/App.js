@@ -54,7 +54,7 @@ export default class App extends React.Component {
 
     render() {
         return(
-            <Router>
+            <Router history={history}>
                 <Switch>
                     {this.state.routes.map((route, i) => (<Route key={i} {...route}/>) )}
                 </Switch>

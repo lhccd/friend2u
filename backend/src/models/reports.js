@@ -8,11 +8,6 @@ const mongoose = require('mongoose');
 // '-> One Schema and check for data-completeness during storing.
 
 const ReportSchema  = new mongoose.Schema({
-    category: {
-        type: String,
-        enum: ['user', 'activity'],
-        required: true
-    },
     reason: {
         type: String,
         enum: ["untrustworthy", "advertisement", "spam", "forbidden", "wrong category", "sexual", "fraudulent"],
@@ -24,17 +19,16 @@ const ReportSchema  = new mongoose.Schema({
     },
     issuer: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User.username',
-    },
-    reported: {
-        type: String,
     }
+},
+{
+	discriminatorKey: 'category'
 });
+
 
 // Disable versioning of db-entries, but
 // enable timestamps(createdAt & updatedAt are now present).
-ReportSchema.set('versionKey', false);
 ReportSchema.set('timestamps', true);
-ReportSchema.set({issuer:1, activity:1}, {unique:true});
+ReportSchema.index({issuer:1, category:1, reported:1}, {unique:true});
 
-// Export the Report model
 module.exports = mongoose.model('Report', ReportSchema);

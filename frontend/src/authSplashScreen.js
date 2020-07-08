@@ -9,6 +9,7 @@ import AuthService from './services/AuthService';
 import { Redirect } from 'react-router-dom';
 
 import Page from './components/Page'
+import { Banned } from './components/Banned'
 
 import styled from "styled-components";
 
@@ -42,7 +43,10 @@ export default function authSplashScreen(WrappedComponent) {
       try {
         let token = await AuthService.isUserAuthenticated();
         if(token){
-			this.setState({authenticated: true, role: AuthService.getUserRole(token)});
+			let banDate = AuthService.getUserBanDate(token);
+			console.log("banDate: " + banDate)
+			if(banDate) this.setState({authenticated: true, role: AuthService.getUserRole(token), banDate: banDate});
+			else this.setState({authenticated: true, role: AuthService.getUserRole(token)});
 		}
         
         //Just to simulate the loading screen
@@ -56,7 +60,7 @@ export default function authSplashScreen(WrappedComponent) {
         console.log(err);
         setTimeout(() => {
           this.setState({
-            loading: false,
+            loading: true,
           });
         }, 1500)
       }
@@ -77,6 +81,13 @@ export default function authSplashScreen(WrappedComponent) {
            </Page>
         )
 	}
+	
+    renderBanned() {
+		return (
+			   <Fragment>
+                   <Banned {...this.props} />
+			   </Fragment>)
+	}
 
     render() {
       // while checking user session, show "loading" message
@@ -91,6 +102,7 @@ export default function authSplashScreen(WrappedComponent) {
 		  if(this.state.authenticated) return <Redirect to={{pathname: '/'}}/>
 		  else return <WrappedComponent {...this.props} />
 	  }
+      else if(this.state.banDate) return this.renderBanned();
       else if(this.state.authenticated) return this.renderAuthenticated();
       
       const { history, location } = this.props;

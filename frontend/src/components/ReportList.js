@@ -2,17 +2,25 @@
 
 import React from 'react';
 import { Fragment } from 'react';
-import { DataTable, TableHeader, TableBody, TableRow, TableColumn } from 'react-md';
+import { CardDeck } from 'react-bootstrap';
 
 import { ReportListRow } from './ReportListRow';
 import Page from './Page'
 
-const dataTableStyle = {
-  'marginBottom': '36px'
-};
 
-export const ReportList = ({reports, toggleModal}) => (
-    <Fragment>
-		{reports.map((r) => <ReportListRow key={`reportitem-${r._id}`} count={r.count} toggleModal={toggleModal} />)}
-    </Fragment>
+export const ReportList = ({reports, toggleModal, deleteReports}) => (
+    <div style={{width: '100%', alignText: 'center'}}>
+		{reports.map((r, idx) => <ReportListRow
+									key={`reportitem-${r._id}`}
+									id={r._id}
+									idx={idx}
+									isBanned={r.reported[0].banUntilDate?true:false}
+									username={r.reported[0].username}
+									count={r.count}
+									toggleModal={toggleModal}
+									deleteReports={deleteReports}
+									removed={r.removed}
+									/>
+								)}
+    </div>
 );

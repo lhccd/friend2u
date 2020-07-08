@@ -81,4 +81,10 @@ export default class UserService {
 		return decodedToken.role
 	}
 	
+	static getUserBanDate(token) {
+		let decodedToken = TokenService.decodeToken(token);
+		console.log(decodedToken)
+		return decodedToken.banTime;
+	}
+	
 }
