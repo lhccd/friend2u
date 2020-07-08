@@ -49,7 +49,11 @@ const checkAuthentication = (req, res, next) => {
 		if(err){
 			var response = {};
 			if(err.name === 'TokenExpiredError'){
-				if(req.url === '/refresh_token') return next();
+				if(req.url === '/refresh_token'){
+					const payload = jwt.verify(token, config.accessTokenSecret, {ignoreExpiration: true} );
+					req.id = payload.id;
+					return next();
+				}
 				
 				response = {
 					error: 'TokenExpired',
