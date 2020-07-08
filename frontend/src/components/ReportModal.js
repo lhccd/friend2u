@@ -5,6 +5,8 @@ import { Modal, Button } from 'react-bootstrap';
 
 import { ReportModalItem } from './ReportModalItem';
 
+import { Link } from 'react-router-dom';
+
 const dataTableStyle = {
   'marginBottom': '36px'
 };
@@ -29,7 +31,7 @@ export class ReportModal extends React.Component{
 	}
 	
 	render() {
-		let {showingUser, show, toggleModal, reports, banUser} = this.props
+		let {category, showingUser, show, toggleModal, reports, banUser} = this.props
 		
 		 return <Modal show={show} onHide={() => toggleModal(false)}>
 			<Modal.Header closeButton>
@@ -47,9 +49,15 @@ export class ReportModal extends React.Component{
 			  <Button variant="secondary" onClick={() => toggleModal(false)}>
 				Close
 			  </Button>
-			  <Button variant="primary" onClick={this.confirmBanningUser}>
-				Ban this user FOREVAH!
-			  </Button>
+			  <Link	to='/'>
+				<Button variant="primary" onClick={() => this.viewMore()}>
+					Go to {`${category}`}
+				</Button>
+			  </Link>
+			  {category === 'user'?<Button variant="primary" onClick={this.confirmBanningUser}>
+										Ban this user FOREVAH!
+									  </Button>:''}
+									  
 			</Modal.Footer>
 			{this.state.confirmBanning?this.renderBanningConfirm(showingUser,banUser):''}
 		   </Modal>

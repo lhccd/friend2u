@@ -102,7 +102,7 @@ const ActivitySchema  = new mongoose.Schema({
             validator: Number.isInteger,
             message: props => `The status (${props.value}) is NOT allowed to have decimals!`
         },
-        required: true
+        defualt: 0
     },
 
     // Storing the ID of the creator.

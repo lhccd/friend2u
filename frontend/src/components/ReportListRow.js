@@ -25,7 +25,7 @@ const renderCard = ({id, isBanned, username, count, toggleModal, deleteReports, 
 				<Card.Text>
 				  There have been <strong>{count}</strong> report{count==1?'':'s'} about this user
 				</Card.Text>
-				<Button variant="primary" onClick={() => toggleModal(true, id, username)}>List all reports</Button>
+				<Button variant="primary" onClick={() => toggleModal(true, id, username, idx)}>List all reports</Button>
 				{isBanned?<Card.Text className="text-right">
 						(!) This user has already been banned! <Button variant="primary" onClick={() => deleteReports(id, username, idx)}>Delete all reports</Button>
 					</Card.Text>:

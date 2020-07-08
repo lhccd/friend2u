@@ -87,4 +87,11 @@ export default class UserService {
 		return decodedToken.banTime;
 	}
 	
+	static isUserBanned(date) {
+		let decodedToken = TokenService.decodeToken(token);
+		console.log(decodedToken)
+		return decodedToken.banTime >= Date.now();
+	}
+	
+	
 }
