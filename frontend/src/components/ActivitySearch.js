@@ -159,7 +159,7 @@ export class ActivitySearch extends React.Component {
                         </Nav>
                     </Navbar>
 
-                <Container>
+                <Container style={{marginTop:"5px"}}>
                     <Form.Group>
                         <Form.Control type="text" name="activityName" placeholder="Search for activityname"
                                       value={this.state.value} onChange={this.handleChange}/>
