@@ -1,14 +1,15 @@
 "use strict";
 
 import React from 'react';
-import { TableRow, TableColumn, FontIcon, Button, DataTable, TableHeader, TableBody } from 'react-md';
+import { TableRow, TableColumn, FontIcon, DataTable, TableHeader, TableBody } from 'react-md';
 import { Link } from 'react-router-dom';
+import { Button, Card , Row, Col, Container, Badge } from 'react-bootstrap';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import HttpService from '../services/HttpService';
 
 //import { SimpleLink } from './SimpleLink';
 
-//import UserService from '../services/UserService';
+import UserService from '../services/AuthService';
 
 
 export class ActivityListRow extends React.Component {
@@ -17,7 +18,8 @@ export class ActivityListRow extends React.Component {
         super(props);
         this.state = {
             address: "",
-            first: true
+            first: true,
+            userID: UserService.getCurrentUser().id
         }
 
         this.setPriceSymbols = this.setPriceSymbols.bind(this);
@@ -90,7 +92,7 @@ export class ActivityListRow extends React.Component {
                                     Category: {this.props.activity.category}
                                 </TableColumn>
                                 <TableColumn width={500}>
-                                    Activityname: {this.props.activity.activityName}
+                                    Activityname: {this.props.activity.activityName} {(this.state.userID==this.props.activity.creator) ? <Badge className="badge-info">Created by you</Badge> : ""}
                                 </TableColumn>
                                 <TableColumn width={150}>
                                     Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}
