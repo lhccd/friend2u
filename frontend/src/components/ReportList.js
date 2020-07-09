@@ -14,7 +14,7 @@ export const ReportList = ({reports, toggleModal, deleteReports}) => (
 									key={`reportitem-${r._id}`}
 									id={r._id}
 									idx={idx}
-									isBanned={r.reported[0].banUntilDate?true:false}
+									isBanned={(r.reported[0].banUntilDate && r.reported[0].banUntilDate >= Date.now())?true:false}
 									username={r.reported[0].username}
 									count={r.count}
 									toggleModal={toggleModal}

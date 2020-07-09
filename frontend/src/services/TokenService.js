@@ -51,11 +51,9 @@ export default class TokenService {
 
 	static async refreshToken() {
 		let accessToken = window.localStorage['accessToken'];
-		console.log(accessToken)
 		if(!accessToken) return null;
 		
 		let refreshToken = window.localStorage['refreshToken'];
-		console.log(refreshToken)
 		if(!refreshToken) return null;
 		
 		if(this.isTokenValid(accessToken)) return accessToken;
@@ -63,8 +61,6 @@ export default class TokenService {
 		
 		//To delete when using httponly cookie
 		if(!this.isTokenValid(refreshToken)) return null;
-		
-		console.log("here")
 		
 		const url = `${this.apiURL()}/auth/refresh_token`;
 		
@@ -78,18 +74,14 @@ export default class TokenService {
 			return Promise.all([res.status, res.json()])
 		})
 		.then(([status,data]) => {
-			console.log(status)
 			if(status === 200 && data.hasOwnProperty('accessToken')){
 				this.setAccessToken(data.accessToken);
 				return data.accessToken
 			}
 			else{
-				console.log(data)
-				//this.removeTokens();
 				return null
 			}
 		}).catch((err) => {
-			console.log(err)
 			return null
 		})
 		

@@ -14,24 +14,17 @@ const create = (req, res) => {
 	}
 
     const newReport = (category === 'user')?new UserReportModel({reason, description, issuer, reported}):ActivityReportModel({reason, description, issuer, reported});
+    const projection = (category === 'user')?'username':'';
     
-	newReport.populate('reported', 'username', function(err,report) {
+	newReport.populate('reported', '_id', function(err,report) {
+		console.log('here')
 		if(err){
 			console.log(err);
 			return res.status(500).json({error: 'Internal error', message: 'It was not possible to create a new report'})
 		}
 		
 		if(!report.reported) return res.status(404).json({error: `${category} not found`, message: `The reported ${category} doesn\'t exist`})
-		
-		//report = report.toObject()
-		//report['test'] = 'aaa'
-		
-		//console.log("here: " + report.reason)
-		
-		//report = UserReportModel({reason: report.reason, description: report.description, issuer: report.issuer, reported: report.reported._id, username: report.reported.username})
-		//report = UserReportModel({reason:'untrustworthy', description:'ciaociaociao', issuer:'5f032b4f8b7b6359c7d7c911', reported:'5f032b4f8b7b6359c7d7c988'})
-		//console.log(report)
-		
+
 		report.save().then((report) =>{
 			console.log(report)
 			return res.status(200).json({message: 'Report created successfully', id: report._id})

@@ -5,6 +5,7 @@ const bcrypt     = require('bcryptjs');
 
 const config           = require('../config');
 const UserSchema       = require('../models/user');
+const ActivitySchema       = require('../models/activities');
 const AuthSchema       = require('../models/auth');
 const ReportSchema       = require('../models/reports');
 const requiredProperties  = require('../models/user_config');
@@ -70,9 +71,9 @@ const listReports = (req,res,type) => {
 	if(req.query.timestamp) query.createdAt = { $gt : req.query.timestamp }
 	if(req.params.id) query.reported = req.params.id
 	
-	console.log('here')
-	
-	ReportSchema.find(query, null, {limit: limit}).populate('reported', ['username']).exec((err, reports) => {
+	const projection = (type === 'user')?'username':'activityName';
+
+	ReportSchema.find(query, null, {limit: limit}).populate('reported', ['_id']).exec((err, reports) => {
 		if(err) return res.status(500).send(err);
 		
 		let ret = {}
@@ -100,7 +101,14 @@ const groupReportsById = (req,res,type) => {
 		category: type
 	}
 	
+	let projection = (type === 'user')?{"$project": {"reported.username": 1,"reported.banUntilDate": 1,"count": 1}}:{"$project": {"reported.activityName": 1,"count": 1}}
+	
 	const aggregatorOpts = [
+		{
+			$match: {
+				category: type
+			}
+		},
 		{
 			$group: {
 				_id: "$reported",
@@ -121,19 +129,13 @@ const groupReportsById = (req,res,type) => {
 		},
 		{
 			$lookup: {
-				from: UserSchema.collection.name,
+				from: type === 'user'?UserSchema.collection.name:ActivitySchema.collection.name,
 				localField: '_id',
 				foreignField: '_id',
 				as: 'reported'
 			}
 		},
-		{
-			"$project": {
-				"reported.username": 1,
-				"reported.banUntilDate": 1,
-				"count": 1.
-			 }
-		 }
+		projection
 	]
 	
 	ReportSchema.aggregate(aggregatorOpts, (err, reports) => {
