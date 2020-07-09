@@ -11,6 +11,31 @@ const reportProperties = [
 	'reported',
 ]
 
+// ACTIVITY MODEL
+
+const activityProperties = [
+	'category',
+	'activityName',
+	'dateTime',
+	'approxTime',
+	'duration',
+	'prefGender',
+	'fromAge',
+	'toAge',
+	'description',
+	'price',
+	'phyCondition',
+	'kitchen',
+	'title',
+	'participants',
+	'status',
+	'creator',
+	'selPerson',
+	'voteForCreator',
+	'voteForselPerson',
+	'location',
+]
+
 //---------------------------------------------------
 
 
@@ -20,5 +45,6 @@ const reportProperties = [
 //Add the name here
 
 module.exports = {
-    reportProperties
+    reportProperties,
+	activityProperties
 };

@@ -82,9 +82,9 @@ export class ActivityListRow extends React.Component {
         // style={{ width: '18rem' }}
         return (
             
-            <TableColumn key={this.props.key}>
+            <TableRow key={this.props.key}>
 
-                <Card>
+                <Card style={{width: '20rem'}}>
                     <Card.Img variant="top" src={thumbnail} />
                     <Card.Header>{this.props.activity.category}</Card.Header>
                     <Card.Body>
@@ -130,7 +130,7 @@ export class ActivityListRow extends React.Component {
                 </TableColumn>*/}
                
 
-            </TableColumn>
+            </TableRow>
         );
         
         
