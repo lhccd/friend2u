@@ -31,6 +31,7 @@ export class ActivitySearch extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleMapChange = this.handleMapChange.bind(this);
         this.handleRBChange = this.handleRBChange.bind(this)
+        this.handleDistChange = this.handleDistChange.bind(this)
 
         // Creating Refs, to show the category-specific filters.
         this.sportRef = React.createRef()
@@ -43,7 +44,11 @@ export class ActivitySearch extends React.Component {
         //console.log(currTime)
         return currTime
     }
-
+    handleDistChange(newDist) {
+        console.log("New Dist.: "+newDist)
+        this.setState({ ["maxDistance"]: newDist})
+    }
+    
     handleRBChange(event) {
         console.log(event.target.id)
         console.log(this)
@@ -321,7 +326,7 @@ export class ActivitySearch extends React.Component {
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
                                         <Card style={{width: '45rem'}}>
-                                            <LocationPicker onLocChange={this.handleMapChange}/>
+                                            <LocationPicker onLocChange={this.handleMapChange} onDistChange={this.handleDistChange} distanceSelect={true}/>
                                             <Form.Label>In which radius should be searched in (in meters)?</Form.Label>
                                             <Form.Control type="number" name="minPhyCondition"
                                                           value={this.state.maxDistance} min="1" max={500000}

@@ -14,9 +14,9 @@ router.get('/report/users',[middlewares.checkAuthentication, middlewares.isUserM
 router.get('/report/users/:id',[middlewares.checkAuthentication, middlewares.isUserModerator], (req,res) => {ModeratorController.listReports(req,res,'user')});
 router.delete('/report/users/:id',[middlewares.checkAuthentication, middlewares.isUserModerator], (req,res) => {ModeratorController.removeReportsByReported(req,res,'user')});
 
-router.delete('/report/:id',[middlewares.checkAuthentication, middlewares.isUserModerator], (req,res) => {ModeratorController.removeReport(req,res)});
+//router.delete('/report/:id',[middlewares.checkAuthentication, middlewares.isUserModerator], (req,res) => {ModeratorController.removeReport(req,res)});
 
-router.get('/report/activities',[middlewares.checkAuthentication, middlewares.isUserModerator], (req,res) => {ModeratorController.listReports(req,res,'activity')});
+router.get('/report/activities',[middlewares.checkAuthentication, middlewares.isUserModerator], (req,res) => {ModeratorController.groupReportsById(req,res,'activity')});
 router.get('/report/activities/:id',[middlewares.checkAuthentication, middlewares.isUserModerator], (req,res) => {ModeratorController.listReports(req,res,'activity')});
 router.delete('/report/activities/:id',[middlewares.checkAuthentication, middlewares.isUserModerator], (req,res) => {ModeratorController.removeReportsByReported(req,res,'activity')});
 

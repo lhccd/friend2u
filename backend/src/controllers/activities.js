@@ -13,16 +13,18 @@ const create = (req, res) => {
     });
 
     console.log("create the following: ")
+    req.body.creator = req.id
     console.log(req.body)
+    console.log(req.id)
     // Try to crate an activity.
-    /*
+    
     ActivityModel.create(req.body)
         .then(activity => res.status(201).json(activity))
         .catch(error => res.status(500).json({
             error: 'Internal server error - activities_create',
             message: error.message
         }));
-        */
+    
 };
 
 // Reading an existing activity.
@@ -321,7 +323,7 @@ const search = (async(req, res) => {
 
     console.log("Request was made with: ")
     console.log(req.body)
-    console.log(req.params)
+    console.log(req.id)
 
     if (Object.keys(req.body).length === 0)
     {
@@ -369,7 +371,7 @@ const search = (async(req, res) => {
         if(ageOfCreator>=req.body.fromAge && ageOfCreator<=req.body.toAge) {
             // Now we have to do the same age-check vice versa
             // => Match the searcher age to the one specified in the activity.
-            var ressearcher = await UserModel.findById(req.body.searcherID)
+            var ressearcher = await UserModel.findById(req.id)
             // Calculate age of searcher.
             var ageOfSearcher = getAge(ressearcher["birthday"])
             // Only if searcher-age matches move further on.

@@ -1,37 +1,41 @@
-const ReportModel = require('../models/reports');
+const UserReportModel = require('../models/userReports');
+const ActivityReportModel = require('../models/activityReports');
 
 const create = (req, res) => {
-
-    // Check whether there is something to store in our DB.
-
-    if (Object.keys(req.body).length === 0) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body is empty'
-    });
-    // Check whether there is something to store in our DB.
+	
     const category = req.body.category;
     const reason = req.body.reason;
     const description = req.body.description;
-    const issuer = req.body.issuer;
+    const issuer = req.id;
     const reported = req.body.reported;
+    
+    if(category === 'user' && issuer === reported) {
+		return res.status(400).json({error: 'Bad Request', message: 'You can\'t report yourself. Why would you do that? :('})
+	}
 
-    const newReport = new Reportmodel({category, reason, description, issuer, reported});
+    const newReport = (category === 'user')?new UserReportModel({reason, description, issuer, reported}):ActivityReportModel({reason, description, issuer, reported});
+    const projection = (category === 'user')?'username':'';
+    
+	newReport.populate('reported', '_id', function(err,report) {
+		console.log('here')
+		if(err){
+			console.log(err);
+			return res.status(500).json({error: 'Internal error', message: 'It was not possible to create a new report'})
+		}
+		
+		if(!report.reported) return res.status(404).json({error: `${category} not found`, message: `The reported ${category} doesn\'t exist`})
 
-    newReport.save()
-        .then(() => res.json('Report added!'))
-        .catch(err => res.status(400).json('Error: ' + err));
-
-    /*if (Object.keys(req.body).length === 0) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body is empty'
-    });
-    // Try to create a report.
-    ReportModel.create(req.body)
-        .then(activity => res.status(201).json(activity))
-        .catch(error => res.status(500).json({
-            error: 'Internal server error - activities_create',
-            message: error.message
-     }));*/
+		report.save().then((report) =>{
+			console.log(report)
+			return res.status(200).json({message: 'Report created successfully', id: report._id})
+			
+			})
+        .catch((err) => {
+			console.log(err)
+			if(err.code === 11000) return res.status(401).json({error: 'Duplicate key', message: `The user has already reported this ${category}`})
+			else return res.status(500).json({error: 'Internal error', message: 'It was not possible to create a new report'})
+		});
+	});
 };
 
 const list  = (req, res) => {

@@ -6,27 +6,32 @@ export default class HttpService {
     constructor() {
     }
 
-    static OurapiURL() {return 'http://localhost:3000'; }
-
-    static async get(url, onSuccess, onError) {
-        console.log(url)
-        console.log("Get_HttpService")
-        let token = window.localStorage['accessToken'];
+    static apiURL() {return 'http://localhost:3000'; }
+    
+   static async get(url, onSuccess, onError, data) {
+		console.log("get")
+        let token = await TokenService.refreshToken();
         let header = new Headers();
+        
         if(token) {
             header.append('Authorization', `Bearer ${token}`);
         }
+        
+        let options = {
+				method: 'GET',
+				headers: header,
+			}
+		
+		if(data){
+			header.append('Content-Type', 'application/json');
+			options.body = JSON.stringify(data)
+		}
 
-        console.log(this.OurapiURL())
 
-        /*
-        fetch(url, {
-             method: 'GET',
-             headers: header
-         }).then((resp) => {
-			 return this.checkIfAuthorized(resp);
-		 }).then((authorized) => {
-			 if(!authorized) window.location = '/#login';
+        fetch(url, options).then((resp) => {
+			 if(!this.isResAuthenticated(resp)){
+				 window.location = '/#login';
+			 }
 			 else return resp.json();
 		 }).then((resp) => {
              if(resp.error) {
@@ -36,205 +41,129 @@ export default class HttpService {
          }).catch((e) => {
              onError(e.message);
          });
-         */
-
-         try{
-             let resp = await fetch(url, {
-             method: 'GET',
-             headers: header
-            })
-
-            var result = await resp.json()
-
-            console.log(result)
-
-            onSuccess(result)
-         } catch(error) {
-             console.log(error)
-         }
-         
     }
-
-
-    static async modGet(url, data, onSuccess, onError) {
-        
-        console.log(data)
-        console.log(JSON.stringify(data))
+    
+    
+   static async put(url, data, onSuccess, onError) {
+		console.log("put")
+        let token = await TokenService.refreshToken();
         let header = new Headers();
-        console.log(header)
         header.append('Content-Type', 'application/json');
         
-        try {
-            let resp = await fetch(url, {
-                method: 'PUT',
-                headers: header,
-                body: JSON.stringify(data),
-            });
-
-            var result = await resp.json()
-            //console.log(await resp.json())
-
-            onSuccess(result)
-
-            /*
-            if(this.checkIfUnauthorized(resp)) {
-                window.location = '/#login';
-                return;
-            }
-            else {
-                resp = await resp.json();
-            }
-
-            if(resp.error) {
-                onError(resp.error);
-            }
-            else {
-                if(resp.hasOwnProperty('token')) {
-                    window.localStorage['jwtToken'] = resp.token;
-                }
-                onSuccess(resp);
-                
-            }*/
-        } catch(err) {
-            onError(err.message);
+        if(token) {
+            header.append('Authorization', `Bearer ${token}`);
         }
-    }
+        
+        let options = {
+				method: 'PUT',
+				headers: header,
+			}
+		
+		if(data){
+			header.append('Content-Type', 'application/json');
+			options.body = JSON.stringify(data)
+		}
+		
 
-    static async put(url, data, onSuccess, onError) {
-        let token = window.localStorage['jwtToken'];
+        fetch(url, options).then((resp) => {
+			 if(!this.isResAuthenticated(resp)){
+				 window.location = '/#login';
+			 }
+			 else return resp.json();
+		 }).then((resp) => {
+             if(resp.error) {
+                 onError(resp.error);
+             }
+             else onSuccess(resp);
+         }).catch((e) => {
+             onError(e.message);
+         });
+    }
+    
+    
+    static async post(url, data, onSuccess, onError) {
+		console.log("post")
+        let token = await TokenService.refreshToken();
+        let header = new Headers();
+        
+        if(token) {
+            header.append('Authorization', `Bearer ${token}`);
+        }
+        
+        let options = {
+				method: 'POST',
+				headers: header,
+				body: JSON.stringify({a: 1, b: 'Textual content'})
+			}
+		
+		if(data){
+			header.append('Content-Type', 'application/json');
+			options.body = JSON.stringify(data)
+		}
+		
+
+        fetch(url, options).then((resp) => {
+			 if(!this.isResAuthenticated(resp)){
+				 window.location = '/#login';
+			 }
+			 else return resp.json();
+		 }).then((resp) => {
+             if(resp.error) {
+				 console.log(resp.message)
+                 onError(resp.error);
+             }
+             else onSuccess(resp);
+         }).catch((e) => {
+             onError(e.message);
+         });
+    }
+    
+    
+    
+     static async remove(url, data, onSuccess, onError) {
+		console.log("delete")
+        let token = await TokenService.refreshToken();
         let header = new Headers();
         if(token) {
-            header.append('Authorization', `JWT ${token}`);
+            header.append('Authorization', `Bearer ${token}`);
         }
-        header.append('Content-Type', 'application/json');
+        
+        let options = {
+				method: 'DELETE',
+				headers: header,
+			}
+		
+		if(data){
+			header.append('Content-Type', 'application/json');
+			options.body = JSON.stringify(data)
+		}
+		
 
-        try {
-            let resp = await fetch(url, {
-                method: 'PUT',
-                headers: header,
-                body: JSON.stringify(data)
-            });
-
-            if(this.checkIfUnauthorized(resp)) {
-                window.location = '/#login';
-                return;
-            }
-            else {
-                resp = await resp.json();
-            }
-
-            if(resp.error) {
-                onError(resp.error);
-            }
-            else {
-                if(resp.hasOwnProperty('token')) {
-                    window.localStorage['jwtToken'] = resp.token;
-                }
-                onSuccess(resp);
-            }
-        } catch(err) {
-            onError(err.message);
-        }
+        fetch(url, options).then((resp) => {
+			 if(!this.isResAuthenticated(resp)){
+				 window.location = '/#login';
+			 }
+			 else return resp.json();
+		 }).then((resp) => {
+             if(resp.error) {
+                 onError(resp.error);
+             }
+             else onSuccess(resp);
+         }).catch((e) => {
+             onError(e.message);
+         });
     }
+    
+    
+    
     
     static isResAuthenticated(res) {
 		return res.status !== 401;
 	}
-
-	static async post(url, data, onSuccess, onError) {
-		console.log("post")
-        let token = await TokenService.refreshToken();
-        let header = new Headers();
-        /*
-        if(token) {
-            header.append('Authorization', `Bearer ${token}`);
-        }
-        */
-        header.append('Content-Type', 'application/json');
-
-        try {
-            let resp = await fetch(url, {
-                method: 'POST',
-                headers: header,
-                body: JSON.stringify(data)
-            });
-
-            var result = await resp.json()
-            //console.log(await resp.json())
-
-            onSuccess(result)
-            /*
-
-            if(this.checkIfUnauthorized(resp)) {
-                window.location = '/#login';
-                return;
-			}
-			
-			let json = await res.json()
-			
-			if(json.error) {
-                onError(json);
-            }
-            else {
-                resp = await resp.json();
-            }
-
-            if(resp.error) {
-                onError(resp.error);
-            }
-            else {
-                if(resp.hasOwnProperty('token')) {
-                    window.localStorage['jwtToken'] = resp.token;
-                }
-                onSuccess(resp);
-            }
-
-            */
-        } catch(err) {
-            onError(e.message);
-        }
-    }
-
-
-
-    static async remove(url, onSuccess, onError) {
-        let token = window.localStorage['jwtToken'];
-        let header = new Headers();
-        if(token) {
-            header.append('Authorization', `JWT ${token}`);
-        }
-
-        try {
-            let resp = await fetch(url, {
-                method: 'DELETE',
-                headers: header
-            });
-
-            if(this.checkIfUnauthorized(resp)) {
-                window.location = '/#login';
-                return;
-            }
-            else {
-                resp = await resp.json();
-            }
-
-            if(resp.error) {
-                onError(resp.error);
-            }
-            else {
-                onSuccess(resp)
-            }
-        } catch(err) {
-            onError(err.message);
-        }
-    }
-
 	
 	
-	static checkIfAuthorized(res) {
-		return res.status !== 401;
-	}
-
+	
+	
 	//In order to check if user is authorized we try to refresh the token (if it was expired)
     static async checkIfAuthorized(res) {
 		if(res.status !== 401) return true;
@@ -272,3 +201,5 @@ export default class HttpService {
     
 
 }
+
+

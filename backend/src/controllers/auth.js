@@ -18,6 +18,9 @@ const authenticationFailedCB = (res,err) => {
 }
 
 const login = async (req,res) => {
+	
+	console.log(req.body)
+	
     if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) return res.status(400).json({
         error: 'Bad Request',
         message: 'The request body must contain a password property'
@@ -100,6 +103,7 @@ const refresh_token = async (req,res) => {
 		
 		//check if token exists
 		try{
+			console.log(req.id)
 			const user = await AuthSchema.findOne({user: req.id});
 			console.log(user)
 			if(!user.refreshToken || user.refreshToken !== refreshToken) throw new Error("Invalid token!")

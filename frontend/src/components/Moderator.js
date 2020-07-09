@@ -10,6 +10,7 @@ import {NavBar, Nav, NavItem, Modal, Button} from 'react-bootstrap'
 import {ReportList} from './ReportList'
 import {ReportModal} from './ReportModal'
 
+
 export class Moderator extends React.Component{
 	constructor(props){
 		super(props)
@@ -30,15 +31,26 @@ export class Moderator extends React.Component{
 			</Nav>
 			
 			<ReportList
-				getReports={this.props.getReports}
+				//getReports={this.props.getReports}
 				reports={this.props.reports}
-				handleListReports={this.props.handleListReports}
+				//handleListReports={this.props.handleListReports}
 				toggleModal={this.props.toggleModal}
+				deleteReports={this.props.deleteReports}
 			/>
 			
-			<Button onClick={this.props.getReports} >new reports</Button>
+			{this.props.allReports?<div>No more reports. Refresh page to update.</div>:
+				<Button onClick={this.props.getReports}>new reports</Button>
+			}
 			
-			<ReportModal show={this.props.showModal} toggleModal={this.props.toggleModal} reports={this.props.reportsModal}  />
+			<ReportModal
+				banUser={this.props.banUser}
+				showingUser={this.props.showingUser}
+				show={this.props.showModal}
+				toggleModal={this.props.toggleModal}
+				reports={this.props.reportsModal}
+				deleteReports={this.props.deleteReports}
+				category={this.props.category}
+			/>
 		</Fragment>
     );
   }

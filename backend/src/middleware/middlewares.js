@@ -4,6 +4,17 @@ const jwt    = require('jsonwebtoken');
 
 const config = require ('../config');
 
+const checkBody = (req,res,next,requiredProperties) => {
+	for(var prop of requiredProperties){
+		if (!Object.prototype.hasOwnProperty.call(req.body, prop)) return res.status(400).json({
+			error: 'Bad Request',
+			message: `The request body must contain a ${prop} property`
+		});
+	};
+	
+	next();
+}
+
 const allowCrossDomain = (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -38,7 +49,11 @@ const checkAuthentication = (req, res, next) => {
 		if(err){
 			var response = {};
 			if(err.name === 'TokenExpiredError'){
-				if(req.url === '/refresh_token') return next();
+				if(req.url === '/refresh_token'){
+					const payload = jwt.verify(token, config.accessTokenSecret, {ignoreExpiration: true} );
+					req.id = payload.id;
+					return next();
+				}
 				
 				response = {
 					error: 'TokenExpired',
@@ -60,9 +75,10 @@ const checkAuthentication = (req, res, next) => {
 		console.log(decoded.banTime)
 		console.log(Date.now())
 		
+		console.log(decoded.banTime)
 		if(decoded.banTime && decoded.banTime > Date.now()){
 			return res.status(403).send({
-				error: 'Forbidden',
+				error: 'Banned',
 				message: "This user is banned",
 				time: decoded.banTime,
 			});
@@ -95,5 +111,6 @@ module.exports = {
     allowCrossDomain,
     checkAuthentication,
     isUserModerator,
-    errorHandler
+    errorHandler,
+    checkBody
 };

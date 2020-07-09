@@ -50,7 +50,8 @@ export default class UserService {
     }
 
     static getCurrentUser() {
-        let token = window.localStorage['jwtToken'];
+        let token = window.localStorage['accessToken'];
+        //console.log(window.localStorage)
         if (!token) return {};
 
         let base64Url = token.split('.')[1];
@@ -79,5 +80,18 @@ export default class UserService {
 		let decodedToken = TokenService.decodeToken(token);
 		return decodedToken.role
 	}
+	
+	static getUserBanDate(token) {
+		let decodedToken = TokenService.decodeToken(token);
+		console.log(decodedToken)
+		return decodedToken.banTime;
+	}
+	
+	static isUserBanned(date) {
+		let decodedToken = TokenService.decodeToken(token);
+		console.log(decodedToken)
+		return decodedToken.banTime >= Date.now();
+	}
+	
 	
 }

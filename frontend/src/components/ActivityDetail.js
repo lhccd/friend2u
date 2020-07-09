@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 //import { Card, CardTitle, CardText, Media, MediaOverlay, Grid, Cell, Button, FontIcon } from 'react-md';
 import { Button, Card , Row, Col } from 'react-bootstrap';
 import LocationShower from './LocationShower';
+import UserService from '../services/AuthService'
 
 //import Page from './Page';
 
@@ -17,11 +18,13 @@ export class ActivityDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            alreadyJoined: this.props.activity.participants.includes("eee")
+            alreadyJoined: this.props.activity.participants.includes("eee"),
+            userID: UserService.getCurrentUser().id
         }
 
         this.handleJoin = this.handleJoin.bind(this);
         this.handleUNJoin = this.handleUNJoin.bind(this);
+        this.test = this.test.bind(this)
     }
 
     handleJoin() {
@@ -30,10 +33,16 @@ export class ActivityDetail extends React.Component {
         // Joining still has to be forwarded to the backend!!!!
     }
 
+
     handleUNJoin() {
+        console.log(this.state.userID === this.props.activity.creator)
         this.setState({alreadyJoined: false})
 
         // Unjoining has to be forwarded to the backend!
+    }
+
+    test() {
+        return (<h1>Huhu</h1>)
     }
 
     render() {
@@ -57,7 +66,6 @@ export class ActivityDetail extends React.Component {
                 Currently {this.props.activity.participants.length} people are interested in this activity.
                 <br/>
                 {(this.state.alreadyJoined) ? <Button variant="success" onClick={this.handleUNJoin}>UNJoin this Activity</Button> : <Button variant="danger" onClick={this.handleJoin}>Join this activity</Button>}
-               
                 </Card.Text>
             </Card.Body>
             </Card>
