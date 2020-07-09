@@ -45,10 +45,10 @@ export default class HttpService {
     
     
    static async put(url, data, onSuccess, onError) {
-		console.log("put")
+        console.log("put, with data: ")
+        console.log(data)
         let token = await TokenService.refreshToken();
-        let header = new Headers();
-        header.append('Content-Type', 'application/json');
+        let header = new Headers()
         
         if(token) {
             header.append('Authorization', `Bearer ${token}`);
@@ -56,7 +56,7 @@ export default class HttpService {
         
         let options = {
 				method: 'PUT',
-				headers: header,
+                headers: header
 			}
 		
 		if(data){
@@ -92,8 +92,7 @@ export default class HttpService {
         
         let options = {
 				method: 'POST',
-				headers: header,
-				body: JSON.stringify({a: 1, b: 'Textual content'})
+				headers: header
 			}
 		
 		if(data){

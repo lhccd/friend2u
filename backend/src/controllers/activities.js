@@ -71,15 +71,8 @@ const update = (req, res) => {
 
 // Add a person to the participants-list.
 const joined = (req, res) => {
-    if (Object.keys(req.body).length === 0)
-    {
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body is empty'
-        });
-    }
-
-    ActivityModel.findByIdAndUpdate(req.params.id, { $addToSet: {participants: req.body.newParticipant}},{
+    
+    ActivityModel.findByIdAndUpdate(req.params.id, { $addToSet: {participants: req.id}},{
         new: true,
         runValidators: true}).exec()
         .then(activity => res.status(200).json(activity))
@@ -87,7 +80,7 @@ const joined = (req, res) => {
             error: 'Internal server error - activities_joined',
             message: error.message
         }));
-
+        
 }
 
 // Get a list of all joined persons of an activity;
@@ -156,18 +149,10 @@ const ActivityExists = (req, res) => {
 
 // Remove a person from the participants-list.
 const unjoin = (req, res) => {
-    if (Object.keys(req.body).length === 0)
-    {
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body is empty'
-        });
-    }
-
     
     //ActivityModel.collection.drop();
 
-    ActivityModel.findByIdAndUpdate(req.params.id, { $pull: {participants: req.body.oldParticipant}},{
+    ActivityModel.findByIdAndUpdate(req.params.id, { $pull: {participants: req.id}},{
         new: true,
         runValidators: true}).exec()
         .then(activity => res.status(200).json(activity))
