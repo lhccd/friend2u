@@ -5,7 +5,7 @@ import { TableRow, TableColumn, FontIcon, DataTable, TableHeader, TableBody } fr
 import { Link } from 'react-router-dom';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import HttpService from '../services/HttpService';
-import {Card, Button, ListGroup, ListGroupItem} from 'react-bootstrap';
+import {Col, Card, Button, ListGroup, ListGroupItem, Row, Image} from 'react-bootstrap';
 import thumbnail from '../media/activity_mock.jpg'
 
 //import { SimpleLink } from './SimpleLink';
@@ -81,25 +81,29 @@ export class ActivityListRow extends React.Component {
 
         // style={{ width: '18rem' }}
         return (
-            
-            <TableRow key={this.props.key}>
-
-                <Card style={{width: '20rem'}}>
-                    <Card.Img variant="top" src={thumbnail} />
-                    <Card.Header>{this.props.activity.category}</Card.Header>
-                    <Card.Body>
-                        <Card.Title>{this.props.activity.activityName}</Card.Title>
-                        <Card.Text>
-                            Some quick example text to build on the card title and make up the bulk of
-                            the card's content.
-                        </Card.Text>
-                        <ListGroup className="list-group-flush">
-                            <ListGroupItem>Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}</ListGroupItem>
-                            <ListGroupItem>Address: {this.state.address}</ListGroupItem>
-                            <ListGroupItem>Price: {this.setPriceSymbols(this.props.activity.price)}</ListGroupItem>
-                        </ListGroup>
-                        <Button variant="primary">Show Details</Button>
-                    </Card.Body>
+            <React.Fragment>
+                <Card style={{margin:"10px", padding:"5px"}}>
+                    <Row key={this.props.key} className="text-center">
+                    <Col xs lg={2}>
+                        <Image className="center" src={thumbnail} fluid style={{width:"100%"}}/>
+                    </Col>
+                    <Col>
+                        <Card.Header>{this.props.activity.category}</Card.Header>
+                        <Card.Body>
+                            <Card.Title>{this.props.activity.activityName}</Card.Title>
+                            <Card.Text>
+                                Some quick example text to build on the card title and make up the bulk of
+                                the card's content.
+                            </Card.Text>
+                            <ListGroup className="list-group-flush">
+                                <ListGroupItem>Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}</ListGroupItem>
+                                <ListGroupItem>Address: {this.state.address}</ListGroupItem>
+                                <ListGroupItem>Price: {this.setPriceSymbols(this.props.activity.price)}</ListGroupItem>
+                            </ListGroup>
+                            <Button variant="primary">Show Details</Button>
+                        </Card.Body>
+                    </Col>
+                    </Row>
                 </Card>
 
                 {/*<TableColumn>
@@ -128,9 +132,7 @@ export class ActivityListRow extends React.Component {
                 </TableBody>
                     
                 </TableColumn>*/}
-               
-
-            </TableRow>
+                </React.Fragment>
         );
         
         
