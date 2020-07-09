@@ -3,10 +3,9 @@
 import React from 'react';
 import { TableRow, TableColumn, FontIcon, DataTable, TableHeader, TableBody } from 'react-md';
 import { Link } from 'react-router-dom';
-import { Button, Card , Row, Col, Container, Badge } from 'react-bootstrap';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import HttpService from '../services/HttpService';
-import {Col, Card, Button, ListGroup, ListGroupItem, Row, Image} from 'react-bootstrap';
+import {Col, Card, Button, ListGroup, ListGroupItem, Row, Image, Container, Badge} from 'react-bootstrap';
 import thumbnail from '../media/activity_mock.jpg'
 
 //import { SimpleLink } from './SimpleLink';
@@ -102,7 +101,7 @@ export class ActivityListRow extends React.Component {
                                 <ListGroupItem>Address: {this.state.address}</ListGroupItem>
                                 <ListGroupItem>Price: {this.setPriceSymbols(this.props.activity.price)}</ListGroupItem>
                             </ListGroup>
-                            <Button variant="primary">Show Details</Button>
+                            <Button variant="primary"><Link to={`/detail/${this.props.activity._id}`}/>Show Details</Button>
                         </Card.Body>
                     </Col>
                     </Row>
