@@ -1,10 +1,12 @@
 "use strict";
 
 import React from 'react';
-import { TableRow, TableColumn, FontIcon, Button, DataTable, TableHeader, TableBody } from 'react-md';
+import { TableRow, TableColumn, FontIcon, DataTable, TableHeader, TableBody } from 'react-md';
 import { Link } from 'react-router-dom';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import HttpService from '../services/HttpService';
+import {Card, Button, ListGroup, ListGroupItem} from 'react-bootstrap';
+import thumbnail from '../media/activity_mock.jpg'
 
 //import { SimpleLink } from './SimpleLink';
 
@@ -77,12 +79,30 @@ export class ActivityListRow extends React.Component {
         }
 
 
-        
+        // style={{ width: '18rem' }}
         return (
             
-            <TableRow key={this.props.key}>
+            <TableColumn key={this.props.key}>
 
-                <TableColumn>
+                <Card>
+                    <Card.Img variant="top" src={thumbnail} />
+                    <Card.Header>{this.props.activity.category}</Card.Header>
+                    <Card.Body>
+                        <Card.Title>{this.props.activity.activityName}</Card.Title>
+                        <Card.Text>
+                            Some quick example text to build on the card title and make up the bulk of
+                            the card's content.
+                        </Card.Text>
+                        <ListGroup className="list-group-flush">
+                            <ListGroupItem>Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}</ListGroupItem>
+                            <ListGroupItem>Address: {this.state.address}</ListGroupItem>
+                            <ListGroupItem>Price: {this.setPriceSymbols(this.props.activity.price)}</ListGroupItem>
+                        </ListGroup>
+                        <Button variant="primary">Show Details</Button>
+                    </Card.Body>
+                </Card>
+
+                {/*<TableColumn>
                     
                 <TableBody>
                             <TableRow>
@@ -93,7 +113,7 @@ export class ActivityListRow extends React.Component {
                                     Activityname: {this.props.activity.activityName}
                                 </TableColumn>
                                 <TableColumn width={150}>
-                                    Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}
+                                    {new Date(this.props.activity.dateTime).toLocaleString()}
                                 </TableColumn>
                                 <TableColumn>
                                     Address: {this.state.address}
@@ -107,10 +127,10 @@ export class ActivityListRow extends React.Component {
                             </TableRow>
                 </TableBody>
                     
-                </TableColumn>
+                </TableColumn>*/}
                
 
-            </TableRow>
+            </TableColumn>
         );
         
         
