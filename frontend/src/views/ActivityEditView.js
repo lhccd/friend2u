@@ -2,12 +2,16 @@
 
 import React from 'react';
 
-import { ActivityDetail } from '../components/ActivityDetail';
+import { ActivityCreate } from '../components/ActivityCreate';
 
 import ActivityService from '../services/ActivityService';
 
+import UserService from '../services/AuthService'
 
-export class ActivityDetailedView extends React.Component {
+import {Alert} from 'react-bootstrap';
+
+
+export class ActivityEditView extends React.Component {
 
     constructor(props) {
         super(props);
@@ -42,31 +46,29 @@ export class ActivityDetailedView extends React.Component {
         });
     }
 
-    joinUser(activityID) {
-        ActivityService.joinUser(activityID).then((message) => {
-            console.log("User has joined "+activityID)
+    updateActivity(activity) {
+        console.log(activity)
+        ActivityService.updateActivity(activity).then((message) => {
+
+            console.log("Activity is forwarded: ")
+            console.log(message)
         }).catch((e) => {
-            console.log("Sth. went wrong with the join...")
-            console.log(e)
-        })
+            console.error(e);
+        });
     }
 
-    unJoinUser(activityID) {
-        ActivityService.unJoinUser(activityID).then((message) => {
-            console.log("User has UNjoined "+activityID)
-        }).catch((e) => {
-            console.log("Sth. went wrong with the UNjoin...")
-            console.log(e)
-        })
-    }
+
 
     render() {
         if (this.state.loading) {
             return (<h2>Loading the selected activity...</h2>);
         }
+        if(this.state.activity.creator != UserService.getCurrentUser().id) {
+            return (<Alert className="alert-danger">You are not allowed to edit this activity!</Alert>)
+        }
 
         return (
-            <ActivityDetail activity={this.state.activity} onJoin={(activityID) => this.joinUser(activityID)} onUNJoin={(activityID) => this.unJoinUser(activityID)} onDelete={(id) => this.deleteActivity(id)}/>
+            <ActivityCreate activity={this.state.activity} onCreate={(activity) => this.updateActivity(activity)} onDelete={(id) => this.deleteActivity(id)}/>
         );
     }
 }

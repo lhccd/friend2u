@@ -8,7 +8,8 @@ import { ReportActivityView } from "../views/ReportActivityView"
 import {ActivityListView} from "../views/ActivityListView";
 import {ActivityDetailedView} from "../views/ActivityDetailedView";
 import {ActivityCreateView} from "../views/ActivityCreateView";
-import {ActivityHistoryView} from "../views/ActivityHistoryView";
+import { ActivityHistoryView } from "../views/ActivityHistoryView";
+import {ActivityEditView} from "../views/ActivityEditView"
 
 export const routes = [
     {component: authSplashScreen(UserLoginView), path: '/login'},
@@ -21,7 +22,7 @@ export const routes = [
     {component: authSplashScreen(HomepageView), path:'/', exact: true},
     {component: authSplashScreen(ActivityListView), path: '/activities/search', exact: true},
     {component: authSplashScreen(ActivityDetailedView), path: '/detail/:id'},
-    {component: authSplashScreen(ActivityCreateView), path: '/activities/create'},
+    {component: authSplashScreen(ActivityCreateView), path: '/activities/create' },
     {component: (ActivityHistoryView), path: '/activityhistory'},
- 
+    {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' }
 ];

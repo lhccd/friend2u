@@ -23,6 +23,7 @@ export default class ActivityService {
        });
     }
 
+
     static getActivity(id) {
         return new Promise((resolve, reject) => {
             HttpService.get(`${ActivityService.baseURL()}/${id}`, function(data) {
@@ -42,7 +43,7 @@ export default class ActivityService {
         console.log("Activity Service - Searching with: ")
         console.log(filters)
         return new Promise((resolve, reject) => {
-            HttpService.modGet(`${ActivityService.baseURL()}/search`, filters, function(data) {
+            HttpService.put(`${ActivityService.baseURL()}/search`, filters, function(data) {
                 if(data != undefined || Object.keys(data).length !== 0) {
                     resolve(data);
                     console.log(data.body)
@@ -72,6 +73,9 @@ export default class ActivityService {
     }
 
     static updateActivity(activity) {
+        console.log("Update activity: ")
+        console.log(activity)
+        
         return new Promise((resolve, reject) => {
             HttpService.put(`${this.baseURL()}/${activity._id}`, activity, function(data) {
                 resolve(data);
@@ -79,6 +83,7 @@ export default class ActivityService {
                reject(textStatus);
             });
         });
+        
     }
 
     static createActivity(activity) {
@@ -99,4 +104,26 @@ export default class ActivityService {
             });
         });
     }
+
+    static joinUser(activityID) {
+        return new Promise((resolve, reject) => {
+            HttpService.post(`${this.baseURL()}/join/${activityID}`, function(data) {
+                resolve(data)
+            }, function(textStatus) {
+                reject(textStatus);
+            });
+        })
+    }
+
+    static unJoinUser(activityID) {
+        return new Promise((resolve, reject) => {
+            HttpService.remove(`${this.baseURL()}/unjoin/${activityID}`, function(data) {
+                resolve(data)
+            }, function(textStatus) {
+                reject(textStatus);
+            });
+        })
+    }
+
+
 }

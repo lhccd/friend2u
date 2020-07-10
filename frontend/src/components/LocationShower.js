@@ -82,6 +82,9 @@ export class LocationShower extends React.Component {
         if(this.state.first) {
           this.getLocation(this.props.coords)
           this.setState({ ["first"]: false })
+          if(this.props.withoutButton) {
+            this.setState({ ["showMap"]: "block"})
+          }
         }
 
         console.log(this.state)
@@ -89,7 +92,7 @@ export class LocationShower extends React.Component {
           <div>
             Address: {this.state.address}
             <div>
-              <button type="button" name="ShowMap" ref={this.searchButtonRef} onClick={this.handleMap}>Show map</button>
+        {(!this.props.withoutButton) ? <button type="button" name="ShowMap" ref={this.searchButtonRef} onClick={this.handleMap}>Show map</button> : ""}
                 <div ref={this.mapRef} style={mapStyle}>
               <Map
               google={this.props.google}
