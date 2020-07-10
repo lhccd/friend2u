@@ -33,6 +33,7 @@ export class ActivityDetail extends React.Component {
         this.handleUNJoin = this.handleUNJoin.bind(this);
         this.test = this.test.bind(this)
         this.userOrCreator = this.userOrCreator.bind(this)
+        this.creatorButtonClick = this.creatorButtonClick.bind(this)
 
         this.participantRef = React.createRef()
         this.creatorRef = React.createRef()
@@ -40,6 +41,14 @@ export class ActivityDetail extends React.Component {
     }
 
 
+    creatorButtonClick(event) {
+        if(this.props.activity.participants.length == 0) {
+            window.location = '/#/activities/edit/'+this.props.activity._id
+        }
+        else {
+            // GoTo select person page
+        }
+    }
 
     userOrCreator() {
         // Check wheter the user is visiting his activity,
@@ -155,7 +164,7 @@ export class ActivityDetail extends React.Component {
                             {this.state.creatorText}
                         </Col>
                         <Col>
-                            <Button variant={this.state.CreatorButtonVariant}>{this.state.creatorButtonText}</Button>
+                            <Button onClick={this.creatorButtonClick} variant={this.state.CreatorButtonVariant}>{this.state.creatorButtonText}</Button>
                         </Col>
                     </div>
                     </div>
