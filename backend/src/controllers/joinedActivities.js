@@ -8,12 +8,12 @@ const JoinedActivityModel = require('../models/joinedActivities')
 const ActivityModel = require('../models/activities')
 
 const join = (req, res, next) => {
-    // Check whether there is something to store in our DB.
-    if (Object.keys(req.body).length === 0) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body is empty'
-    });
+    
 
+    console.log("Join - ActID: "+req.params.id+" ; UserID: "+req.id)
+
+
+    
 
     // Before adding a user to the JoinedActivityModel, we are checking, whether the given
     // ID for the activity actually exists and also whether it is the first time, that
@@ -31,14 +31,14 @@ const join = (req, res, next) => {
 
                 ActivityModel.findById(req.params.id).exec()
                     .then(result => {
-                        if(result.participants.indexOf(req.body.newParticipant) > -1) {
+                        if(result.participants.indexOf(req.id) > -1) {
                             return res.status(400).json({
                                 error: 'Bad Request',
                                 message: 'The request cannot be executed as the user already joined this acitivty!'
                             });
                         } else {
                             
-                            JoinedActivityModel.create({activityID: req.params.id, joinedPersonID: req.body.newParticipant})
+                            JoinedActivityModel.create({activityID: req.params.id, joinedPersonID: req.id})
                                 .then(activity => {
                                     //res.status(201).json(activity);
                                     next();
@@ -269,14 +269,12 @@ const getJoinedActivities = (req, res) => {
 
 // Delete a user from one activity.
 const unjoin = (req, res, next) => {
-    // Check whether there is something to store in our DB.
-    if (Object.keys(req.body).length === 0) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body is empty'
-    });
 
+    console.log("UNJoin - ActID: "+req.params.id+" ; UserID: "+req.id)
+    
+    
     // Try to crate an activity.
-    JoinedActivityModel.deleteMany({activityID: req.params.id, joinedPersonID: req.body.oldParticipant})
+    JoinedActivityModel.deleteMany({activityID: req.params.id, joinedPersonID: req.id})
         .then(activity => {
             //res.status(201).json(activity);
             next();
@@ -285,6 +283,7 @@ const unjoin = (req, res, next) => {
             error: 'Internal server error - joinedActivities_join',
             message: error.message
         }));
+        
 }
 
 // List the existing relations.

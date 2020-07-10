@@ -170,6 +170,269 @@ export class ActivityCreate extends React.Component {
         return (
             <React.Fragment>
                 <Container fluid>
+                    <h1 className="text-center">Create Your activity</h1>
+                    <Form>
+                        <Form.Group>
+
+                            <Form.Label>Activityname</Form.Label>
+                            <Form.Control type="text" name="activityName" placeholder="Sth. meaningful"
+                                          value={this.state.activityName} onChange={this.handleChange}/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Category</Form.Label>
+                            <Form.Check
+                                inline
+                                checked={this.state.category === "Sport"}
+                                label="Sport"
+                                type="radio"
+                                name="category"
+                                id="Sport"
+                                onChange={this.handleCategoryChange}
+                            />
+                            <Form.Check
+                                inline
+                                checked={this.state.category === "Entertainment"}
+                                label="Entertainment"
+                                type="radio"
+                                name="category"
+                                id="Entertainment"
+                                onChange={this.handleCategoryChange}
+                            />
+                            <Form.Check
+                                inline
+                                checked={this.state.category === "Food"}
+                                label="Food"
+                                type="radio"
+                                name="category"
+                                id="Food"
+                                onChange={this.handleCategoryChange}
+                            />
+                            <Form.Check
+                                inline
+                                checked={this.state.category === "Others"}
+                                label="Others"
+                                type="radio"
+                                name="category"
+                                id="Others"
+                                onChange={this.handleCategoryChange}
+                            />
+                            <br/>
+
+                            <div ref={this.sportRef} style={{display: "none"}}>
+                                <Form.Label>Level of "Sportiness"</Form.Label>
+                                <Form.Check
+                                    inline
+                                    checked={this.state.phyCondition === "1"}
+                                    label="Couchpotato"
+                                    type="radio"
+                                    name="phyCondition"
+                                    id="1"
+                                    onChange={this.handleRBChange}
+                                />
+                                <Form.Check
+                                    inline
+                                    checked={this.state.phyCondition === "2"}
+                                    label="Casual Athlete"
+                                    type="radio"
+                                    name="phyCondition"
+                                    id="2"
+                                    onChange={this.handleRBChange}
+                                />
+                                <Form.Check
+                                    inline
+                                    checked={this.state.phyCondition === "3"}
+                                    label="Quite Sporty"
+                                    type="radio"
+                                    name="phyCondition"
+                                    id="3"
+                                    onChange={this.handleRBChange}
+                                />
+                                <Form.Check
+                                    inline
+                                    checked={this.state.phyCondition === "4"}
+                                    label="Very well trained"
+                                    type="radio"
+                                    name="phyCondition"
+                                    id="4"
+                                    onChange={this.handleRBChange}
+                                />
+                            </div>
+
+                            <div ref={this.entertainmentRef} style={{display: "none"}}>
+                                <Form.Label>Title</Form.Label>
+                                <Form.Control type="text" name="title"
+                                              placeholder="Title of the movie/concert/opera e.g TopGun II"
+                                              value={this.state.title} onChange={this.handleChange}/>
+                            </div>
+
+
+                            <div ref={this.foodRef} style={{display: "none"}}>
+                                <Form.Label>Cuisine</Form.Label>
+                                <Form.Check
+
+                                    checked={this.state.kitchen === "Italian"}
+                                    label="Italian"
+                                    type="radio"
+                                    name="kitchen"
+                                    id="Italian"
+                                    onChange={this.handleRBChange}
+                                />
+                                <Form.Check
+                                    checked={this.state.kitchen === "Japanese"}
+                                    label="Japanese"
+                                    type="radio"
+                                    name="kitchen"
+                                    id="Japanese"
+                                    onChange={this.handleRBChange}
+                                />
+                                <Form.Check
+                                    checked={this.state.kitchen === "Chinese"}
+                                    label="Chinese"
+                                    type="radio"
+                                    name="kitchen"
+                                    id="Chinese"
+                                    onChange={this.handleRBChange}
+                                />
+                                <Form.Check
+                                    checked={this.state.kitchen === "German"}
+                                    label="German"
+                                    type="radio"
+                                    name="kitchen"
+                                    id="German"
+                                    onChange={this.handleRBChange}
+                                />
+                                <Form.Check
+                                    checked={this.state.kitchen === "FastFood"}
+                                    label="Fast Food"
+                                    type="radio"
+                                    name="kitchen"
+                                    id="FastFood"
+                                    onChange={this.handleRBChange}
+                                />
+                                <Form.Check
+                                    checked={this.state.kitchen === "StreetFood"}
+                                    label="Street Food"
+                                    type="radio"
+                                    name="kitchen"
+                                    id="StreetFood"
+                                    onChange={this.handleRBChange}
+                                />
+                                <Form.Check
+                                    checked={this.state.kitchen === "Other"}
+                                    label="Other"
+                                    type="radio"
+                                    name="kitchen"
+                                    id="Other"
+                                    onChange={this.handleRBChange}
+                                />
+                            </div>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Time</Form.Label>
+                            <Form.Control type="datetime-local" name="dateTime" value={this.state.dateTime} min={cT}
+                                          onChange={this.handleChange}/>
+
+                            <Form.Check type="checkbox" name="approxTime" checked={this.state.approxTime}
+                                        label="Time just roughly, we might talk about it"
+                                        onChange={this.handleATChange}/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Activity Duration</Form.Label>
+                            <Form.Control type="number" name="duration" value={this.state.duration} min="1"
+                                          onChange={this.handleChange}/>
+
+                            <br/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Price Range</Form.Label>
+                            <Form.Check
+
+                                checked={this.state.price === "p1"}
+                                label="$"
+                                type="radio"
+                                name="price"
+                                id="p1"
+                                onChange={this.handleRBChange}
+                            />
+                            <Form.Check
+
+                                checked={this.state.price === "p2"}
+                                label="$$"
+                                type="radio"
+                                name="price"
+                                id="p2"
+                                onChange={this.handleRBChange}
+                            />
+                            <Form.Check
+
+                                checked={this.state.price === "p3"}
+                                label="$$$"
+                                type="radio"
+                                name="price"
+                                id="p3"
+                                onChange={this.handleRBChange}
+                            />
+                            <Form.Check
+
+                                checked={this.state.price === "p4"}
+                                label="$$$$"
+                                type="radio"
+                                name="price"
+                                id="p4"
+                                onChange={this.handleRBChange}
+                            />
+                            <Form.Check
+
+                                checked={this.state.price === "p5"}
+                                label="$$$$$"
+                                type="radio"
+                                name="price"
+                                id="p5"
+                                onChange={this.handleRBChange}
+                            />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Companion Preferences</Form.Label>
+                            <br/>
+                            <Form.Group>
+                                <Form.Label>From Age</Form.Label>
+                                <Form.Control type="number" name="fromAge" value={this.state.fromAge} min="18"
+                                              max={this.state.toAge} onChange={this.handleChange}/>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>To Age</Form.Label>
+                                <Form.Control type="number" name="toAge" value={this.state.toAge}
+                                              min={this.state.fromAge}
+                                              max="150" onChange={this.handleChange}/>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Preferred Gender</Form.Label>
+                                <Form.Control as="select" name="gender" defaultValue="Female"
+                                              onChange={this.handleChange}>
+                                    <option>Female</option>
+                                    <option>Male</option>
+                                    <option>Other</option>
+                                    <option>Does not matter</option>
+                                </Form.Control>
+                            </Form.Group>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Filter Location</Form.Label>
+                            <Dropdown>
+                                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                    Location
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Card style={{width: '45rem'}}>
+                                        <LocationPicker onLocChange={this.handleMapChange}/>
+                                    </Card>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </Form.Group>
+                    </Form>
+                </Container>
+
+                {/*<Container fluid>
                 <h3>Create Activity:</h3>
                 <Form>
                     <Form.Row>
@@ -437,7 +700,7 @@ export class ActivityCreate extends React.Component {
                         every field is filled).
                     </Alert>
                 </Form>
-                </Container>
+                </Container>*/}
             </React.Fragment>
         )
     }
