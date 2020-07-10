@@ -101,7 +101,9 @@ export class ActivityListRow extends React.Component {
                                 <ListGroupItem>Address: {this.state.address}</ListGroupItem>
                                 <ListGroupItem>Price: {this.setPriceSymbols(this.props.activity.price)}</ListGroupItem>
                             </ListGroup>
-                            <Button variant="primary"><Link to={`/detail/${this.props.activity._id}`}/>Show Details</Button>
+                            <Link to={`/detail/${this.props.activity._id}`}>
+                                <Button variant="primary">Show Details</Button>
+                            </Link>
                         </Card.Body>
                     </Col>
                     </Row>
