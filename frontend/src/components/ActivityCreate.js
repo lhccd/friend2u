@@ -429,6 +429,11 @@ export class ActivityCreate extends React.Component {
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Form.Group>
+                        <Button onClick={this.handleSubmit}>Create Your Activity</Button>
+                        <Alert ref={this.submitAlertRef} style={{display: "none"}}>
+                            Please validate your input, there seems to be something wrong (especially check whether
+                            every field is filled).
+                        </Alert>
                     </Form>
                 </Container>
 
