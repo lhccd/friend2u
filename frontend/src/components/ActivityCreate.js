@@ -24,6 +24,7 @@ export class ActivityCreate extends React.Component {
             kitchen: "Other",
             title: "",
             status: 0,
+            participants: [],
             first: true
         };
 
@@ -142,6 +143,7 @@ export class ActivityCreate extends React.Component {
             }
 
             console.log("Create the activity: ")
+            delete this.state["first"]
             console.log(this.state)
             this.props.onCreate(this.state)
 

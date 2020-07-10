@@ -27,12 +27,6 @@ const activityProperties = [
 	'phyCondition',
 	'kitchen',
 	'title',
-	'participants',
-	'status',
-	'creator',
-	'selPerson',
-	'voteForCreator',
-	'voteForselPerson',
 	'location',
 ]
 

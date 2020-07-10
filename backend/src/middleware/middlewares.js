@@ -5,7 +5,9 @@ const jwt    = require('jsonwebtoken');
 const config = require ('../config');
 
 const checkBody = (req,res,next,requiredProperties) => {
+	console.log(req.body)
 	for(var prop of requiredProperties){
+		//console.log("Curr prop: "+prop+", hasWP: "+Object.prototype.hasOwnProperty.call(req.body, prop))
 		if (!Object.prototype.hasOwnProperty.call(req.body, prop)) return res.status(400).json({
 			error: 'Bad Request',
 			message: `The request body must contain a ${prop} property`

@@ -14,6 +14,8 @@ const create = (req, res) => {
 
     console.log("create the following: ")
     req.body.creator = req.id
+    req.body.participants = []
+    req.body.status = 0
     console.log(req.body)
     console.log(req.id)
     // Try to crate an activity.

@@ -91,7 +91,7 @@ export class ActivityListRow extends React.Component {
                     <Col>
                         <Card.Header>{this.props.activity.category}</Card.Header>
                         <Card.Body>
-                            <Card.Title>{this.props.activity.activityName}</Card.Title>
+                            <Card.Title>{(this.state.userID==this.props.activity.creator) ? <Badge className="badge-info">Created by you</Badge> : ""} <br/> {this.props.activity.activityName}</Card.Title>
                             <Card.Text>
                                 Some quick example text to build on the card title and make up the bulk of
                                 the card's content.
