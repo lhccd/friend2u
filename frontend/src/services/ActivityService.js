@@ -73,6 +73,9 @@ export default class ActivityService {
     }
 
     static updateActivity(activity) {
+        console.log("Update activity: ")
+        console.log(activity)
+        
         return new Promise((resolve, reject) => {
             HttpService.put(`${this.baseURL()}/${activity._id}`, activity, function(data) {
                 resolve(data);
@@ -80,6 +83,7 @@ export default class ActivityService {
                reject(textStatus);
             });
         });
+        
     }
 
     static createActivity(activity) {

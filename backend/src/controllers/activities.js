@@ -29,6 +29,7 @@ const create = (req, res) => {
 
 // Reading an existing activity.
 const read   = (req, res) => {
+
     ActivityModel.findById(req.params.id).exec()
         .then(activity => {
 
@@ -56,8 +57,8 @@ const update = (req, res) => {
             message: 'The request body is empty'
         });
     }
-
-    // console.log(req.body);
+    console.log("Update with the following:")
+    console.log(req.body);
 
     ActivityModel.findByIdAndUpdate(req.params.id,req.body,{
         new: true,

@@ -13,7 +13,8 @@ export class LocationPicker extends React.Component {
             mapPos: {lat: 48.14137159149285, lng: 11.5969768950502},
             search: "",
             showMap: "none",
-            maxDistance: "1000"
+            maxDistance: "1000",
+            first: true
         }
         this.onClick = this.onClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -92,6 +93,15 @@ export class LocationPicker extends React.Component {
             //transitionTimingFunction: 'ease-in-out',
             transition: '2s ease-in-out'
         }
+        if(this.state.first && this.props.editLocation) {
+          //console.log(this.props.editLocation)
+          //console.log("Mhhm")
+          this.state.mapPos.lng = this.props.editLocation.coordinates[0]
+          this.state.mapPos.lat = this.props.editLocation.coordinates[1]
+          this.state.position.lng = this.props.editLocation.coordinates[0]
+          this.state.position.lat = this.props.editLocation.coordinates[1]
+          this.state.first = false
+        }
         return (
             <div>
                 Choose the location:
@@ -109,7 +119,7 @@ export class LocationPicker extends React.Component {
                             className={"map"}
                             zoom={14}
                             onClick={this.onClick}
-                            initialCenter={{lat: 48.14137159149285, lng: 11.5969768950502}}
+                            initialCenter={this.state.mapPos}
                             center={this.state.mapPos}
                         >
                             <Marker position={this.state.position}/>

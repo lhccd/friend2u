@@ -23,7 +23,8 @@ export class ActivityCreate extends React.Component {
             phyCondition: "2",
             kitchen: "Other",
             title: "",
-            status: 0
+            status: 0,
+            first: true
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -167,6 +168,29 @@ export class ActivityCreate extends React.Component {
 
     render() {
         var cT = this.getCurrentTime()
+        if(this.props.activity && this.state.first) {
+            console.log("True or false, that is the question!")
+            console.log(this.props.activity)
+            this.state = this.props.activity
+            this.state.price = "p"+this.props.activity.price
+            console.log(this.getCurrentTime())
+            console.log(this.props.activity.dateTime)
+            this.state.dateTime = this.props.activity.dateTime.substring(0,16)
+            //this.setState({ ["price"]: "p"+this.props.activity.price})
+            // Show the category-specific filters; Therefore
+
+            //console.log("PhyCond:")
+            //console.log(this.state.phyCondition)
+            //console.log(this.state.phyCondition.toString())
+            // Physical condition is stored as number, but is here based on a string;
+            // Therefore conversion is necessary.
+            this.state.phyCondition = this.state.phyCondition.toString()
+            
+            this.state.first = false
+        } else {
+            console.log("The answer is false")
+            console.log(this.props.activity)
+        }
         return (
             <React.Fragment>
                 <Container fluid>
@@ -488,7 +512,7 @@ export class ActivityCreate extends React.Component {
                             />
                             <br/>
 
-                            <div ref={this.sportRef} style={{display: "none"}}>
+                            <div ref={this.sportRef} style={{display: (this.state.category == "Sport") ? "block" : "none"}}>
                                 <Form.Label>Level of "Sportiness"</Form.Label>
                                 <Form.Check
                                      
@@ -528,14 +552,14 @@ export class ActivityCreate extends React.Component {
                                 />
                             </div>
 
-                            <div ref={this.entertainmentRef} style={{display: "none"}}>
+                            <div ref={this.entertainmentRef} style={{display: (this.state.category == "Entertainment") ? "block" : "none"}}>
                                 <Form.Label>Title</Form.Label>
                                 <Form.Control type="text" name="title" placeholder="Title of the movie/concert/opera e.g TopGun II"
                                               value={this.state.title} onChange={this.handleChange}/>
                             </div>
 
 
-                            <div ref={this.foodRef} style={{display: "none"}}>
+                            <div ref={this.foodRef} style={{display: (this.state.category == "Food") ? "block" : "none"}}>
                                 <Form.Label>Cuisine</Form.Label>
                                 <Form.Check
 
@@ -675,7 +699,7 @@ export class ActivityCreate extends React.Component {
                         </Form.Group>
                         <Form.Group as={Col}>
                             <Form.Label>Preferred Gender</Form.Label>
-                            <Form.Control as="select" name="gender" defaultValue="Female" onChange={this.handleChange}>
+                            <Form.Control as="select" name="prefGender" defaultValue="Female" onChange={this.handleChange}>
                                 <option>Female</option>
                                 <option>Male</option>
                                 <option>Other</option>
@@ -691,7 +715,7 @@ export class ActivityCreate extends React.Component {
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     <Card style={{width: '45rem'}}>
-                                        <LocationPicker onLocChange={this.handleMapChange}/>
+                                        <LocationPicker onLocChange={this.handleMapChange} editLocation={(this.props.activity) ? this.props.activity.location : ""}/>
                                     </Card>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -699,7 +723,7 @@ export class ActivityCreate extends React.Component {
                         <br/>
 
                     </Form.Row>
-                    <Button onClick={this.handleSubmit}>Create Your Activity</Button>
+                    <Button onClick={this.handleSubmit}>{(this.props.activity) ? "Update Your Activity":"Create Your Activity"}</Button>
                     <Alert ref={this.submitAlertRef} style={{display: "none"}}>
                         Please validate your input, there seems to be something wrong (especially check whether
                         every field is filled).
