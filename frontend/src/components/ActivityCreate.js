@@ -64,6 +64,8 @@ export class ActivityCreate extends React.Component {
         this.setState({[event.target.name]: event.target.id});
 
         // Changing input-view based upon the selected category.
+        // Better solution found, no longer neeeded.
+        /*
         switch (event.target.id) {
             case "Sport": {
                 this.sportRef.current.style.display = "block"
@@ -90,6 +92,7 @@ export class ActivityCreate extends React.Component {
                 break
             }
         }
+        */
     }
 
     handleRBChange(event) {
@@ -141,6 +144,13 @@ export class ActivityCreate extends React.Component {
                 this.state.price = ap
                 //console.log(this.state.price)
             }
+            // Backend stores gender differently;
+            // Translation for "Does not matter" is done here.
+            // Backend: Female, Male, Other, NotDeclared
+            // Frontend: Female, Male, Other, Does not matter
+            if(this.state.prefGender === "Does not matter") {
+                this.state.prefGender = "NotDeclared"
+            }
 
             console.log("Create the activity: ")
             delete this.state["first"]
@@ -178,6 +188,14 @@ export class ActivityCreate extends React.Component {
             console.log(this.getCurrentTime())
             console.log(this.props.activity.dateTime)
             this.state.dateTime = this.props.activity.dateTime.substring(0,16)
+            // Translate prefGender state.
+            if(this.props.activity.prefGender === "NotDeclared") {
+                this.state.prefGender = "Does not matter"
+            }
+            // Show category-specific filters.
+            //if(this.props.activity.category == "Sport") this.sportRef.current.style.display = "block"
+            //if(this.props.activity.category == "Entertainment") this.entertainmentRef.current.style.display = "block"
+            //if(this.props.activity.category == "Food") this.foodRef.current.style.display = "block"
             //this.setState({ ["price"]: "p"+this.props.activity.price})
             // Show the category-specific filters; Therefore
 
@@ -187,6 +205,9 @@ export class ActivityCreate extends React.Component {
             // Physical condition is stored as number, but is here based on a string;
             // Therefore conversion is necessary.
             this.state.phyCondition = this.state.phyCondition.toString()
+            this.state.duration = this.state.duration.toString()
+            this.state.fromAge = this.state.fromAge.toString()
+            this.state.toAge = this.state.toAge.toString()
             
             this.state.first = false
         } else {
@@ -244,7 +265,7 @@ export class ActivityCreate extends React.Component {
                             />
                             <br/>
 
-                            <div ref={this.sportRef} style={{display: "none"}}>
+                            <div ref={this.sportRef} style={{ display: (this.state.category === "Sport") ? "block" : "none"}}>
                                 <Form.Label>Level of "Sportiness"</Form.Label>
                                 <Form.Check
                                     inline
@@ -284,7 +305,7 @@ export class ActivityCreate extends React.Component {
                                 />
                             </div>
 
-                            <div ref={this.entertainmentRef} style={{display: "none"}}>
+                            <div ref={this.entertainmentRef} style={{display: (this.state.category === "Entertainment") ? "block" : "none"}}>
                                 <Form.Label>Title</Form.Label>
                                 <Form.Control type="text" name="title"
                                               placeholder="Title of the movie/concert/opera e.g TopGun II"
@@ -292,7 +313,7 @@ export class ActivityCreate extends React.Component {
                             </div>
 
 
-                            <div ref={this.foodRef} style={{display: "none"}}>
+                            <div ref={this.foodRef} style={{display: (this.state.category === "Food") ? "block" : "none"}}>
                                 <Form.Label>Cuisine</Form.Label>
                                 <Form.Check
 
@@ -433,7 +454,7 @@ export class ActivityCreate extends React.Component {
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Preferred Gender</Form.Label>
-                                <Form.Control as="select" name="gender" defaultValue="Female"
+                                <Form.Control as="select" name="prefGender" defaultValue={this.state.prefGender}
                                               onChange={this.handleChange}>
                                     <option>Female</option>
                                     <option>Male</option>
@@ -450,12 +471,12 @@ export class ActivityCreate extends React.Component {
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     <Card style={{width: '45rem'}}>
-                                        <LocationPicker onLocChange={this.handleMapChange}/>
+                                        <LocationPicker onLocChange={this.handleMapChange} editLocation={(this.props.activity)?this.props.activity.location:""}/>
                                     </Card>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Form.Group>
-                        <Button onClick={this.handleSubmit}>Create Your Activity</Button>
+                        <Button onClick={this.handleSubmit}>{(this.state.creator === UserService.getCurrentUser().id) ? "Update Your Activity" : "Create Your Activity"}</Button>
                         <Alert ref={this.submitAlertRef} style={{display: "none"}}>
                             Please validate your input, there seems to be something wrong (especially check whether
                             every field is filled).

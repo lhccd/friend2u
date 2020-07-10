@@ -20,12 +20,30 @@ export class ActivityListRow extends React.Component {
         this.state = {
             address: "",
             first: true,
-            userID: UserService.getCurrentUser().id
+            userID: UserService.getCurrentUser().id,
+            badgeClassName: "",
+            badgeText: "",
+            showBadge: false
         }
 
         this.setPriceSymbols = this.setPriceSymbols.bind(this);
         this.getLocation = this.getLocation.bind(this);
+        this.setBadgeProps = this.setBadgeProps.bind(this)
     }
+
+    setBadgeProps() {
+        if(this.state.userID==this.props.activity.creator) {
+            this.setState({ ["showBadge"]: true})
+            this.setState({ ["badgeClassName"]: "badge-info"})
+            this.setState({ ["badgeText"]: "Created by You"})
+        }
+        else if(this.props.activity.participants.includes(UserService.getCurrentUser().id)) {
+            this.setState({ ["showBadge"]: true})
+            this.setState({ ["badgeClassName"]: "badge-success"})
+            this.setState({ ["badgeText"]: "you already joined"})
+        }
+    }
+
 
 
     async getLocation(location) {
@@ -76,6 +94,7 @@ export class ActivityListRow extends React.Component {
         
         if(this.state.first) {
             this.getLocation(this.props.activity.location)
+            this.setBadgeProps()
             this.setState({ ["first"]: false })
         }
 
@@ -91,7 +110,7 @@ export class ActivityListRow extends React.Component {
                     <Col>
                         <Card.Header>{this.props.activity.category}</Card.Header>
                         <Card.Body>
-                            <Card.Title>{(this.state.userID==this.props.activity.creator) ? <Badge className="badge-info">Created by you</Badge> : ""} <br/> {this.props.activity.activityName}</Card.Title>
+                            <Card.Title>{(this.state.showBadge) ? <Badge className={this.state.badgeClassName}>{this.state.badgeText}</Badge> : ""} <br/> {this.props.activity.activityName}</Card.Title>
                             <Card.Text>
                                 Some quick example text to build on the card title and make up the bulk of
                                 the card's content.
