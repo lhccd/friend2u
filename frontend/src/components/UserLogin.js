@@ -37,9 +37,6 @@ class UserLogin extends React.Component {
         this.setState(Object.assign({}, this.state, {[fieldName]: fieldVal}));
     }
 
-    handleChangePassword(value) {
-        this.setState(Object.assign({}, this.state, {password: value}));
-    }
 
     handleSubmit(event) {
         event.preventDefault();

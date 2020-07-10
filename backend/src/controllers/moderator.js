@@ -20,7 +20,12 @@ const blockUser = (req,res) => {
         message: 'The request body must contain a banningUser property'
     });
     
-    var time = req.body.time || DEFAULT_TIME;
+    
+    var time = DEFAULT_TIME;
+    
+    if(req.body.time && !isNaN(req.body.time) && Number.isInteger(+(req.body.time)) && +(req.body.time) > 0) time = +(req.body.time);
+    
+    console.log(time)
     
     UserSchema.findOneAndUpdate({_id: req.body.banningUser, role: 'user'}, {$set: {banUntilDate: Date.now() + time}},{new: true},(err, user) => {
 		if(err) return res.status(400).json({"error": err});
@@ -118,7 +123,7 @@ const groupReportsById = (req,res,type) => {
 		{
 			$sort: {
 				count: -1,
-				_id: 1,
+				_id: -1,
 			}
 		},
 		{

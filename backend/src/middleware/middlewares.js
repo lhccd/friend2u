@@ -72,10 +72,6 @@ const checkAuthentication = (req, res, next) => {
 			});
 		}
 		
-		console.log(decoded.banTime)
-		console.log(Date.now())
-		
-		console.log(decoded.banTime)
 		if(decoded.banTime && decoded.banTime > Date.now()){
 			return res.status(403).send({
 				error: 'Banned',

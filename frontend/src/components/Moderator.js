@@ -6,9 +6,20 @@ import AuthService from '../services/AuthService';
 
 import Page from './Page';
 
-import {NavBar, Nav, NavItem, Modal, Button} from 'react-bootstrap'
+import {NavBar, Nav, NavItem, Modal, Button, Card} from 'react-bootstrap'
 import {ReportList} from './ReportList'
-import {ReportModal} from './ReportModal'
+import { ReportUserModal } from './ReportUserModal'
+
+import { FaSortDown } from "react-icons/fa";
+
+
+const style = {
+	margin: 'auto',
+	marginTop: '30px',
+	marginBottom: '30px',
+	width: '90%',
+	height: '95%',
+}
 
 
 export class Moderator extends React.Component{
@@ -19,39 +30,48 @@ export class Moderator extends React.Component{
 	
 
   render(){
+	  
+	let { category, reports, handleSelect, toggleModal, deleteReports, getReports, refreshReports } = this.props
+	
+	reports = reports[category];
+	  
     return(
-		<Fragment>
-			<Nav variant="tabs" activeKey={this.props.category} onSelect={this.props.handleSelect}>
-			  <Nav.Item>
-				<Nav.Link eventKey="users">Users</Nav.Link>
-			  </Nav.Item>
-			  <Nav.Item>
-				<Nav.Link eventKey="activities">Activities</Nav.Link>
-			  </Nav.Item>
-			</Nav>
+		<Card style={style}>
+			<Card.Header>
+				<Nav variant="tabs" activeKey={category} onSelect={handleSelect}>
+				  <Nav.Item>
+					<Nav.Link eventKey="users">Users</Nav.Link>
+				  </Nav.Item>
+				  <Nav.Item>
+					<Nav.Link eventKey="activities">Activities</Nav.Link>
+				  </Nav.Item>
+				</Nav>
+			</Card.Header>
 			
 			<ReportList
-				//getReports={this.props.getReports}
-				reports={this.props.reports}
+				category={category}
+				reports={reports}
 				//handleListReports={this.props.handleListReports}
-				toggleModal={this.props.toggleModal}
-				deleteReports={this.props.deleteReports}
+				toggleModal={toggleModal}
+				deleteReports={deleteReports}
+				refreshReports={refreshReports}
 			/>
 			
-			{this.props.allReports?<div>No more reports. Refresh page to update.</div>:
-				<Button onClick={this.props.getReports}>new reports</Button>
+			{reports.all?'':
+				<Button style={{color: 'grey'}} variant="link" onClick={() => getReports(category)}>
+					<FaSortDown size={30}/>
+				</Button>
 			}
 			
-			<ReportModal
-				banUser={this.props.banUser}
-				showingUser={this.props.showingUser}
-				show={this.props.showModal}
-				toggleModal={this.props.toggleModal}
-				reports={this.props.reportsModal}
-				deleteReports={this.props.deleteReports}
-				category={this.props.category}
-			/>
-		</Fragment>
+			{this.props.category === 'users'?<ReportUserModal
+												banUser={this.props.banUser}
+												modalReported={this.props.modalReported}
+												show={this.props.showModal}
+												toggleModal={this.props.toggleModal}
+												reports={this.props.reportsModal}
+												deleteReports={this.props.deleteReports}
+											/>:''}
+		</Card>
     );
   }
 }

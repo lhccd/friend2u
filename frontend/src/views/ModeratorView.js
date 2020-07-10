@@ -15,17 +15,26 @@ export class ModeratorView extends React.Component {
         super(props);
         this.state = {
 			category: 'users',
-			reportsUser: [],
-			reports: [],
+			reports: {
+				'users': {
+					list: [],
+					all: false,
+					deleted: 0,
+				},
+				'activities': {
+					list: [],
+					all: false,
+					deleted: 0,
+				},
+			},
+			reportsActivities: [],
 			showModal: false,
 			reportsModal: [],
-			showingUser: {
+			modalReported: {
 				id: '',
-				username: '',
+				name: '',
 				idx: -1,
 			},
-			allReports: false,
-			deleted: 0
 		}
 		
 		this.handleChangeCategory = this.handleChangeCategory.bind(this);
@@ -33,25 +42,42 @@ export class ModeratorView extends React.Component {
 		this.banUser = this.banUser.bind(this);
 		this.toggleModal = this.toggleModal.bind(this);
 		this.deleteReportsById = this.deleteReportsById.bind(this);
+		this.refreshReports = this.refreshReports.bind(this);
     }
     
-    closeModal(){
-		this.setState({reportsModal: [], showingUser: {id: '', username: '', idx: -1}, showModal: false})
+    componentDidMount() {
+		this.getReportList(this.state.category)
 	}
     
-    async getReportList(){
+    async refreshReports(category){
+		let { reports } = this.state
+		await this.setState(prevState => {
+			let rep = Object.assign({}, reports)
+			rep[category] = {list: [],all: false,deleted: 0}
+			return {reports: rep}
+		})
+		
+		this.getReportList(category)
+	}
+    
+    async getReportList(category){
 		try{
-			let limit = 2
-			let skip = this.state.reports.length - this.state.deleted
-			let newReports = await ReportService.getReportList(this.state.category,null,limit,skip)
-			let reports = this.state.reports
-			let newState = {}
+			let { reports } = this.state
+			let currReports = Object.assign({}, reports[category])
+			let limit = 1
+			let skip = currReports.list.length - currReports.deleted
+			let newReports = await ReportService.getReportList(category,null,limit,skip)
+			
+			
 			if(newReports.reports.length === 0 || newReports.reports.length < limit){
-				newState.allReports = true
+				currReports.all = true
 			}
-			reports = reports.concat(newReports.reports)
-			newState.reports = reports
-			this.setState(newState)
+			currReports.list = currReports.list.concat(newReports.reports)
+			this.setState(prevState => {
+				let rep = Object.assign({}, reports)
+				rep[category] = currReports
+				return {reports: rep}
+			})
 		}
 		catch(err){
             console.error(err);
@@ -61,11 +87,11 @@ export class ModeratorView extends React.Component {
 		}
 	}
 	
-	async getReportListById(id, username, idx){
+	async getReportListById(id, name, idx){
 		try{
 			let reports = await ReportService.getReportList(this.state.category,id,null,null)
 			console.log("aaa: " + idx)
-			this.setState({reportsModal: reports.reports, showingUser: {id: id, username: username, idx: idx}})
+			this.setState({reportsModal: reports.reports, modalReported: {id: id, name: name, idx: idx}})
 			//console.log(reports[0].reports[0]._id)
 			//this.setState({reports: reports[0].reports})
 		}
@@ -78,8 +104,20 @@ export class ModeratorView extends React.Component {
 	}
 	
 	removeReportItem(idx){
-		let reports = this.state.reports
-		reports[idx].removed = true;
+		let { category, reports } = this.state
+		
+		let currReports = Object.assign({}, reports[category])
+		delete currReports.list[idx]
+		currReports.deleted += 1
+		//reports[category].list[idx].removed = true;
+		
+		console.log(currReports)
+		this.setState(prevState => {
+			let rep = Object.assign({}, reports)
+			reports[category] = currReports
+			return {rep}
+		})
+		
 		
 		let deleted = this.state.deleted;
 		
@@ -104,11 +142,10 @@ export class ModeratorView extends React.Component {
 		}
 	}
     
-	async banUser(id, time){
+	async banUser(id, time, idx){
 		try{
-			let reports = await ReportService.banUser(this.state.showingUser.id,time)
-			this.removeReportItem(this.state.showingUser.idx)
-			this.closeModal()
+			let reports = await ReportService.banUser(id,time)
+			this.removeReportItem(idx)
 		}
 		catch(err){
             console.error(err);
@@ -119,19 +156,23 @@ export class ModeratorView extends React.Component {
 	}
     
     handleChangeCategory(category) {
-		this.setState({category: category, reports: [], allReports: false})
+		this.setState({category: category})
+		let reports = this.state.reports[category]
+		if(reports.list.length === 0 && !reports.all){
+			this.getReportList(category);
+		}
 	}
 	
 	toggleModal(show,id,username,idx) {
-		//TODO: Retrieve reports
-		if(show) this.getReportListById(id, username, idx)
-		this.setState({showModal: show})
+		if(show){
+			this.getReportListById(id, username, idx)
+			this.setState({showModal: true})
+		}
+		else this.setState({reportsModal: [], modalReported: {id: '', name: '', idx: -1}, showModal: false})
 	}
 	
 	renderModerator() {
-		const {category, showModal, reports, reportsModal, showingUser, allReports} = this.state;
-		
-		console.log(reports)
+		const {category, showModal, reports, reportsModal, modalReported, allReports} = this.state;
 		
 		return <Moderator
 				category={category}
@@ -141,10 +182,11 @@ export class ModeratorView extends React.Component {
 				handleSelect={this.handleChangeCategory}
 				showModal={showModal}
 				toggleModal={this.toggleModal}
-				showingUser={showingUser}
+				modalReported={modalReported}
 				reportsModal={reportsModal}
 				deleteReports={this.deleteReportsById}
 				allReports={allReports}
+				refreshReports={this.refreshReports}
 			  />;
 	}
 	

@@ -13,13 +13,16 @@ import { Banned } from './components/Banned'
 
 import styled from "styled-components";
 
+import { Spinner } from 'react-bootstrap';
+
 
 //Loading mes
 function LoadingMessage() {
   return (
     <div className="splash-screen">
-      Wait a moment while we load your app.
-      <div className="loading-dot">.</div>
+     <Spinner style={{ position: "fixed", top: "50%", left: "50%" }} animation="border" variant='info' role="status">
+		 <span className="sr-only">Loading...</span>
+	 </Spinner>
     </div>
   );
 }
@@ -82,10 +85,10 @@ export default function authSplashScreen(WrappedComponent) {
         )
 	}
 	
-    renderBanned() {
+    renderBanned(date) {
 		return (
 			   <Fragment>
-                   <Banned {...this.props} />
+                   <Banned {...this.props} date={date} />
 			   </Fragment>)
 	}
 
@@ -102,7 +105,7 @@ export default function authSplashScreen(WrappedComponent) {
 		  if(this.state.authenticated) return <Redirect to={{pathname: '/'}}/>
 		  else return <WrappedComponent {...this.props} />
 	  }
-      else if(this.state.banDate) return this.renderBanned();
+      else if(this.state.banDate) return this.renderBanned(this.state.banDate);
       else if(this.state.authenticated) return this.renderAuthenticated();
       
       const { history, location } = this.props;

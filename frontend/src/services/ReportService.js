@@ -53,7 +53,7 @@ export default class ReportService {
 		
 		const data = {
 			banningUser: id,
-			//time: time
+			time: time
 		}
 		
         return new Promise((resolve, reject) => {

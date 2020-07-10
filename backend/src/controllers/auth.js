@@ -61,6 +61,12 @@ const login = async (req,res) => {
 				"refreshToken": refreshToken,
 			}
 			
+			/*res.cookie('refreshToken', refreshToken, {
+				maxAge: config.refreshTokenLife,
+				httpOnly: true,
+				sameSite: 'strict',
+			});*/
+			
 			res.status(200).json(response);
 			
 			
@@ -98,6 +104,8 @@ const login = async (req,res) => {
 const refresh_token = async (req,res) => {
     // refresh the token
     const refreshToken = req.body.refreshToken
+    //console.log(req.cookies)
+    //const refreshToken = req.cookies['refreshToken']
     
     if(refreshToken) {
 		
