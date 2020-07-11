@@ -256,7 +256,22 @@ const setSelectedPerson = (req, res) => {
 
 
 // Remove an existing activity.
-const remove = (req, res) => {
+const remove = async (req, res) => {
+
+    var delAct = await ActivityModel.findById(req.params.id)
+
+    //console.log("Trying to delete activity: "+req.params.id+" from: "+delAct.creator+"="+req.id)
+
+    
+    // Check wheter the user who wants to delete an activity is also the creator;
+    // Special check for moderators might still be required.
+    if(!(req.id === delAct.creator)) {
+        res.status(500).json({
+            error: 'You are not the creator of the activity!',
+            message: error.message
+        })
+    }
+
     ActivityModel.findByIdAndRemove(req.params.id).exec()
         .then(() => res.status(200).json({message: `Activity with id${req.params.id} was deleted`}))
         .catch(error => res.status(500).json({

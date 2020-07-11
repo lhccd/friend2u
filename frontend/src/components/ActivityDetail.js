@@ -42,10 +42,16 @@ export class ActivityDetail extends React.Component {
         this.setPriceSymbols = this.setPriceSymbols.bind(this);
         this.getPhyConditon = this.getPhyConditon.bind(this)
         this.setPrefGender = this.setPrefGender.bind(this)
+        this.deleteActivity = this.deleteActivity.bind(this)
 
         this.participantRef = React.createRef()
         this.creatorRef = React.createRef()
         this.creatorButtonRef = React.createRef()
+    }
+
+    deleteActivity() {
+        this.props.onDelete(this.props.activity._id)
+        window.location = "/#/activities/search"
     }
 
     setPrefGender() {
@@ -182,16 +188,24 @@ export class ActivityDetail extends React.Component {
                 <Card style={{margin:"10px", padding:"5px"}}>
                     <Row key={this.props.key} className="text-center">
                     <Col xs lg={2}>
-                        <Link to={'/activities/search'}>
-                            <Button>
-                                Return to search
-                            </Button>
-                        </Link>
-                        <br/>
                         <Image className="center" src={thumbnail} fluid style={{width:"100%"}}/>
                     </Col>
                     <Col>
-                        <Card.Header>{this.props.activity.category}</Card.Header>
+                        <div style={{float: "left"}}>
+                            <Link to={'/activities/search'}>
+                                <Button>
+                                    Return to search
+                                </Button>
+                            </Link>
+                        </div>
+                        <div style={{float: "right", visibility: (this.props.activity.creator === UserService.getCurrentUser().id ) ? "block" : "hidden"}}>
+                            <Button onClick={this.deleteActivity} variant="danger">
+                                Delete this activity
+                            </Button>
+                        </div>
+                        <Card.Header>
+                            {this.props.activity.category}
+                        </Card.Header>
                         <Card.Body>
                             <Card.Title>{this.props.activity.activityName}</Card.Title>
                             <ListGroup className="list-group-flush">
