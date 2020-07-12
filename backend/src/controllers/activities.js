@@ -275,6 +275,15 @@ const list  = (req, res) => {
         }));
 };
 
+const findActivitiesForUser  = (req, res) => {
+    ActivityModel.find({ creator: req.params.id}).exec()
+        .then(activities => res.status(200).json(activities))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error - activities_list',
+            message: error.message
+        }));
+};
+
 // Find activities within a radius;
 // Minimum is fixed to 0m, but maximum has to be provided in body.
 const getActivitiesInRadius = ((req, res) => {
@@ -609,5 +618,6 @@ module.exports = {
     getActivitiesInRadius,
     search,
     test,
-    getVotes
+    getVotes,
+    findActivitiesForUser
 };

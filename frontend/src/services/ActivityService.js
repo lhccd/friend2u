@@ -39,6 +39,37 @@ export default class ActivityService {
         });
     }
 
+    static getActivitiesByUserID(userID) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${ActivityService.baseURL()}/user/${userID}`, function(data) {
+                if(data != undefined || Object.keys(data).length !== 0) {
+                    resolve(data);
+                }
+                else {
+                    reject('Error while retrieving the activity');
+                }
+            }, function(textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
+
+    static getjoinedActivitiesID(userID) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${ActivityService.baseURL()}/userjoined/${userID}`, function(data) {
+                if(data != undefined || Object.keys(data).length !== 0) {
+                    resolve(data);
+                }
+                else {
+                    reject('Error while retrieving the activity');
+                }
+            }, function(textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
+
+
     static searchActivities(filters) {
         console.log("Activity Service - Searching with: ")
         console.log(filters)

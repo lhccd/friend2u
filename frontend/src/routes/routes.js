@@ -23,6 +23,6 @@ export const routes = [
     {component: authSplashScreen(ActivityListView), path: '/activities/search', exact: true},
     {component: authSplashScreen(ActivityDetailedView), path: '/detail/:id'},
     {component: authSplashScreen(ActivityCreateView), path: '/activities/create' },
-    {component: (ActivityHistoryView), path: '/activityhistory'},
+    {component: authSplashScreen(ActivityHistoryView), path: '/activityhistory/'},
     {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' }
 ];

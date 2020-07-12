@@ -1,10 +1,8 @@
 
 import React from 'react';
-import { Tabs, Tab} from 'react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import styled from 'styled-components'
-import Page from './Page';
 import { ActivityListCards } from './ActivityListCards'
-
 export class ActivityHistory extends React.Component {
 
     constructor(props) {
@@ -13,6 +11,7 @@ export class ActivityHistory extends React.Component {
     }
 
     render() {
+      
         const Styles = styled.div`
             .btn {
                 margin-top: 20px;
@@ -41,20 +40,27 @@ export class ActivityHistory extends React.Component {
 
         return (
             <Styles>
-                <Page>
-                    <h1 className="h1">My Activity History</h1>
-                    <Tabs defaultActiveKey="activityhistory" id="activityhistory" onSelect={this.props.handleSelect}>
-                        <Tab eventKey="created" title="Created">
-                            <ActivityListCards
-                            activities = {this.props.activities}
-                            />
-                        </Tab>
-                        <Tab eventKey="joinedactivity" title="JoinedActivity">
-                        </Tab>
-                        <Tab eventKey="histories" title="Histories">
-                        </Tab>
-                    </Tabs>
-                </Page>
+                <h1 className="h1">My Activity History</h1>
+                <Tabs defaultActiveKey="activityhistory" id="activityhistory" onChange = {this.handleSelect} >
+                    <Tab eventKey="Created" title="Created">
+                        <ActivityListCards
+                            activities={this.props.createdactivities}
+                            mode="Created"
+                        />
+                    </Tab>
+                    <Tab eventKey="Joined" title="JoinedActivity">
+                        <ActivityListCards
+                            activities={this.props.joinedactivities}
+                            mode="Joined"
+                        />
+                    </Tab>
+                    <Tab eventKey="Histories" title="Histories">
+                        <ActivityListCards
+                            activities={this.props.createdactivities}
+                            mode="Histories"
+                        />
+                    </Tab>
+                </Tabs>
             </Styles>
         );
     }
