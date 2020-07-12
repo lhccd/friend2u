@@ -214,7 +214,7 @@ export class ActivityDetail extends React.Component {
                                     Duration:
                                     <br/>
                                     {this.props.activity.duration} min. {(this.props.activity.approxTime) ? "(time not 100% fixed)" : ""}
-                                    </ListGroupItem>
+                                </ListGroupItem>
                                 <ListGroupItem style={{ display: (this.props.activity.category === "Sport") ? "block" : "none" }}>Physical Condition: {this.state.transPhyCond}</ListGroupItem>
                                 <ListGroupItem>Price:<br/>{this.setPriceSymbols(this.props.activity.price)}</ListGroupItem>
                                 <ListGroupItem>Description: <br/> {this.props.activity.description}</ListGroupItem>
