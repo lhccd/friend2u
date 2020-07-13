@@ -1,6 +1,6 @@
 import React from 'react';
 import LocationPicker from './LocationPicker';
-import {Button, Card, Row, Container, Col, Form, Alert, Dropdown, ListGroup, ListGroupItem} from 'react-bootstrap';
+import {Button, Card, Row, Container, Col, Form, Alert, Dropdown, ListGroup, ListGroupItem, TextArea} from 'react-bootstrap';
 import UserService from '../services/AuthService';
 
 export class ActivityCreate extends React.Component {
@@ -25,7 +25,8 @@ export class ActivityCreate extends React.Component {
             title: "",
             status: 0,
             participants: [],
-            first: true
+            first: true,
+            submitTry: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -109,10 +110,16 @@ export class ActivityCreate extends React.Component {
         console.log(event.target.name)
         console.log(event.target.value)
         console.log(event.target)
+        if(event.target.name==="description" && this.state.description.length==500) return
+        if(event.target.name==="activityName" && this.state.activityName.length==50) return
+        if(event.target.name==="title" && this.state.title.length==50) return
         this.setState({[event.target.name]: event.target.value});
     }
 
     handleSubmit(event) {
+
+        // Should some fields be wrongly entered, then show now an error.
+        this.setState({ ["submitTry"]: true})
 
         //creator
         console.log("Infos about me: ")
@@ -153,7 +160,9 @@ export class ActivityCreate extends React.Component {
             }
 
             console.log("Create the activity: ")
+            // Delete state-entries, which do not belong into the database.
             delete this.state["first"]
+            delete this.state["submitTry"]
             console.log(this.state)
             this.props.onCreate(this.state)
 
@@ -219,12 +228,15 @@ export class ActivityCreate extends React.Component {
 
             <Card style={{margin:"10px", padding:"5px"}}>
                 <ListGroup>
-                    <ListGroupItem>
+                    <ListGroupItem className="list-group-item-success">
                         <h2>
                             Create your activity
                         </h2>
                     </ListGroupItem>
                     <ListGroupItem className="list-group-item-warning"/>
+                    <ListGroupItem className="list-group-item-info">
+                        General information about your activity:
+                    </ListGroupItem>
                     <ListGroupItem className="list-group-item-secondary">
                         Select the Category:
                     </ListGroupItem>
@@ -314,8 +326,8 @@ export class ActivityCreate extends React.Component {
 
                             <div ref={this.entertainmentRef} style={{display: (this.state.category === "Entertainment") ? "block" : "none"}}>
                             
-                                <ListGroupItem className="list-group-item-secondary">Title</ListGroupItem>
-                                <ListGroupItem>
+                                <ListGroupItem className="list-group-item-secondary">Title ({this.state.title.length+"/50"})</ListGroupItem>
+                                <ListGroupItem className={(this.state.title == 0 && this.state.submitTry)?"list-group-item-danger":""}>
                                     <Form.Control type="text" name="title"
                                               placeholder="Type the title of the movie/concert/opera e.g TopGun II"
                                               value={this.state.title} onChange={this.handleChange}/>
@@ -329,7 +341,7 @@ export class ActivityCreate extends React.Component {
                                 </ListGroupItem>
                                 <ListGroupItem>
                                 <Form.Check
-
+                                    inline
                                     checked={this.state.kitchen === "Italian"}
                                     label="Italian"
                                     type="radio"
@@ -338,6 +350,7 @@ export class ActivityCreate extends React.Component {
                                     onChange={this.handleRBChange}
                                 />
                                 <Form.Check
+                                    inline
                                     checked={this.state.kitchen === "Japanese"}
                                     label="Japanese"
                                     type="radio"
@@ -346,6 +359,7 @@ export class ActivityCreate extends React.Component {
                                     onChange={this.handleRBChange}
                                 />
                                 <Form.Check
+                                    inline
                                     checked={this.state.kitchen === "Chinese"}
                                     label="Chinese"
                                     type="radio"
@@ -354,6 +368,7 @@ export class ActivityCreate extends React.Component {
                                     onChange={this.handleRBChange}
                                 />
                                 <Form.Check
+                                    inline
                                     checked={this.state.kitchen === "German"}
                                     label="German"
                                     type="radio"
@@ -362,6 +377,7 @@ export class ActivityCreate extends React.Component {
                                     onChange={this.handleRBChange}
                                 />
                                 <Form.Check
+                                    inline
                                     checked={this.state.kitchen === "FastFood"}
                                     label="Fast Food"
                                     type="radio"
@@ -370,6 +386,7 @@ export class ActivityCreate extends React.Component {
                                     onChange={this.handleRBChange}
                                 />
                                 <Form.Check
+                                    inline
                                     checked={this.state.kitchen === "StreetFood"}
                                     label="Street Food"
                                     type="radio"
@@ -378,6 +395,7 @@ export class ActivityCreate extends React.Component {
                                     onChange={this.handleRBChange}
                                 />
                                 <Form.Check
+                                    inline
                                     checked={this.state.kitchen === "Other"}
                                     label="Other"
                                     type="radio"
@@ -389,15 +407,22 @@ export class ActivityCreate extends React.Component {
                             </div>
 
                     <ListGroupItem className="list-group-item-secondary">
-                        Activityname
+                        Activityname ({this.state.activityName.length+"/50"})
                     </ListGroupItem>
-                    <ListGroupItem>
+                    <ListGroupItem className={(this.state.activityName == 0 && this.state.submitTry)?"list-group-item-danger":""}>
                         <Form.Control type="text" name="activityName" placeholder="Sth. meaningful"
                                     value={this.state.activityName} onChange={this.handleChange}/>
                     </ListGroupItem>
 
                     <ListGroupItem className="list-group-item-secondary">
-                        Time & Duration in minutes:
+                        <Row>
+                            <Col>
+                                Time:
+                            </Col>
+                            <Col>
+                                Duration in minutes:
+                            </Col>
+                        </Row>
                     </ListGroupItem>
                     <ListGroupItem>
                         <Row>
@@ -465,33 +490,65 @@ export class ActivityCreate extends React.Component {
                                 onChange={this.handleRBChange}
                             />
                         </ListGroupItem>
+                        <ListGroupItem className="list-group-item-secondary">
+                            Description of your activity: ({this.state.description.length+"/500"})
+                        </ListGroupItem>
+                        <ListGroupItem>
+                            <Form.Control as="textarea" rows="4" name="description" onChange={this.handleChange} value={this.state.description}/>
+                        </ListGroupItem>
                         <ListGroupItem className="list-group-item-warning"/>
                         <ListGroupItem className="list-group-item-info">
                             Select preferences for your Companion:
                         </ListGroupItem>
-                        
                         <ListGroupItem className="list-group-item-secondary">
-                            From Age
+                            <Row>
+                                <Col>
+                                    From Age:
+                                </Col>
+                                <Col>
+                                    To Age:
+                                </Col>
+                                <Col>
+                                    Gender:
+                                </Col>
+                            </Row>
                         </ListGroupItem>
-                                <Form.Control type="number" name="fromAge" value={this.state.fromAge} min="18"
+                        <ListGroupItem>
+                            <Row>
+                                <Col>
+                                    <Form.Control type="number" name="fromAge" value={this.state.fromAge} min="18"
                                               max={this.state.toAge} onChange={this.handleChange}/>
-                        
-                            
-                                <Form.Label>To Age</Form.Label>
-                                <Form.Control type="number" name="toAge" value={this.state.toAge}
+                                </Col>
+                                <Col>
+                                    <Form.Control type="number" name="toAge" value={this.state.toAge}
                                               min={this.state.fromAge}
                                               max="150" onChange={this.handleChange}/>
-                           
-                            <Form.Group>
-                                <Form.Label>Preferred Gender</Form.Label>
-                                <Form.Control as="select" name="prefGender" defaultValue={this.state.prefGender}
-                                              onChange={this.handleChange}>
-                                    <option>Female</option>
-                                    <option>Male</option>
-                                    <option>Other</option>
-                                    <option>Does not matter</option>
-                                </Form.Control>
-                            </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Control as="select" name="prefGender" defaultValue={this.state.prefGender}
+                                                onChange={this.handleChange}>
+                                        <option>Female</option>
+                                        <option>Male</option>
+                                        <option>Other</option>
+                                        <option>Does not matter</option>
+                                    </Form.Control>
+                                </Col>
+                            </Row>
+                        </ListGroupItem>
+                        <ListGroupItem className="list-group-item-warning"/>
+                        <ListGroupItem className="list-group-item-info">
+                            Choose the location:
+                        </ListGroupItem>
+                        <ListGroupItem style={{ height: "35rem"}}>
+                            <LocationPicker onLocChange={this.handleMapChange} editLocation={(this.props.activity)?this.props.activity.location:""}/>
+                        </ListGroupItem>
+                        <ListGroupItem>
+                        <Button onClick={this.handleSubmit}>{(this.state.creator === UserService.getCurrentUser().id) ? "Update Your Activity" : "Create Your Activity"}</Button>
+                        <Alert ref={this.submitAlertRef} style={{display: "none"}}>
+                            Please validate your input, there seems to be something wrong (especially check whether
+                            every field is filled correctly).
+                        </Alert>
+                        </ListGroupItem>
                    
 
 
@@ -513,7 +570,7 @@ export class ActivityCreate extends React.Component {
 
 
 
-            <React.Fragment>
+           {/* <React.Fragment>
                 <Container fluid>
                     <h1 className="text-center">Create Your activity</h1>
                     <Form>
@@ -780,7 +837,7 @@ export class ActivityCreate extends React.Component {
                             every field is filled).
                         </Alert>
                     </Form>
-                </Container>
+                            </Container>*/}
 
                 {/*<Container fluid>
                 <h3>Create Activity:</h3>
@@ -1050,8 +1107,8 @@ export class ActivityCreate extends React.Component {
                         every field is filled).
                     </Alert>
                 </Form>
-                </Container>*/}
-            </React.Fragment>
+                </Container>
+                        </React.Fragment>*/}
             </div>
         )
     }
