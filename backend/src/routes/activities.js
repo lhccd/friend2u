@@ -32,7 +32,7 @@ router.get('/activityExists/:id', ActivityHandler.ActivityExists); // Check, whe
 router.delete('/unjoin/:id', middlewares.checkAuthentication, JoinedActivityHandler.unjoin, ActivityHandler.unjoin); // Remove a user form the participants-list.
 router.put('/creatorVoteForParticipant/:id', ActivityHandler.creatorVoteForParticipant); // Set the vote of the creator for the selPerson.
 router.put('/participantVoteForCreator/:id', ActivityHandler.participantVoteForCreator); // Set the vote of the selPerson for the creator.
-//router.delete('/:id', ActivityHandler.remove); // Delete a activitie by Id
+router.delete('/:id', middlewares.checkAuthentication, ActivityHandler.remove); // Delete a activitie by Id
 router.put('/setSelectedPerson/:id', ActivityHandler.setSelectedPerson); // Set the selected person for an activity.
 router.put('/updateStatus/:id', middlewares.checkAuthentication, ActivityHandler.changeStatus); // Change the status of an activity; For valuerepresentation look into the controller.
 

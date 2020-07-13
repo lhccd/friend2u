@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import {Button} from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-transition-group';
  
 
@@ -91,12 +92,14 @@ export class LocationShower extends React.Component {
         return (
           <div>
             Address: {this.state.address}
+            <br/>
             <div>
-        {(!this.props.withoutButton) ? <button type="button" name="ShowMap" ref={this.searchButtonRef} onClick={this.handleMap}>Show map</button> : ""}
+              <br/>
+        {(!this.props.withoutButton) ? <Button className="btn-info" type="button" name="ShowMap" ref={this.searchButtonRef} onClick={this.handleMap}>Show map</Button> : ""}
                 <div ref={this.mapRef} style={mapStyle}>
               <Map
               google={this.props.google}
-              style={{ width: "50rem", height: "30rem" }}
+              style={{ height: "30rem", float: "auto" }}
               className={"map"}
               zoom={14}
               

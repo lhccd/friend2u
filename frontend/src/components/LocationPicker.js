@@ -14,7 +14,9 @@ export class LocationPicker extends React.Component {
             search: "",
             showMap: "none",
             maxDistance: "1000",
-            first: true
+            first: true,
+            error: false,
+            SBText: "Find location"
         }
         this.onClick = this.onClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -41,12 +43,21 @@ export class LocationPicker extends React.Component {
         console.log("Searching for: " + encodeURI(this.state["search"]))
         httpGetAsync(query, (res) => {
             var out = JSON.parse(res)
-            loc = out.results[0].geometry.location//{ lat: out.results[0].geometry.location.lat, lng: out.results[0].geometry.location.lng}
-            console.log(out)
-            console.log(loc)
-            this.setState({["position"]: loc})
-            this.setState({["mapPos"]: loc})
-            this.props.onLocChange(loc)
+            // Should the inputtext be to unprecise, the length of the results will be 0;
+            // We will notify the user about this situation.
+            if(out.results.length == 0) {
+              this.setState({ ["error"]: true})
+              this.setState({ ["SBText"]: "Location not found"})
+            } else {
+              this.setState({ ["error"]: false})
+              this.setState({ ["SBText"]: "Find location"})
+              loc = out.results[0].geometry.location//{ lat: out.results[0].geometry.location.lat, lng: out.results[0].geometry.location.lng}
+              console.log(out)
+              console.log(loc)
+              this.setState({["position"]: loc})
+              this.setState({["mapPos"]: loc})
+              this.props.onLocChange(loc)
+            }
         })
         event.preventDefault();
     }
@@ -104,12 +115,12 @@ export class LocationPicker extends React.Component {
         }
         return (
             <div>
-                Choose the location:
+                Search location by name:
                 <input type="text" name="search" placeholder="Search location" value={this.state.search}
                        onChange={this.handleChange}/>
                 {(this.props.distanceSelect) ? <input type="number" name="maxDistance" placeholder="Distance to search in" value={this.state.maxDistance}
                         onChange={this.handleChange}/> : ""}
-                <Button onClick={this.handleMapSubmit}>Find location</Button>
+                <Button onClick={this.handleMapSubmit} id="SearchButton" variant={(this.state.error)?"danger":"primary"}>{this.state.SBText}</Button>
                 <div className="m-auto">
                     {/*<button type="button" name="ShowMap" ref={this.searchButtonRef} onClick={this.handleMap}>Show map</button>*/}
                     <div ref={this.mapRef} style={{height: "25rem", width: '100%' }}>
@@ -118,6 +129,7 @@ export class LocationPicker extends React.Component {
                             // style={{width: "50rem", height: "30rem"}}
                             className={"map"}
                             zoom={14}
+                            style={{ height: "30rem", float: "auto", marginRight: "2rem" }}
                             onClick={this.onClick}
                             initialCenter={this.state.mapPos}
                             center={this.state.mapPos}
