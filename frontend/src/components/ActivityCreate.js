@@ -205,6 +205,24 @@ export class ActivityCreate extends React.Component {
                                           value={this.state.activityName} onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group>
+                            <Form.Label>Upload Activity Picture</Form.Label>
+                                <form className="mt-4"
+                                      action="http://localhost:3000/activities/upload"
+                                      method="POST"
+                                      encType="multipart/form-data"
+                                >
+                                    <div className="form-group">
+                                        <input
+                                            type="file"
+                                            name="file"
+                                            id="input-files"
+                                            className="form-control-file border"
+                                        />
+                                    </div>
+                                    <button type="submit" className="btn btn-primary">Submit</button>
+                                </form>
+                        </Form.Group>
+                        <Form.Group>
                             <Form.Label>Category</Form.Label>
                             <Form.Check
                                 inline
@@ -461,35 +479,6 @@ export class ActivityCreate extends React.Component {
                             every field is filled).
                         </Alert>
                     </Form>
-                    <React.Fragment>
-                        <h1>Upload Page</h1>
-                        <Container>
-                            <div className="jumbotron">
-                                <h1 className="display-4">Image Uploader</h1>
-                                <p className="lead">
-                                    This is a simple application to upload and retrieve images from a database
-                                </p>
-                                <hr className="my-4" />
-                            </div>
-
-                            <form className="mt-4"
-                                  action="http://localhost:3000/activities/upload"
-                                  method="POST"
-                                  encType="multipart/form-data"
-                            >
-                                <div className="form-group">
-                                    <input
-                                        type="file"
-                                        name="file"
-                                        id="input-files"
-                                        className="form-control-file border"
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-primary">Submit</button>
-                            </form>
-
-                        </Container>
-                    </React.Fragment>
                 </Container>
 
                 {/*<Container fluid>
