@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import thumbnail from '../media/activity_mock.jpg';
 import UserService from '../services/AuthService';
 import ActivityService from '../services/ActivityService';
+import { object } from 'prop-types';
 
 const Styles = styled.div`
    .activity-location{
@@ -41,39 +42,37 @@ export class ActivityListCard extends React.Component {
                 "bio": "",
                 "profilePicture": "",
                 "role": "",
-                "_id": "5ede2369220019136bbe42bc",
+                "_id": "",
                 "username": "",
                 "email": "",
-                "birthday": "2020-02-01T23:00:00.000Z",
-                "name": "aa",
-                "surname": "aa",
-                "gender": "male",
-                "mobile": "1234567",
+                "birthday": "",
+                "name": "",
+                "surname": "",
+                "gender": "",
+                "mobile": "",
                 "age": "",
             },
             participant: {
                 "bio": "",
                 "profilePicture": "",
                 "role": "",
-                "_id": "5ede2369220019136bbe42bc",
+                "_id": "",
                 "username": "",
                 "email": "",
-                "birthday": "2020-02-01T23:00:00.000Z",
-                "name": "aa",
-                "surname": "aa",
-                "gender": "male",
-                "mobile": "1234567",
+                "birthday": "",
+                "name": "",
+                "surname": "",
+                "gender": "",
+                "mobile": "",
                 "age": "",
             },
-
-
+            show: false
         }
         this.handleUNJoin = this.handleUNJoin.bind(this);
         this.setPriceSymbols = this.setPriceSymbols.bind(this);
         this.getLocation = this.getLocation.bind(this);
         this.getUserInfo = this.getUserInfo.bind(this);
     }
-
 
     handleUNJoin() {
         ActivityService.unJoinUser(this.props.activity._id).then((message) => {
@@ -83,14 +82,12 @@ export class ActivityListCard extends React.Component {
             console.log(e)
         })
         window.location.reload()
-
-
     }
 
     async getUserInfo(userID, role) {
         UserService.getUserInfo(userID)
         let creator = await UserService.getUserInfo(userID)
-        creator.age = "sb"
+
         var today = new Date();
         var birthDate = new Date(creator.birthday);  // create a date object directly from `dob1` argument
         var age_now = today.getFullYear() - birthDate.getFullYear();
@@ -99,8 +96,9 @@ export class ActivityListCard extends React.Component {
             age_now--;
         }
         creator.age = age_now;
+
         if (role == "creator") {
-            this.setState({ creater: creator })
+            this.setState({ creator: creator })
         } else {
             this.setState({ participant: creator })
         }
@@ -139,20 +137,25 @@ export class ActivityListCard extends React.Component {
     }
 
     render() {
-        if (this.state.first) {
-            this.getLocation(this.props.activity.location)
-            this.getUserInfo(this.props.activity.creator, "creator")
-            this.setState({ ["first"]: false })
-        }
         const participantsEmpty = this.props.activity.participants.length == 0
         const createdMode = this.props.mode == 'Created'
         const joinedMode = this.props.mode == 'Joined'
         const historiesMode = this.props.mode == 'Histories'
         const hasSelPerson = this.props.activity.selPerson != undefined
         const paired = this.props.activity.selPerson == this.state.userID
-        if (hasSelPerson) {
-            this.getUserInfo(this.props.activity.selPerson, "participant")
+
+        if (this.state.first) {
+            this.getLocation(this.props.activity.location)
+
+            if (createdMode && hasSelPerson) {
+                this.getUserInfo(this.props.activity.selPerson, "participant")
+            }
+            if (joinedMode) {
+                this.getUserInfo(this.props.activity.creator, "creator")
+            }
+            this.setState({ ["first"]: false })
         }
+
         return (
             <Fragment>
                 <Styles>
@@ -194,10 +197,10 @@ export class ActivityListCard extends React.Component {
                                                             </Link>
 
                                                             :
-                                                            <Button variant="primary"> Choose Companion</Button>
+                                                            <Link to={`/chooseCompanion/${this.props.activity._id}`} >                             
+                                                            <Button variant="primary" > Choose Companion</Button>
+                                                         </Link>   
                                                         }
-
-
                                                     </div>
                                                 </React.Fragment>
 
@@ -207,7 +210,7 @@ export class ActivityListCard extends React.Component {
                                                     <h4> Name: </h4>
                                                     <span Style="padding-left:10px"> {this.state.participant.name} {this.state.participant.surname}  </span>
                                                     <h4> Age: </h4>
-                                                    <span Style="padding-left:10px"> {!this.state.participant.age}  </span>
+                                                    <span Style="padding-left:10px"> {this.state.participant.age}  </span>
                                                     <h4> Gender: </h4>
                                                     <span Style="padding-left:10px"> {this.state.participant.gender}  </span>
                                                 </div>
@@ -220,7 +223,7 @@ export class ActivityListCard extends React.Component {
                                                 <h4> Name: </h4>
                                                 <span Style="padding-left:10px"> {this.state.creator.name} {this.state.creator.surname}  </span>
                                                 <h4> Age: </h4>
-                                                <span Style="padding-left:10px"> {!this.state.creator.age}  </span>
+                                                <span Style="padding-left:10px"> {this.state.creator.age}  </span>
                                                 <h4> Gender: </h4>
                                                 <span Style="padding-left:10px"> {this.state.creator.gender}  </span>
                                             </div>
@@ -238,13 +241,17 @@ export class ActivityListCard extends React.Component {
                                                     <span Style="padding-left:10px"> {this.state.creator.mobile}  </span>
 
                                                 </React.Fragment>}
+                                            <div className='activity-participateButton' >
+                                                <Link to={`/detail/${this.props.activity._id}`} >
+                                                    <Button variant="primary" > See details</Button>
+                                                </Link>
+                                            </div>
                                         </React.Fragment>
 
                                         : null
+
                                     }
-
                                 </div>
-
                             </Col>
                         </Row>
                     </Card>

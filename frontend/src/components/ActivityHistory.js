@@ -11,7 +11,7 @@ export class ActivityHistory extends React.Component {
     }
 
     render() {
-      
+
         const Styles = styled.div`
             .btn {
                 margin-top: 20px;
@@ -38,10 +38,12 @@ export class ActivityHistory extends React.Component {
             }
         `
 
+       
+
         return (
             <Styles>
                 <h1 className="h1">My Activity History</h1>
-                <Tabs defaultActiveKey="activityhistory" id="activityhistory" onChange = {this.handleSelect} >
+                <Tabs defaultActiveKey="activityhistory" id="activityhistory" onChange={this.handleSelect} >
                     <Tab eventKey="Created" title="Created">
                         <ActivityListCards
                             activities={this.props.createdactivities}
@@ -50,17 +52,19 @@ export class ActivityHistory extends React.Component {
                     </Tab>
                     <Tab eventKey="Joined" title="JoinedActivity">
                         <ActivityListCards
-                            activities={this.props.joinedactivities}
+                            activities={this.props.joinedactivities}   
                             mode="Joined"
                         />
                     </Tab>
                     <Tab eventKey="Histories" title="Histories">
                         <ActivityListCards
-                            activities={this.props.createdactivities}
+                            activities={this.props.historyactivities}
                             mode="Histories"
                         />
                     </Tab>
                 </Tabs>
+        
+                
             </Styles>
         );
     }

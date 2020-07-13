@@ -100,7 +100,7 @@ export default class UserService {
                     resolve(data);
                 }
                 else {
-                    reject('Error while retrieving the activity');
+                    reject('Error while retrieving the user');
                 }
             }, function(textStatus) {
                 reject(textStatus);

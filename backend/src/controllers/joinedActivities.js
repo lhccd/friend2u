@@ -296,5 +296,5 @@ module.exports = {
     join,
     getJoinedActivities,
     unjoin,
-    list
+    list,
 }
