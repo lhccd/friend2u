@@ -11,6 +11,7 @@ const activities = require('./routes/activities');
 const users = require('./routes/users');
 const moderator = require('./routes/moderator');
 const reports = require('./routes/reports');
+const images = require('./routes/images');
 
 const api = express();
 
@@ -38,6 +39,7 @@ api.use('/activities', activities);
 api.use('/users', users);
 api.use('/moderator', moderator);
 api.use('/reports', reports);
+api.use('/images', images);
 
 //Serving static files
 //TO DO

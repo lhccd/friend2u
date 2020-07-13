@@ -181,17 +181,12 @@ export class ActivitySearch extends React.Component {
                                     <option>Other</option>
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Group as={Col}>
-                                <Form.Label>Activityname</Form.Label>
-                                <Form.Control type="text" name="activityName" placeholder="Search for activityname"
-                                              value={this.state.value} onChange={this.handleChange}/>
-                            </Form.Group>
-                            <Form.Group as={Col}>
+                            <Form.Group as={Col} md={{ span: "auto", offset: "auto" }}>
                                 <Form.Label>From Time</Form.Label>
                                 <Form.Control type="datetime-local" name="fromTime" value={this.state.fromTime} min={cT}
                                               max={this.state.toTime} onChange={this.handleChange}/>
                             </Form.Group>
-                            <Form.Group as={Col}>
+                            <Form.Group as={Col} md={{ span: "auto", offset: "auto" }}>
                                 <Form.Label>To Time</Form.Label>
                                 <Form.Control type="datetime-local" name="toTime" value={this.state.toTime}
                                               min={this.state.fromTime} onChange={this.handleChange}/>

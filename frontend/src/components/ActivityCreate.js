@@ -207,7 +207,7 @@ export class ActivityCreate extends React.Component {
                         <Form.Group>
                             <Form.Label>Upload Activity Picture</Form.Label>
                                 <form className="mt-4"
-                                      action="http://localhost:3000/activities/upload"
+                                      action="http://localhost:3000/images/upload"
                                       method="POST"
                                       encType="multipart/form-data"
                                 >
