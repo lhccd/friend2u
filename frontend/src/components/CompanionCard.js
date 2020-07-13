@@ -1,35 +1,10 @@
 "use strict";
 
 import React, { Fragment } from 'react';
-import { Col, Card, Button, Row, Image } from 'react-bootstrap';
+import { Col, Card, Button, Row, Image,ListGroup,ListGroupItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
-import styled from 'styled-components';
 import thumbnail from '../media/activity_mock.jpg';
-import UserService from '../services/AuthService';
-import ActivityService from '../services/ActivityService';
-import { object } from 'prop-types';
 
-const Styles = styled.div`
-   .activity-location{
-       display: flex;
-       align-items:baseline;
-   }
-   .activity-date{
-    display: flex;
-    align-items:baseline;
-}
-   .activity-price{
-    display: flex;
-    align-items:baseline;  
-   }
-   .activity-participateButton{
-    display: flex;
-    .button{
-     margin-top: 100 px;
-    }
-   }
-
-`;
 export class CompanionCard extends React.Component {
 
     constructor(props) {
@@ -48,8 +23,8 @@ export class CompanionCard extends React.Component {
         
         return (
             <Fragment>
-                <Styles>
-                    <Card>
+    
+                    <Card style = {{margin:"10px", padding:"5px"}}>
                         <Row noGutters>
                             <Col md="auto">
                                 <Image className="center" src={thumbnail} fluid style={{ width: "100%" }} />
@@ -58,15 +33,19 @@ export class CompanionCard extends React.Component {
                                 <div class="card-block px-2">
                                     <Card.Title>{this.props.participant.name} {this.props.participant.surname}</Card.Title>
                                     <Card.Text>  
-                                        <h2>{this.props.participant.gender} {this.props.participant.age}
-                                        {this.props.participant.bio} </h2>
+                                    <ListGroup className="list-group-flush">
+                                    <ListGroupItem>Age: {this.props.participant.age}</ListGroupItem>
+                                    <ListGroupItem>Gender: {this.props.participant.gender}</ListGroupItem>
+                                    <ListGroupItem>Description: {this.props.participant.bio}</ListGroupItem>
+                                      </ListGroup>
                                     <Button variant="primary" onClick = {this.chooseCompanion} > Choose</Button>      
+                                  
                                     </Card.Text>     
                                 </div>
                             </Col>
                         </Row>
                     </Card>
-                </Styles>
+     
             </Fragment>
 
         );

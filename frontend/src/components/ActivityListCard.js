@@ -1,7 +1,7 @@
 "use strict";
 
 import React, { Fragment } from 'react';
-import { Col, Card, Button, Row, Image } from 'react-bootstrap';
+import { Col, Card, Button, Row, Image , ListGroup, ListGroupItem} from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import styled from 'styled-components';
 import thumbnail from '../media/activity_mock.jpg';
@@ -9,27 +9,6 @@ import UserService from '../services/AuthService';
 import ActivityService from '../services/ActivityService';
 import { object } from 'prop-types';
 
-const Styles = styled.div`
-   .activity-location{
-       display: flex;
-       align-items:baseline;
-   }
-   .activity-date{
-    display: flex;
-    align-items:baseline;
-}
-   .activity-price{
-    display: flex;
-    align-items:baseline;  
-   }
-   .activity-participateButton{
-    display: flex;
-    .button{
-     margin-top: 100 px;
-    }
-   }
-
-`;
 export class ActivityListCard extends React.Component {
 
     constructor(props) {
@@ -158,8 +137,7 @@ export class ActivityListCard extends React.Component {
 
         return (
             <Fragment>
-                <Styles>
-                    <Card key={this.props.activity._id}>
+                    <Card key={this.props.activity._id} style={{margin:"10px", padding:"5px"}}>
                         <Row noGutters>
                             <Col md="auto">
                                 <Image className="center" src={thumbnail} fluid style={{ width: "100%" }} />
@@ -168,25 +146,18 @@ export class ActivityListCard extends React.Component {
                                 <div class="card-block px-2">
                                     <Card.Title>{this.props.activity.activityName}</Card.Title>
                                     <Card.Text>
-                                        <div class='activity-location'>
-                                            <h4> Location:  </h4>
-                                            <span Style="padding-left:10px">  {this.state.address} </span>
-                                        </div>
-                                        <div class='activity-date'>
-                                            <h4> Date & Time:  </h4>
-                                            <span Style="padding-left:10px"> {new Date(this.props.activity.dateTime).toLocaleString()} </span>
-                                        </div>
-                                        <div class='activity-price'>
-                                            <h4> Price:  </h4>
-                                            <span> {this.setPriceSymbols(this.props.activity.price)}</span>
-                                        </div>
+                                    <ListGroup className="list-group-flush">
+                                    <ListGroupItem>Location: {this.state.address}</ListGroupItem>
+                                    <ListGroupItem>Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}</ListGroupItem>
+                                    <ListGroupItem>Price: {this.setPriceSymbols(this.props.activity.price)}</ListGroupItem>
+                                    </ListGroup>
                                     </Card.Text>
                                     {createdMode ?
                                         <React.Fragment>
                                             {!hasSelPerson ?
                                                 <React.Fragment>
-                                                    <span>  Currently {this.props.activity.participants.length} participants are interested in your activity. </span>
-                                                    <div class='activity-participateButton' >
+                                                    <ListGroupItem> Currently {this.props.activity.participants.length} participants are interested in your activity.
+                                                    <div className='activity-participateButton' >
                                                         <Link to={`/detail/${this.props.activity._id}`} >
                                                             <Button variant="primary" > See details</Button>
                                                         </Link>
@@ -199,53 +170,55 @@ export class ActivityListCard extends React.Component {
                                                             :
                                                             <Link to={`/chooseCompanion/${this.props.activity._id}`} >                             
                                                             <Button variant="primary" > Choose Companion</Button>
-                                                         </Link>   
+                                                         </Link> 
+                                                           
                                                         }
                                                     </div>
+                                                    </ListGroupItem>
                                                 </React.Fragment>
 
                                                 :
-                                                <div class='participant-information'>
-                                                    <h4> Information about Participant: </h4>
-                                                    <h4> Name: </h4>
-                                                    <span Style="padding-left:10px"> {this.state.participant.name} {this.state.participant.surname}  </span>
-                                                    <h4> Age: </h4>
-                                                    <span Style="padding-left:10px"> {this.state.participant.age}  </span>
-                                                    <h4> Gender: </h4>
-                                                    <span Style="padding-left:10px"> {this.state.participant.gender}  </span>
-                                                </div>
+                                                <ListGroup className="list-group-flush"> Information about the participant:
+                                    <ListGroupItem>Name: {this.state.participant.name}</ListGroupItem>
+                                    <ListGroupItem>Age:: {this.state.participant.age} Gender: {this.state.participant.gender}</ListGroupItem>
+                                    <ListGroupItem>Contact:  Mobile: {this.state.participant.mobile} E-mail: 
+                                    {this.state.participant.email}</ListGroupItem>
+                                    </ListGroup>
+                                              
                                             }
                                         </React.Fragment> : null}
                                     {joinedMode ?
                                         <React.Fragment>
-                                            <div class='activity-information'>
-                                                <h4> Information about Creator: </h4>
-                                                <h4> Name: </h4>
-                                                <span Style="padding-left:10px"> {this.state.creator.name} {this.state.creator.surname}  </span>
-                                                <h4> Age: </h4>
-                                                <span Style="padding-left:10px"> {this.state.creator.age}  </span>
-                                                <h4> Gender: </h4>
-                                                <span Style="padding-left:10px"> {this.state.creator.gender}  </span>
-                                            </div>
+                                                  <ListGroup className="list-group-flush"> Information about the creator:
+                                    <ListGroupItem>Name: {this.state.creator.name}</ListGroupItem>
+                                    <ListGroupItem>Age:: {this.state.creator.age} Gender: {this.state.creator.gender}</ListGroupItem>
+                                   
+                                    </ListGroup>
+                                    <ListGroup>
                                             {!paired ?
                                                 <React.Fragment>
-                                                    <span> The creator has not yet decided.</span>
-                                                    <div class='unjoinButton' >
+                                                    <ListGroupItem>The creator has not yet decided.
+                                                   
+                                                    <div className='unjoinButton' >
                                                         <Button variant="primary" onClick={this.handleUNJoin}> Unjoin Activity</Button>
                                                     </div>
+                                                    </ListGroupItem>
                                                 </React.Fragment>
                                                 :
                                                 <React.Fragment>
-                                                    <span> You are chosen.</span>
-                                                    <h4> Contact: </h4>
-                                                    <span Style="padding-left:10px"> {this.state.creator.mobile}  </span>
-
-                                                </React.Fragment>}
+                                                    <ListGroupItem>
+                                                   You are chosen.<br></br>   
+                                                   Contact:  Mobile: {this.state.creator.mobile} E-mail: 
+                                    {this.state.participant.email}</ListGroupItem>
+                                                </React.Fragment>
+                                                }
+                                                
                                             <div className='activity-participateButton' >
                                                 <Link to={`/detail/${this.props.activity._id}`} >
                                                     <Button variant="primary" > See details</Button>
                                                 </Link>
                                             </div>
+                                            </ListGroup>
                                         </React.Fragment>
 
                                         : null
@@ -255,7 +228,6 @@ export class ActivityListCard extends React.Component {
                             </Col>
                         </Row>
                     </Card>
-                </Styles>
             </Fragment>
 
         );
