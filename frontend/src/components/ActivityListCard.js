@@ -1,13 +1,11 @@
 "use strict";
 
 import React, { Fragment } from 'react';
-import { Col, Card, Button, Row, Image , ListGroup, ListGroupItem} from 'react-bootstrap';
+import { Col, Card, Button, Row, Image, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
-import styled from 'styled-components';
 import thumbnail from '../media/activity_mock.jpg';
 import UserService from '../services/AuthService';
 import ActivityService from '../services/ActivityService';
-import { object } from 'prop-types';
 
 export class ActivityListCard extends React.Component {
 
@@ -119,9 +117,9 @@ export class ActivityListCard extends React.Component {
         const participantsEmpty = this.props.activity.participants.length == 0
         const createdMode = this.props.mode == 'Created'
         const joinedMode = this.props.mode == 'Joined'
-        const historiesMode = this.props.mode == 'Histories'
         const hasSelPerson = this.props.activity.selPerson != undefined
         const paired = this.props.activity.selPerson == this.state.userID
+        const notMe = hasSelPerson && !paired
 
         if (this.state.first) {
             this.getLocation(this.props.activity.location)
@@ -137,26 +135,26 @@ export class ActivityListCard extends React.Component {
 
         return (
             <Fragment>
-                    <Card key={this.props.activity._id} style={{margin:"10px", padding:"5px"}}>
-                        <Row noGutters>
-                            <Col md="auto">
-                                <Image className="center" src={thumbnail} fluid style={{ width: "100%" }} />
-                            </Col>
-                            <Col>
-                                <div class="card-block px-2">
-                                    <Card.Title>{this.props.activity.activityName}</Card.Title>
-                                    <Card.Text>
+                <Card key={this.props.activity._id} style={{ margin: "10px", padding: "5px" }}>
+                    <Row noGutters>
+                        <Col md="auto">
+                            <Image className="center" src={thumbnail} fluid style={{ width: "100%" }} />
+                        </Col>
+                        <Col>
+                            <div class="card-block px-2">
+                                <Card.Title>{this.props.activity.activityName}</Card.Title>
+                                <Card.Text>
                                     <ListGroup className="list-group-flush">
-                                    <ListGroupItem>Location: {this.state.address}</ListGroupItem>
-                                    <ListGroupItem>Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}</ListGroupItem>
-                                    <ListGroupItem>Price: {this.setPriceSymbols(this.props.activity.price)}</ListGroupItem>
+                                        <ListGroupItem>Location: {this.state.address}</ListGroupItem>
+                                        <ListGroupItem>Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}</ListGroupItem>
+                                        <ListGroupItem>Price: {this.setPriceSymbols(this.props.activity.price)}</ListGroupItem>
                                     </ListGroup>
-                                    </Card.Text>
-                                    {createdMode ?
-                                        <React.Fragment>
-                                            {!hasSelPerson ?
-                                                <React.Fragment>
-                                                    <ListGroupItem> Currently {this.props.activity.participants.length} participants are interested in your activity.
+                                </Card.Text>
+                                {createdMode ?
+                                    <React.Fragment>
+                                        {!hasSelPerson ?
+                                            <React.Fragment>
+                                                <ListGroupItem> Currently {this.props.activity.participants.length} participants are interested in your activity.
                                                     <div className='activity-participateButton' >
                                                         <Link to={`/detail/${this.props.activity._id}`} >
                                                             <Button variant="primary" > See details</Button>
@@ -168,66 +166,74 @@ export class ActivityListCard extends React.Component {
                                                             </Link>
 
                                                             :
-                                                            <Link to={`/chooseCompanion/${this.props.activity._id}`} >                             
-                                                            <Button variant="primary" > Choose Companion</Button>
-                                                         </Link> 
-                                                           
+                                                            <Link to={`/chooseCompanion/${this.props.activity._id}`} >
+                                                                <Button variant="primary" > Choose Companion</Button>
+                                                            </Link>
+
                                                         }
                                                     </div>
-                                                    </ListGroupItem>
-                                                </React.Fragment>
+                                                </ListGroupItem>
+                                            </React.Fragment>
 
-                                                :
-                                                <ListGroup className="list-group-flush"> Information about the participant:
+                                            :
+                                            <ListGroup className="list-group-flush"> Information about the participant:
                                     <ListGroupItem>Name: {this.state.participant.name}</ListGroupItem>
-                                    <ListGroupItem>Age:: {this.state.participant.age} Gender: {this.state.participant.gender}</ListGroupItem>
-                                    <ListGroupItem>Contact:  Mobile: {this.state.participant.mobile} E-mail: 
+                                                <ListGroupItem>Age:: {this.state.participant.age} Gender: {this.state.participant.gender}</ListGroupItem>
+                                                <ListGroupItem>Contact:  Mobile: {this.state.participant.mobile} E-mail:
                                     {this.state.participant.email}</ListGroupItem>
-                                    </ListGroup>
-                                              
-                                            }
-                                        </React.Fragment> : null}
-                                    {joinedMode ?
-                                        <React.Fragment>
-                                                  <ListGroup className="list-group-flush"> Information about the creator:
+                                            </ListGroup>
+
+                                        }
+                                    </React.Fragment> : null}
+                                {joinedMode ?
+                                    <React.Fragment>
+                                        <ListGroup className="list-group-flush"> Information about the creator:
                                     <ListGroupItem>Name: {this.state.creator.name}</ListGroupItem>
-                                    <ListGroupItem>Age:: {this.state.creator.age} Gender: {this.state.creator.gender}</ListGroupItem>
-                                   
-                                    </ListGroup>
-                                    <ListGroup>
+                                            <ListGroupItem>Age:: {this.state.creator.age} Gender: {this.state.creator.gender}</ListGroupItem>
+
+                                        </ListGroup>
+                                        <ListGroup>
                                             {!paired ?
                                                 <React.Fragment>
-                                                    <ListGroupItem>The creator has not yet decided.
-                                                   
+                                                    {hasSelPerson ?
+
+                                                        <ListGroupItem>you are not chosen.</ListGroupItem>
+                                                        : <React.Fragment>
+                                                            <ListGroupItem>The creator has not yet decided.
                                                     <div className='unjoinButton' >
-                                                        <Button variant="primary" onClick={this.handleUNJoin}> Unjoin Activity</Button>
-                                                    </div>
-                                                    </ListGroupItem>
+                                                                    <Button variant="primary" onClick={this.handleUNJoin}> Unjoin activity</Button>
+                                                                    &nbsp;&nbsp;&nbsp;
+                                                <Link to={`/detail/${this.props.activity._id}`} >
+                                                                        <Button variant="primary" > See details</Button>
+                                                                    </Link>
+                                                                </div>
+                                                            </ListGroupItem>
+                                                        </React.Fragment>
+                                                    }
                                                 </React.Fragment>
                                                 :
                                                 <React.Fragment>
+                                                    <ListGroupItem>Contact:  Mobile: {this.state.creator.mobile} E-mail:
+                                    {this.state.creator.email}</ListGroupItem>
                                                     <ListGroupItem>
-                                                   You are chosen.<br></br>   
-                                                   Contact:  Mobile: {this.state.creator.mobile} E-mail: 
-                                    {this.state.participant.email}</ListGroupItem>
+                                                        You are chosen.<br></br>
+
+                                                        <Link to={`/detail/${this.props.activity._id}`} >
+                                                            <Button variant="primary" > See details</Button>
+                                                        </Link>
+
+                                                    </ListGroupItem>
                                                 </React.Fragment>
-                                                }
-                                                
-                                            <div className='activity-participateButton' >
-                                                <Link to={`/detail/${this.props.activity._id}`} >
-                                                    <Button variant="primary" > See details</Button>
-                                                </Link>
-                                            </div>
-                                            </ListGroup>
-                                        </React.Fragment>
+                                            }
 
-                                        : null
-
-                                    }
-                                </div>
-                            </Col>
-                        </Row>
-                    </Card>
+                                        </ListGroup>
+                                    </React.Fragment>
+                                    : null
+                                }
+                            </div>
+                        </Col>
+                    </Row>
+                </Card>
             </Fragment>
 
         );
