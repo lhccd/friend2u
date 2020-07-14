@@ -171,7 +171,7 @@ export class ActivityListView extends React.Component {
         return (
             <div>
                 <ActivitySearch onSearch={(filters) => this.searchActivities(filters)}/>
-                <ActivityList data={this.state.data} onDelete={(id) => this.deleteActivity(id)} onSearch={(sortBy)=>this.sortBy(sortBy)}/>
+                <ActivityList data={this.state.data} onDelete={(id) => this.deleteActivity(id)} onSort={(sortBy)=>this.sortBy(sortBy)}/>
             </div>
             
         );
