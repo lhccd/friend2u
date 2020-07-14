@@ -10,19 +10,11 @@ import { Redirect } from 'react-router-dom';
 
 import Page from './components/Page'
 import { Banned } from './components/Banned'
+import { LoadingScreen } from './components/LoadingScreen'
 
 import styled from "styled-components";
 
 
-//Loading mes
-function LoadingMessage() {
-  return (
-    <div className="splash-screen">
-      Wait a moment while we load your app.
-      <div className="loading-dot">.</div>
-    </div>
-  );
-}
 
 export default function authSplashScreen(WrappedComponent) {
   return class extends React.Component {
@@ -75,6 +67,9 @@ export default function authSplashScreen(WrappedComponent) {
         // <Page role={this.state.role}>
         //                     <WrappedComponent {...this.props} role={this.state.role} />
         //                 </Page>
+        
+        console.log(this.state.role)
+        
 		return (
            <Page role={this.state.role}>
                <WrappedComponent {...this.props} role={this.state.role} />
@@ -82,16 +77,16 @@ export default function authSplashScreen(WrappedComponent) {
         )
 	}
 	
-    renderBanned() {
+    renderBanned(date) {
 		return (
 			   <Fragment>
-                   <Banned {...this.props} />
+                   <Banned {...this.props} date={date} />
 			   </Fragment>)
 	}
 
     render() {
       // while checking user session, show "loading" message
-      if (this.state.loading) return LoadingMessage();
+      if (this.state.loading) return <LoadingScreen />;
 
       // otherwise, show the desired route
       if(WrappedComponent.name === 'UserLoginView') {
@@ -102,7 +97,7 @@ export default function authSplashScreen(WrappedComponent) {
 		  if(this.state.authenticated) return <Redirect to={{pathname: '/'}}/>
 		  else return <WrappedComponent {...this.props} />
 	  }
-      else if(this.state.banDate) return this.renderBanned();
+      else if(this.state.banDate) return this.renderBanned(this.state.banDate);
       else if(this.state.authenticated) return this.renderAuthenticated();
       
       const { history, location } = this.props;

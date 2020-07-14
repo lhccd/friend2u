@@ -4,6 +4,9 @@ import React from 'react';
 import { Fragment } from 'react';
 import { Card, Button, Text } from 'react-bootstrap';
 
+import { FaEye } from "react-icons/fa";
+
+
 const cardStyle = {
   'width': '80%',
   'margin': 50,
@@ -46,6 +49,23 @@ const renderRemoved = ({username}) => {
 			</Card>
 }
 
+/*
 export const ReportListRow = ({id, isBanned, username, count, toggleModal, deleteReports, idx, removed}) => {
 	return removed?renderRemoved({username}):renderCard({id, isBanned, username, count, toggleModal, deleteReports, idx, removed})
+};
+* */
+
+export const ReportListRow = ({idx, name, count, id, toggleModal}) => {
+	return (
+	    <tr>
+		  <td>{idx+1}</td>
+		  <td>{name}</td>
+		  <td>{count}</td>
+		  <td align={'right'}>
+			<Button variant="outline-secondary" onClick={() => toggleModal(true, id, name, idx)}>
+				<FaEye size={20} /> View
+			</Button>
+		  </td>
+		</tr>
+    )
 };

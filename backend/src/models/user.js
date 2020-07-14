@@ -7,6 +7,26 @@ const requiredProperties = require('./user_config')
 const bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
 
+/* * * * * * * * * * *
+ * 
+ *  AUX FUNCTIONS
+ * 
+ * * * * * * * * * * */
+
+const getAge = (birthday) => {
+	var today = new Date();
+	var age = today.getFullYear() - birthday.getFullYear();
+	var m = today.getMonth() - birthday.getMonth();
+	if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+		age--;
+	}
+	return age;
+}
+
+
+//-------------------------------------------------------------------
+
+
 const schema  = {	
     username: {
         type: String,
@@ -53,7 +73,7 @@ const schema  = {
 	
 	profilePicture: {
 		type: String,
-		default: 'https://friend2u.s3.amazonaws.com/profile_pictures/default.png'
+		default: 'http://127.0.0.1:3000/static/images/profile/default.png'
 	},
 
 	
@@ -74,7 +94,7 @@ for (var prop of requiredProperties){
 	schema[prop].required = true;
 }
 
-const UserSchema  = new mongoose.Schema(schema)
+const UserSchema  = new mongoose.Schema(schema,{getters: true})
 
 //We create the hashed password directly when we insert a new user.
 //We also use salt.
@@ -121,14 +141,24 @@ UserSchema.methods.updatePassword = function(oldPassword, newPassword, cb) {
         
         user.save((err) => {
 			cb(err);
-		})
-        
-        
+		})        
     });
 };
 
-UserSchema.set('versionKey', false);
 
+//Compute the age from the birthday
+UserSchema.virtual('age').get(function() {
+	return getAge(this.birthday);
+});
+
+
+//Check if the user is over 18 to sign up
+UserSchema.path('birthday').validate(function(birthday) {
+	
+	if(getAge(birthday) < 18)
+		this.invalidate('birthday', 'You must be over 18 to sign up');
+		
+}, null);
 
 // Export the User model
 module.exports = mongoose.model('User', UserSchema);

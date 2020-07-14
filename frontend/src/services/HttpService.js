@@ -12,21 +12,23 @@ export default class HttpService {
         console.log("get")
         console.log(url)
         let token = await TokenService.refreshToken();
-        let header = new Headers();
+        let header = {};
+           
+        let options = {
+			method: 'GET',
+		}
         
         if(token) {
-            header.append('Authorization', `Bearer ${token}`);
+            header['Authorization'] = `Bearer ${token}`
         }
-        
-        let options = {
-				method: 'GET',
-				headers: header,
-			}
+
 		
 		if(data){
-			header.append('Content-Type', 'application/json');
+			header['Content-Type'] =  'application/json';
 			options.body = JSON.stringify(data)
 		}
+		
+		options.headers = header
 
 
         fetch(url, options).then((resp) => {
@@ -36,11 +38,13 @@ export default class HttpService {
 			 else return resp.json();
 		 }).then((resp) => {
              if(resp.error) {
-                 onError(resp.error);
+                 onError(resp);
              }
-             else onSuccess(resp);
+             else{
+				 onSuccess(resp);
+			 }
          }).catch((e) => {
-             onError(e.message);
+             onError(e);
          });
     }
     
@@ -49,22 +53,24 @@ export default class HttpService {
         console.log("put, with data: ")
         console.log(data)
         let token = await TokenService.refreshToken();
-        let header = new Headers()
         
-        if(token) {
-            header.append('Authorization', `Bearer ${token}`);
-        }
+        let header = {};
         
         let options = {
-				method: 'PUT',
-                headers: header
-			}
+			method: 'PUT',
+		}
+        
+        if(token) {
+            header['Authorization'] = `Bearer ${token}`
+        }
 		
 		if(data){
-			header.append('Content-Type', 'application/json');
+			header['Content-Type'] =  'application/json';
 			options.body = JSON.stringify(data)
 		}
 		
+		options.headers = header
+	
 
         fetch(url, options).then((resp) => {
 			 if(!this.isResAuthenticated(resp)){
@@ -85,24 +91,70 @@ export default class HttpService {
     static async post(url, data, onSuccess, onError) {
 		console.log("post")
         let token = await TokenService.refreshToken();
-        let header = new Headers();
-        
-        if(token) {
-            header.append('Authorization', `Bearer ${token}`);
-        }
+        let header = {};
         
         let options = {
-				method: 'POST',
-				headers: header
-			}
-		
+			method: 'POST',
+		}
+        
+        if(token) {
+            header['Authorization'] = `Bearer ${token}`
+        }
+
 		if(data){
-			header.append('Content-Type', 'application/json');
+			header['Content-Type'] =  'application/json';
 			options.body = JSON.stringify(data)
 		}
 		
+		options.headers = header
+		
+		console.log(options)
 
         fetch(url, options).then((resp) => {
+			 if(!this.isResAuthenticated(resp)){
+				 window.location = '/#login';
+			 }
+			 else return resp.json();
+		 }).then((resp) => {
+             if(resp.error) {
+				 console.log(resp.message)
+                 onError(resp.error);
+             }
+             else onSuccess(resp);
+         }).catch((e) => {
+             onError(e.message);
+         });
+    }
+    
+    static async postImage(url, file, onSuccess, onError) {
+		console.log("post image")
+        let token = await TokenService.refreshToken();
+        let header = {};
+        
+        if(token) {
+            header['Authorization'] = `Bearer ${token}`
+        }
+        
+        let formData = new FormData();
+        
+        formData.append('image', file);
+        
+        let options = {
+			method: 'POST',
+			body: formData
+		}
+        
+        /*if(token) {
+            header['Authorization'] = `Bearer ${token}`
+        }*/
+
+		console.log(url)
+		
+		options.headers = header
+		
+
+        fetch(url, options).then((resp) => {
+			console.log(resp)
 			 if(!this.isResAuthenticated(resp)){
 				 window.location = '/#login';
 			 }
@@ -123,21 +175,23 @@ export default class HttpService {
      static async remove(url, data, onSuccess, onError) {
 		console.log("delete")
         let token = await TokenService.refreshToken();
-        let header = new Headers();
-        if(token) {
-            header.append('Authorization', `Bearer ${token}`);
-        }
+        let header = {};
         
         let options = {
-				method: 'DELETE',
-				headers: header,
-			}
+			method: 'DELETE',
+		}
+        
+        if(token) {
+            header['Authorization'] = `Bearer ${token}`
+        }
+
 		
 		if(data){
-			header.append('Content-Type', 'application/json');
+			header['Content-Type'] =  'application/json';
 			options.body = JSON.stringify(data)
 		}
 		
+		options.headers = header
 
         fetch(url, options).then((resp) => {
 			 if(!this.isResAuthenticated(resp)){

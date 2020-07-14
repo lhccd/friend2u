@@ -4,6 +4,7 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
 import { ReportModalItem } from './ReportModalItem';
+import { BanUserConfirm } from './BanUserConfirm';
 
 import { Link } from 'react-router-dom';
 
@@ -27,11 +28,13 @@ export class ReportModal extends React.Component{
 	}
 	
 	renderBanningConfirm(showingUser,banUser){
-		return (<div>Are you sure to ban this user FOREVAH? <Button variant="primary" onClick={() => banUser(showingUser.id,0)}>Dont ask me that again plz</Button></div>)
+		return (<BanUserConfirm />)
+		//return (<div>Are you sure to ban this user FOREVAH? <Button variant="primary" onClick={() => banUser(showingUser.id,0)}>Dont ask me that again plz</Button></div>)
 	}
 	
 	render() {
 		let {category, showingUser, show, toggleModal, reports, banUser} = this.props
+		console.log('category: ' + category)
 		
 		 return <Modal show={show} onHide={() => toggleModal(false)}>
 			<Modal.Header closeButton>
@@ -44,6 +47,7 @@ export class ReportModal extends React.Component{
 										reason={r.reason}
 										description={r.description}
 									/>)}
+				{this.state.confirmBanning?this.renderBanningConfirm(showingUser,banUser):''}
 			</Modal.Body>
 			<Modal.Footer>
 			  <Button variant="secondary" onClick={() => toggleModal(false)}>
@@ -59,7 +63,6 @@ export class ReportModal extends React.Component{
 									  </Button>:''}
 									  
 			</Modal.Footer>
-			{this.state.confirmBanning?this.renderBanningConfirm(showingUser,banUser):''}
 		   </Modal>
     }
 };

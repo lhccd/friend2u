@@ -24,6 +24,7 @@ api.use(helmet());
 api.use(bodyParser.json());
 api.use(bodyParser.urlencoded({ extended: false }));
 api.use(middlewares.allowCrossDomain);
+api.use('/static', express.static(__dirname + '/public'));
 
 
 // Basic route
