@@ -9,6 +9,7 @@ import Page from './Page';
 import {NavBar, Nav, NavItem, Modal, Button, Card} from 'react-bootstrap'
 import {ReportList} from './ReportList'
 import { ReportUserModal } from './ReportUserModal'
+import { ReportActivityModal } from './ReportActivityModal'
 
 import { FaSortDown } from "react-icons/fa";
 
@@ -34,6 +35,8 @@ export class Moderator extends React.Component{
 	let { category, reports, handleSelect, toggleModal, deleteReports, getReports, refreshReports } = this.props
 	
 	reports = reports[category];
+	
+	console.log(reports)
 	  
     return(
 		<Card style={style}>
@@ -70,7 +73,14 @@ export class Moderator extends React.Component{
 												toggleModal={this.props.toggleModal}
 												reports={this.props.reportsModal}
 												deleteReports={this.props.deleteReports}
-											/>:''}
+												userProfile={false}
+											/>:<ReportActivityModal
+												modalReported={this.props.modalReported}
+												show={this.props.showModal}
+												toggleModal={this.props.toggleModal}
+												reports={this.props.reportsModal}
+												deleteReports={this.props.deleteReports}
+											/>}
 		</Card>
     );
   }

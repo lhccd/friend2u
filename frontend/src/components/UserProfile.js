@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom'
-import { FaFlag } from "react-icons/fa";
-import { Button, ButtonGroup, Card , Row, Col, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { FaFlag, FaUserSlash, FaUserShield } from "react-icons/fa";
+import { Button, ButtonGroup, Card , Row, Col, Form, OverlayTrigger, Tooltip, Modal } from 'react-bootstrap';
 import AuthService from '../services/AuthService'
+import ReportService from '../services/ReportService'
+import { ReportUserModal } from './ReportUserModal';
 
 import { ServerError } from './ServerError';
 
@@ -16,10 +18,56 @@ export class UserProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-			
+			reports: [],
+			showModal: false
         }
+        
+        this.id = this.props.id
+		this.banUser = this.banUser.bind(this);
+		this.getReportListById = this.getReportListById.bind(this);
+		this.toggleModal = this.toggleModal.bind(this);
+		
+		if(this.props.role === 'moderator'){
+			this.getReportListById(this.id)
+		}
 		
     }
+    
+    async banUser(id, time){
+		try{
+			let reports = await ReportService.banUser(id,time)
+		}
+		catch(err){
+            console.error(err);
+            this.setState({
+                error: err
+            });
+		}
+	}
+	
+	async getReportListById(id){
+		try{
+			let reports = await ReportService.getReportList('users',id,null,null)
+			console.log("aaa")
+			this.setState({reports: reports.reports})
+			//console.log(reports[0].reports[0]._id)
+			//this.setState({reports: reports[0].reports})
+		}
+		catch(err){
+            console.error(err);
+            this.setState({
+                error: err
+            });
+		}
+	}
+	
+	toggleModal(show,id,username,idx) {
+		if(show){
+			this.getReportListById(this.id, username)
+			this.setState({showModal: true})
+		}
+		else this.setState({reports: [], showModal: false})
+	}
 
 
     render() {
@@ -28,7 +76,7 @@ export class UserProfile extends React.Component {
 			console.log('user is undefined')
 			return <ServerError />
 		}
-		let { username, name, surname, age, gender, bio, profilePicture} = user
+		let { username, name, surname, age, gender, bio, profilePicture, role } = user
 		let wholeName = `${name} ${surname}`
 		
         return (
@@ -39,11 +87,20 @@ export class UserProfile extends React.Component {
 							{username}
 						</div>
 						<div class="col-sm-3">
-							{!this.props.editable?<OverlayTrigger placement='right' overlay={<Tooltip>Report this user</Tooltip>}>
+							{role === 'moderator'?<OverlayTrigger placement='top' overlay={<Tooltip>This user is a moderator</Tooltip>}>
+													<FaUserShield color={'#37cf23'} size={40}/>
+												</OverlayTrigger>:null}
+							{!this.props.editable?<OverlayTrigger placement='top' overlay={<Tooltip>Report this user</Tooltip>}>
 													<Button style={{color: 'grey'}} variant="link" onClick={() => {}}>
 														<FaFlag size={30}/>
 													</Button>
-												</OverlayTrigger>:null}	
+												</OverlayTrigger>:null}
+							{!this.props.editable && this.props.role === 'moderator'?
+													<OverlayTrigger placement='top' overlay={<Tooltip>See the reports of this user</Tooltip>}>
+														<Button style={{color: 'grey'}} variant="link" onClick={() => {this.toggleModal(true)}}>
+															<FaUserSlash size={40}/>
+														</Button>
+													</OverlayTrigger>:null}
 						</div>
 					</div>
 				</Card.Header>
@@ -114,6 +171,14 @@ export class UserProfile extends React.Component {
 				<Card.Footer>
 					<small className="text-muted">Friend2U loves U</small>
 				</Card.Footer>
+				{this.props.role === 'moderator'?<ReportUserModal
+									banUser={this.banUser}
+									modalReported={{id: this.id, name: username}}
+									show={this.state.showModal}
+									toggleModal={this.toggleModal}
+									reports={this.state.reports}
+									userProfile={true}
+								/>:null}
 			</Card>
         );
     }

@@ -67,6 +67,9 @@ export default function authSplashScreen(WrappedComponent) {
         // <Page role={this.state.role}>
         //                     <WrappedComponent {...this.props} role={this.state.role} />
         //                 </Page>
+        
+        console.log(this.state.role)
+        
 		return (
            <Page role={this.state.role}>
                <WrappedComponent {...this.props} role={this.state.role} />

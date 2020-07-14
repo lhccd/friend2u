@@ -17,6 +17,7 @@ export class BanUserConfirm extends React.Component{
 			nDays: 14,
 			reason: '',
 			banOk: false,
+			forever: false
 		}
 		
 		console.log(props.username)
@@ -24,6 +25,9 @@ export class BanUserConfirm extends React.Component{
 		this.handleChangeName = this.handleChangeName.bind(this);
 		this.handleChangeNDays = this.handleChangeNDays.bind(this);
 		this.isNDaysOk = this.isNDaysOk.bind(this);
+		this.handleChangeForever = this.handleChangeForever.bind(this);
+		this.disableSubmit = this.disableSubmit.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 	
 	handleChange(event) {
@@ -31,32 +35,45 @@ export class BanUserConfirm extends React.Component{
 		let fieldVal = event.target.value;
         this.setState(Object.assign({}, this.state, {[fieldName]: fieldVal}));
     }
+    
+    handleChangeForever(event) {
+		this.setState({forever: event.target.checked})
+	}
 
     handleChangeName(event) {
 		let value = event.target.value;
         if(value === this.props.username) this.setState({banOk: true})
+        else this.setState({banOk: false})
     }
     
     handleChangeNDays(event) {
-		let value = parseInt(event.target.value);
+		let value = event.target.value;
         this.setState(Object.assign({}, this.state, {nDays: value}));
-        console.log(this.isNDaysOk())
+        console.log(value)
     }
 
     handleSubmit(event) {
         event.preventDefault();
+        
+        console.log(this.state.forever)
 		
-        let user = {
-            username: this.state.username,
-            password: this.state.password
-        };
-
-        this.props.onSubmit(user);
-    }
+		if(this.state.forever){
+			this.props.banUser(-1)
+		}
+		else{
+			this.props.banUser(this.state.nDays * 3600*24*1000)
+		}
+	}
     
     isNDaysOk(){
 		let nd = this.state.nDays
-		return typeof nd === 'number' && nd > 0 && Number.isInteger(nd)
+		console.log(!isNaN(nd))
+		console.log(nd)
+		return nd !== '' && nd !== undefined && Number.isInteger(+nd) && +nd > 0
+	}
+	
+	disableSubmit() {
+		return !(this.state.banOk && (this.state.forever || this.isNDaysOk()))
 	}
 	
 	render() {
@@ -71,14 +88,19 @@ export class BanUserConfirm extends React.Component{
 							value={this.state.nDays}
 							onChange={this.handleChangeNDays}
 							placeholder="Number of days"
+							disabled={this.state.forever}
 					  />
+						<Form.Check
+							type="checkbox"
+							label="Ban forever"
+							onChange={this.handleChangeForever}
+							style={{paddingTop: '10px'}} />
 					</Form.Group>
 
 					<Form.Group as={Col} sm={3} >
 					  <Form.Label>Repeat name of user</Form.Label>
 					  <Form.Control
 							type="text"
-							required={true}
 							onChange={this.handleChangeName}
 						/>
 					</Form.Group>
@@ -87,7 +109,7 @@ export class BanUserConfirm extends React.Component{
 				  </Form.Row>
 				  <Form.Row>
 					<Form.Group>
-					  <Button onClick={this.handleSubmit} onClick={() => {console.log(this.state.nDays * 3600*24*1000);this.props.banUser(this.state.nDays * 3600*24*1000)}} disabled={!(this.isNDaysOk() && this.state.banOk)}>Confirm</Button>
+					  <Button onClick={this.handleSubmit} onClick={this.handleSubmit} disabled={this.disableSubmit()}>Confirm</Button>
 					</Form.Group>
 				  </Form.Row>
 

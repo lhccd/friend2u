@@ -30,10 +30,23 @@ const blockUser = (req,res) => {
     else if(req.body.time && !isNaN(req.body.time) && Number.isInteger(+(req.body.time)) && +(req.body.time) > 0) time = Date.now() + +(req.body.time);
     else time = Date.now() + DEFAULT_TIME;
     
+    let query = {
+		_id: req.body.banningUser,
+		role: 'user',
+	}
+	
+	if(time !== -1){
+		query.banUntilDate = {
+			$ne: -1,
+			$lt: time
+		}
+	} 
+		
     
-    UserSchema.findOneAndUpdate({_id: req.body.banningUser, role: 'user'}, {$set: {banUntilDate: time}},{new: true},(err, user) => {
+    //We can't set the banning time lower than the actual one
+    UserSchema.findOneAndUpdate(query, {$set: {banUntilDate: time}},{new: true},(err, user) => {
 		if(err) return res.status(400).json({"error": err});
-		if(!user) return res.status(404).json({"error": "The user doesn't exist. Are you trying to ban a moderator?"}); //No civil war!
+		if(!user) return res.status(404).json({"error": "You can\'t ban a moderator or set a banning time lower then the actual one. Or the user doesn't exist. "}); //No civil war!
 		
 		ReportSchema.deleteMany({category: 'user', reported: req.body.banningUser},(err,result) => {
 			if(err) console.log(err)

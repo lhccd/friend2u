@@ -7,11 +7,14 @@ import { withRouter, Link } from 'react-router-dom';
 import { AlertMessage } from './AlertMessage';
 import Page from './Page';
 
-
-const style = {
-	maxWidth: 500,
+const style={
+	top: '80px',
 	margin: 'auto',
-};
+	width: '70%',
+	height: 'auto',
+	maxWidth: '500px',
+	borderRadius: '20px', 
+}
 
 
 class UserLogin extends React.Component {

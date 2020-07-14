@@ -53,7 +53,8 @@ export class ReportUserModal extends React.Component{
 	}
 	
 	render() {
-		let {modalReported, show, toggleModal, reports, banUser} = this.props
+		let {modalReported, show, toggleModal, reports, banUser, userProfile } = this.props
+		
 		
 		 return <Modal show={show} size='xl' onHide={this.closeModal} style={modalStyle}>
 			<Modal.Header closeButton>
@@ -74,13 +75,14 @@ export class ReportUserModal extends React.Component{
 			  <Button variant="secondary" onClick={this.closeModal}>
 				Close
 			  </Button>
-			  <Link	to='/'>
-				<Button variant="primary" onClick={() => this.viewMore()}>
-					Go to user profile
-				</Button>
-			  </Link>
+			  {!userProfile?<Link	to={`/profile/${modalReported.id}`}>
+								<Button variant="primary" >
+									Go to user profile
+								</Button>
+							  </Link>:null}
+		
 			  <Button variant="primary" onClick={this.confirmBanningUser}>
-										Ban this user FOREVAH!
+										Ban this user
 									  </Button>
 									  
 			</Modal.Footer>

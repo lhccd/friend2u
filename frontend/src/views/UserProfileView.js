@@ -20,6 +20,8 @@ export class UserProfileView extends React.Component {
 			notFound: false,
 			loading: true,
 			serverError: false,
+			reports: [],
+			showModal: false,
 		}
 		
 		this.id = this.props.match.params.id;
@@ -40,9 +42,10 @@ export class UserProfileView extends React.Component {
 			}
 		}
 	}
+
 	
-	renderOtherProfile(user,editable) {
-		return <UserProfile user={user} editable={editable}/>
+	renderOtherProfile(user,editable,id) {
+		return <UserProfile user={user} id={id} role={this.props.role} editable={editable}/>
 	}
 
 	
@@ -71,8 +74,8 @@ export class UserProfileView extends React.Component {
 		
 		let me = AuthService.getCurrentUser()
 		if(me && me.id === this.id)		
-			return this.renderOtherProfile(user,true)
+			return this.renderOtherProfile(user,true,this.id)
         else
-			return this.renderOtherProfile(user,false)
+			return this.renderOtherProfile(user,false,this.id)
     }
 }

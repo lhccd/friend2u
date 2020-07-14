@@ -107,6 +107,7 @@ export default class HttpService {
 		
 		options.headers = header
 		
+		console.log(options)
 
         fetch(url, options).then((resp) => {
 			 if(!this.isResAuthenticated(resp)){

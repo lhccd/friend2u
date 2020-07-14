@@ -161,6 +161,8 @@ export class ModeratorView extends React.Component {
 		if(reports.list.length === 0 && !reports.all){
 			this.getReportList(category);
 		}
+		
+		this.setState({showModal: false})
 	}
 	
 	toggleModal(show,id,username,idx) {

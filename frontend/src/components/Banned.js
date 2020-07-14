@@ -64,30 +64,9 @@ export class Banned extends React.Component{
         </div>
         </Card.Body>
         <Card.Footer>
-            <small className="text-muted">Friend2U doesn't love U (for now)</small>
+            <small className="text-muted">Friend2U doesn{'\''}t love U {this.props.date !== -1?'(for now)':''}</small>
         </Card.Footer>
         </Card>
     );
   }
 }
-
-
-/*
-
-It seems you have been banned but maybe there was a mistake. Please click <a href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'> here </a> to contact the admins
-<button onClick={() => {AuthService.logout();window.location = "/#login"}} >Logout</button>
-* 
-*         <Card.Header className="border-0">
-            <FaAngry size={300}/>
-        </Card.Header>
-        <Card.Body class="px-2">
-            <h4 class="card-title">Title</h4>
-            <p class="card-text">Description</p>
-            <Button onClick={() => {AuthService.logout();window.location = "/#login"}}>Logout</Button>
-        </Card.Body>
-        <div class="w-100"></div>
-        <div class="card-footer w-100 text-muted">
-            FOOTER
-        </div>
-
-* */
