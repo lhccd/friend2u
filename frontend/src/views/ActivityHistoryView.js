@@ -4,69 +4,96 @@ import React from 'react';
 
 import { ActivityHistory } from '../components/ActivityHistory';
 import ActivityService from '../services/ActivityService';
-
+import UserService from '../services/AuthService';
 export class ActivityHistoryView extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            activities: [
-                {
-                    "location": {
-                        "type": "Point",
-                        "coordinates": [
-                            11.75739884,
-                            47.71386555
-                        ]
-                    },
-                    "fromAge": 30,
-                    "toAge": 40,
-                    "participants": [],
-                    "voteForCreator": 1,
-                    "voteForselPerson": 1,
-                    "_id": "5f065c72ba3bdc409a8fdcef",
-                    "category": "Sport",
-                    "activityName": "Hiking to Neureuth",
-                    "dateTime": "2020-11-06T17:00:00.000Z",
-                    "approxTime": false,
-                    "duration": 20,
-                    "prefGender": "Male",
-                    "description": "Lorem ipsum",
-                    "price": 1,
-                    "phyCondition": 4,
-                    "status": 0,
-                    "creator": "5ee6a3d39df02f51788dc338",
-                    "createdAt": "2020-07-08T23:53:22.564Z",
-                    "updatedAt": "2020-07-08T23:53:22.564Z"
-                }
-            ]
+            createdactivities: [
+            ],
+            joinedactivities:
+                [],
+            historyCreatedactivities: [],
+            historyJoinedactivities: [],
+            userID: UserService.getCurrentUser().id
         }
+
     }
 
     componentDidMount() {
+        console.log('loading')
         this.getActivities();
-      }
-    async getActivities(){
-		try{
-            let activities = await ActivityService.getActivities()
-            console.log(activities)
-			this.setState({activities:activities})
-		}
-		catch(err){
+        this.getjoinedActivities();
+    }
+
+    async getActivities() {
+        var today = new Date();
+
+        try {
+            let createdactivities = await ActivityService.getActivitiesByUserID(this.state.userID)
+            var historyactivities = new Array()
+            let created = new Array()
+
+            for (var i = 0; i < createdactivities.length; i++) {
+                var activityDate = new Date(createdactivities[i].dateTime)
+                if ((activityDate - today) < 0) {
+                    if (createdactivities[i].selPerson != undefined) {
+                        historyactivities.push(createdactivities[i])
+                    } else {
+                        continue;
+                    }
+                } else {
+                    created.push(createdactivities[i])
+                }
+            }
+            this.setState({ createdactivities: created })
+            this.setState({ historyCreatedactivities: historyactivities })
+        }
+        catch (err) {
             console.error(err);
             this.setState({
                 error: err
             });
-		}
-	}
+        }
+    }
 
+    async getjoinedActivities() {
+        try {
+            let joinedactivitiesIDs = await ActivityService.getjoinedActivitiesID(this.state.userID)
+            var joinedactivities = []
+            var historyactivities = new Array()
+            var today = new Date()
+            for (var i = 0; i < joinedactivitiesIDs.length; i++) {
+                var joinedactivity = await ActivityService.getActivity(joinedactivitiesIDs[i].activityID)
+                var activityDate = new Date(joinedactivity.dateTime)
 
+                if ((activityDate - today) > 0) {
+                    joinedactivities.push(joinedactivity)
+                } else {
+                    if (joinedactivity.selPerson == this.state.userID) {
+                        historyactivities.push(joinedactivity)
+                    }
+                }
+            }
+            historyactivities = Array.from(new Set(historyactivities));
+            this.setState({ joinedactivities: joinedactivities })
+            this.setState({ historyJoinedactivities: historyactivities })
+        }
+        catch (err) {
+            console.error(err);
+            this.setState({
+                error: err
+            });
+        }
+    }
     render() {
-        const {activities} = this.state
-        console.log(this.state.activities)
         return (
-        <ActivityHistory
-        activities={activities}/>
+            <ActivityHistory
+                createdactivities={this.state.createdactivities}
+                joinedactivities={this.state.joinedactivities}
+                historyactivities={this.state.historyCreatedactivities.concat(this.state.historyJoinedactivities)}
+            />
         );
     }
 }

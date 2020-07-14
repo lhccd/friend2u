@@ -17,7 +17,7 @@ const requiredProperties = require('./requiredProperties');
 
 router.get('/', ActivityHandler.list); // List all activities
 router.post('/', [middlewares.checkAuthentication, (req,res,next) => middlewares.checkBody(req,res,next,requiredProperties.activityProperties)], ActivityHandler.create); // Create a new activity
-router.get('/userjoined/', JoinedActivityHandler.getJoinedActivities); // Get a list of joined activities for a specific user.
+router.get('/userjoined/:id', JoinedActivityHandler.getJoinedActivities); // Get a list of joined activities for a specific user.
 router.get('/userActivityRelation', JoinedActivityHandler.list);
 router.get('/withinRadius', ActivityHandler.getActivitiesInRadius); // All activities within a specified radius are returned.
 router.put('/search', middlewares.checkAuthentication, ActivityHandler.search) // Searching for activities with all possible filters; Should one filter not be applied, then one should provide the max range in the json-body, e.g. fromAge = 18 and toAge = 150 (min./max. allowed values in schema).
@@ -35,5 +35,5 @@ router.put('/participantVoteForCreator/:id', ActivityHandler.participantVoteForC
 router.delete('/:id', middlewares.checkAuthentication, ActivityHandler.remove); // Delete a activitie by Id
 router.put('/setSelectedPerson/:id', ActivityHandler.setSelectedPerson); // Set the selected person for an activity.
 router.put('/updateStatus/:id', middlewares.checkAuthentication, ActivityHandler.changeStatus); // Change the status of an activity; For valuerepresentation look into the controller.
-
+router.get('/user/:id', middlewares.checkAuthentication, ActivityHandler.findActivitiesForUser); 
 module.exports = router;

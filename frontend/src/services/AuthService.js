@@ -9,6 +9,7 @@ export default class UserService {
     }
 
     static baseURL() {return 'http://localhost:3000/auth'; }
+    static userURL() {return "http://localhost:3000/users" }
     static userServicebaseURL() { return 'http://localhost:3000/users' }
 
     static register(user) {
@@ -106,5 +107,6 @@ export default class UserService {
 		return decodedToken.banTime >= Date.now();
 	}
 	
-	
+
+    
 }

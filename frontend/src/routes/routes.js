@@ -10,6 +10,7 @@ import {ActivityDetailedView} from "../views/ActivityDetailedView";
 import {ActivityCreateView} from "../views/ActivityCreateView";
 import { ActivityHistoryView } from "../views/ActivityHistoryView";
 import {ActivityEditView} from "../views/ActivityEditView"
+import {CompanionView} from "../views/CompanionView"
 import UploadPage from "../components/UploadImage";
 
 export const routes = [
@@ -24,7 +25,8 @@ export const routes = [
     {component: authSplashScreen(ActivityListView), path: '/activities/search', exact: true},
     {component: authSplashScreen(ActivityDetailedView), path: '/detail/:id'},
     {component: authSplashScreen(ActivityCreateView), path: '/activities/create' },
-    {component: (ActivityHistoryView), path: '/activityhistory'},
+    {component: authSplashScreen(ActivityHistoryView), path: '/activityhistory'},
     {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' },
+    {component: authSplashScreen(CompanionView), path: '/chooseCompanion/:id' },
     {component: UploadPage, path: '/uploadimage'}
 ];

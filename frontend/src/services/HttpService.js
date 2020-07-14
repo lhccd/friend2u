@@ -9,7 +9,8 @@ export default class HttpService {
     static apiURL() {return 'http://localhost:3000'; }
     
    static async get(url, onSuccess, onError, data) {
-		console.log("get")
+        console.log("get")
+        console.log(url)
         let token = await TokenService.refreshToken();
         let header = new Headers();
         

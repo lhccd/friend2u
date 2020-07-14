@@ -250,13 +250,7 @@ function userJoinedAlready(port, id, jsonbody, callback) {
 
 
 const getJoinedActivities = (req, res) => {
-
-    if (Object.keys(req.body).length === 0) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body is empty'
-    });
-
-    JoinedActivityModel.find({joinedPersonID: req.body.user})
+    JoinedActivityModel.find({joinedPersonID: req.params.id}).exec()
         .then(activity => {
             res.status(201).json(activity);
             
@@ -302,5 +296,5 @@ module.exports = {
     join,
     getJoinedActivities,
     unjoin,
-    list
+    list,
 }

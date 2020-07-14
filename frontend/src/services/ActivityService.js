@@ -39,6 +39,37 @@ export default class ActivityService {
         });
     }
 
+    static getActivitiesByUserID(userID) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${ActivityService.baseURL()}/user/${userID}`, function(data) {
+                if(data != undefined || Object.keys(data).length !== 0) {
+                    resolve(data);
+                }
+                else {
+                    reject('Error while retrieving the activity');
+                }
+            }, function(textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
+
+    static getjoinedActivitiesID(userID) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${ActivityService.baseURL()}/userjoined/${userID}`, function(data) {
+                if(data != undefined || Object.keys(data).length !== 0) {
+                    resolve(data);
+                }
+                else {
+                    reject('Error while retrieving the activity');
+                }
+            }, function(textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
+
+
     static searchActivities(filters) {
         console.log("Activity Service - Searching with: ")
         console.log(filters)
@@ -125,5 +156,20 @@ export default class ActivityService {
         })
     }
 
-
+    static chooseCompanion(participantID,activityID) {
+        var status = {"newStatus":1}
+        var selPer = {"selPerson": participantID}
+        return new Promise((resolve, reject) => {
+            HttpService.put(`${this.baseURL()}/setSelectedPerson/${activityID}`,selPer, function(data) {
+                resolve(data)
+            }, function(textStatus) {
+                reject(textStatus);
+            })
+            HttpService.put(`${this.baseURL()}/updateStatus/${activityID}`,status, function(data) {
+               resolve(data)
+            }, function(textStatus) {
+                reject(textStatus);
+            });
+        })
+    }
 }
