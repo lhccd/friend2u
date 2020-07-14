@@ -23,14 +23,11 @@ export default class Page extends React.Component {
 
     render() {
         return (
-                <React.Fragment style={{
-                    minHeight: '100vh',
-					display: 'flex',
-					flexDirection: 'column',
-                }}>
+                <React.Fragment>
                     <Header role={this.props.role}/>
                        <div style={{
 								minHeight: '90vh',
+								height: '90vh',
 								display: 'flex',
 								flexDirection: 'column',
 						   }}

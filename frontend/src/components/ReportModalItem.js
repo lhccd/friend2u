@@ -15,7 +15,6 @@ export const ReportModalItem = ({id, reason, description}) => (
     style={{ width: '100%' }}
     className="mb-2"
   >
-
     <Card.Body>
       <Card.Title>{reason} </Card.Title>
       <Card.Text>

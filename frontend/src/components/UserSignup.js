@@ -14,8 +14,15 @@ import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
 
-const style = { maxWidth: 800, margin: 'auto' };
 
+const style={
+	top: '80px',
+	margin: 'auto',
+	width: '70%',
+	height: 'auto',
+	maxWidth: '800px',
+	borderRadius: '20px', 
+}
 
 class UserSignup extends React.Component {
 
@@ -212,7 +219,7 @@ class UserSignup extends React.Component {
 							<Form.Label>Gender</Form.Label>
 						    <Form.Group onChange={this.handleChange}>
 								{['male','female','other'].map((t) => <Form.Check inline key={`gender-${t}`} name="gender" value={t} label={t} type='radio' /> )}
-								<Form.Check inline  name="gender" value='notDelcared' label='I prefer not to declare it' type='radio' />
+								<Form.Check inline  name="gender" value='notDeclared' label='I prefer not to declare it' type='radio' />
 							</Form.Group>
 						</Form.Group>
 						

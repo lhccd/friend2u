@@ -53,8 +53,10 @@ export default class ReportService {
 		
 		const data = {
 			banningUser: id,
-			//time: time
 		}
+		
+		if(time === -1) data.forever = true
+		else data.time = time
 		
         return new Promise((resolve, reject) => {
             HttpService.post(url,

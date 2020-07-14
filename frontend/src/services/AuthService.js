@@ -3,7 +3,7 @@
 import HttpService from './HttpService';
 import TokenService from './TokenService';
 
-export default class UserService {
+export default class AuthService {
 
     constructor() {
     }
@@ -14,7 +14,7 @@ export default class UserService {
 
     static register(user) {
         return new Promise((resolve, reject) => {
-            HttpService.post(`${UserService.baseURL()}/register`, {
+            HttpService.post(`${AuthService.baseURL()}/register`, {
                 username: user.username,
                 password: user.password,
                 email: user.email,
@@ -47,7 +47,7 @@ export default class UserService {
 
     static login(user, pass) {
         return new Promise((resolve, reject) => {
-            HttpService.post(`${UserService.baseURL()}/login`, {
+            HttpService.post(`${AuthService.baseURL()}/login`, {
                 username: user,
                 password: pass
             }, function(data) {
@@ -98,13 +98,14 @@ export default class UserService {
 	static getUserBanDate(token) {
 		let decodedToken = TokenService.decodeToken(token);
 		console.log(decodedToken)
-		return decodedToken.banTime;
+		if(decodedToken.banTime && this.isUserBanned(token)) return decodedToken.banTime;
+		return null;
 	}
 	
-	static isUserBanned(date) {
+	static isUserBanned(token) {
 		let decodedToken = TokenService.decodeToken(token);
-		console.log(decodedToken)
-		return decodedToken.banTime >= Date.now();
+		
+		return decodedToken.banTime === -1 || decodedToken.banTime >= Date.now();
 	}
 	
 
