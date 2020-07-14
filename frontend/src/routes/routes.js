@@ -9,8 +9,9 @@ import {ActivityListView} from "../views/ActivityListView";
 import {ActivityDetailedView} from "../views/ActivityDetailedView";
 import {ActivityCreateView} from "../views/ActivityCreateView";
 import { ActivityHistoryView } from "../views/ActivityHistoryView";
-import {ActivityEditView} from "../views/ActivityEditView"
-import {CompanionView} from "../views/CompanionView"
+import {ActivityEditView} from "../views/ActivityEditView";
+import {CompanionView} from "../views/CompanionView";
+import {LandingPageView} from "../views/LandingPageView";
 import UploadPage from "../components/UploadImage";
 
 export const routes = [
@@ -19,14 +20,15 @@ export const routes = [
     {component: authSplashScreen(ReportActivityView), path: '/report_activity'},
     {component: authSplashScreen(UserLoginView), path: '/login', exact: true},
     {component: authSplashScreen(UserSignupView), path: '/register', exact: true},
-    {component: authSplashScreen(HomepageView), path: '/', exact: true},
+    {component: authSplashScreen(HomepageView), path: '/td'},
     {component: authSplashScreen(ModeratorView), path: '/moderator'},
-    {component: authSplashScreen(HomepageView), path:'/', exact: true},
+    {component: authSplashScreen(HomepageView), path:'/td'},
     {component: authSplashScreen(ActivityListView), path: '/activities/search', exact: true},
     {component: authSplashScreen(ActivityDetailedView), path: '/detail/:id'},
     {component: authSplashScreen(ActivityCreateView), path: '/activities/create' },
     {component: authSplashScreen(ActivityHistoryView), path: '/activityhistory'},
     {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' },
     {component: authSplashScreen(CompanionView), path: '/chooseCompanion/:id' },
+    {component: LandingPageView, path: '/', exact: true},
     {component: UploadPage, path: '/uploadimage'}
 ];
