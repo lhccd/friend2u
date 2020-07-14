@@ -1,7 +1,7 @@
 import React from 'react';
 import LocationPicker from './LocationPicker';
 import {Button, Card, Row, Container, Col, Form, Alert, Dropdown, ListGroup, ListGroupItem, TextArea} from 'react-bootstrap';
-import UserService from '../services/AuthService';
+import AuthService from '../services/AuthService';
 
 export class ActivityCreate extends React.Component {
     constructor(props) {
@@ -123,7 +123,7 @@ export class ActivityCreate extends React.Component {
 
         //creator
         console.log("Infos about me: ")
-        console.log(UserService.getCurrentUser())
+        console.log(AuthService.getCurrentUser())
 
 
         var error = false
@@ -543,7 +543,7 @@ export class ActivityCreate extends React.Component {
                             <LocationPicker onLocChange={this.handleMapChange} editLocation={(this.props.activity)?this.props.activity.location:""}/>
                         </ListGroupItem>
                         <ListGroupItem>
-                        <Button onClick={this.handleSubmit}>{(this.state.creator === UserService.getCurrentUser().id) ? "Update Your Activity" : "Create Your Activity"}</Button>
+                        <Button onClick={this.handleSubmit}>{(this.state.creator === AuthService.getCurrentUser().id) ? "Update Your Activity" : "Create Your Activity"}</Button>
                         <Alert ref={this.submitAlertRef} style={{display: "none"}}>
                             Please validate your input, there seems to be something wrong (especially check whether
                             every field is filled correctly).
