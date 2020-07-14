@@ -21,13 +21,17 @@ const blockUser = (req,res) => {
     });
     
     
-    var time = DEFAULT_TIME;
     
-    if(req.body.time && !isNaN(req.body.time) && Number.isInteger(+(req.body.time)) && +(req.body.time) > 0) time = +(req.body.time);
+    //If the request contains the property 'forever' the prop time will be ignored and the banTime will be -1 (special value which means forever)
     
-    console.log(time)
+    var time = 0;
     
-    UserSchema.findOneAndUpdate({_id: req.body.banningUser, role: 'user'}, {$set: {banUntilDate: Date.now() + time}},{new: true},(err, user) => {
+    if(Object.prototype.hasOwnProperty.call(req.body, 'forever')) time = -1;
+    else if(req.body.time && !isNaN(req.body.time) && Number.isInteger(+(req.body.time)) && +(req.body.time) > 0) time = Date.now() + +(req.body.time);
+    else time = Date.now() + DEFAULT_TIME;
+    
+    
+    UserSchema.findOneAndUpdate({_id: req.body.banningUser, role: 'user'}, {$set: {banUntilDate: time}},{new: true},(err, user) => {
 		if(err) return res.status(400).json({"error": err});
 		if(!user) return res.status(404).json({"error": "The user doesn't exist. Are you trying to ban a moderator?"}); //No civil war!
 		

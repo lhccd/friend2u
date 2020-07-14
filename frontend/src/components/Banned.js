@@ -64,7 +64,7 @@ export class Banned extends React.Component{
         </div>
         </Card.Body>
         <Card.Footer>
-            <small className="text-muted">Friend2U loves U</small>
+            <small className="text-muted">Friend2U doesn't love U (for now)</small>
         </Card.Footer>
         </Card>
     );

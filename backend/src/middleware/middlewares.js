@@ -1,8 +1,22 @@
 "use strict";
 
 const jwt    = require('jsonwebtoken');
-
 const config = require ('../config');
+const objectID = require('mongoose').Types.ObjectId
+
+//Useful utility to check if an id is a valid object id so mongoose doens't return error
+//Should be used when there is an :id in the path
+const checkIfValidId = (req,res,next) => {
+	
+	let id = req.params.id
+	
+	if(objectID.isValid(id)) return next()
+	return res.status(400).json({
+			error: 'Bad Request',
+			message: `The id is not correct`
+	});
+}
+
 
 const checkBody = (req,res,next,requiredProperties) => {
 	for(var prop of requiredProperties){
@@ -72,7 +86,7 @@ const checkAuthentication = (req, res, next) => {
 			});
 		}
 		
-		if(decoded.banTime && decoded.banTime > Date.now()){
+		if(decoded.banTime && (decoded.banTime === -1 || decoded.banTime > Date.now())){
 			return res.status(403).send({
 				error: 'Banned',
 				message: "This user is banned",
@@ -108,5 +122,6 @@ module.exports = {
     checkAuthentication,
     isUserModerator,
     errorHandler,
-    checkBody
+    checkBody,
+    checkIfValidId	
 };

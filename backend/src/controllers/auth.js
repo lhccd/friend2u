@@ -173,19 +173,35 @@ const register = async (req,res) => {
     
     UserSchema.create(newUser, (err, user) => {
 		if(err){
-			if (err.code == 11000) {
-				console.log(err)
-				return res.status(400).json({
-					error: 'User exists',
-					duplicateKey: Object.keys(err.keyPattern)[0],
-					
-				});
-			} else {
-				return res.status(500).json({
-					error: 'Internal server error',
-					message: err.message
-				});
+			let message = {};
+			let status = 401;
+			let error = 'Error'
+			switch (err.name) {
+				case 'ValidationError':
+					for(let field in err.errors) {
+						message[field] = err.errors[field].message
+					}
+					error = 'Invalid user'
+					break;
+				case 'MongoError':
+					if(err.code = 11000){
+						error= 'User exists'
+						message = `A user with this ${Object.keys(err.keyPattern)[0]} already exists`
+					}
+					else{
+						message = 'Internal server error'
+					}
+					break;
+				default:
+					message = 'Internal server error';
+					status = 500;
 			}
+			
+			return res.status(status).json({
+				error: error,
+				message: message,
+			})
+			
 		}
 		else{
 			return res.status(200).json({

@@ -10,22 +10,11 @@ import { Redirect } from 'react-router-dom';
 
 import Page from './components/Page'
 import { Banned } from './components/Banned'
+import { LoadingScreen } from './components/LoadingScreen'
 
 import styled from "styled-components";
 
-import { Spinner } from 'react-bootstrap';
 
-
-//Loading mes
-function LoadingMessage() {
-  return (
-    <div className="splash-screen">
-     <Spinner style={{ position: "fixed", top: "50%", left: "50%" }} animation="border" variant='info' role="status">
-		 <span className="sr-only">Loading...</span>
-	 </Spinner>
-    </div>
-  );
-}
 
 export default function authSplashScreen(WrappedComponent) {
   return class extends React.Component {
@@ -94,7 +83,7 @@ export default function authSplashScreen(WrappedComponent) {
 
     render() {
       // while checking user session, show "loading" message
-      if (this.state.loading) return LoadingMessage();
+      if (this.state.loading) return <LoadingScreen />;
 
       // otherwise, show the desired route
       if(WrappedComponent.name === 'UserLoginView') {
