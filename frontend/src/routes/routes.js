@@ -33,7 +33,7 @@ export const routes = [
     {component: authSplashScreen(ActivityHistoryView), path: '/activityhistory'},
     {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' },
     {component: authSplashScreen(CompanionView), path: '/chooseCompanion/:id' },
-    {component: UploadPage, path: '/uploadimage'}
+    {component: UploadPage, path: '/uploadimage'},
 
     {component: authSplashScreen(UserProfileView), path: '/profile/:id' },
     {component: authSplashScreen(EditProfileView), path: '/editProfile' }
