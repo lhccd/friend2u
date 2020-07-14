@@ -256,7 +256,22 @@ const setSelectedPerson = (req, res) => {
 
 
 // Remove an existing activity.
-const remove = (req, res) => {
+const remove = async (req, res) => {
+
+    var delAct = await ActivityModel.findById(req.params.id)
+
+    //console.log("Trying to delete activity: "+req.params.id+" from: "+delAct.creator+"="+req.id)
+
+    
+    // Check wheter the user who wants to delete an activity is also the creator;
+    // Special check for moderators might still be required.
+    if(!(req.id === delAct.creator)) {
+        res.status(500).json({
+            error: 'You are not the creator of the activity!',
+            message: error.message
+        })
+    }
+
     ActivityModel.findByIdAndRemove(req.params.id).exec()
         .then(() => res.status(200).json({message: `Activity with id${req.params.id} was deleted`}))
         .catch(error => res.status(500).json({
@@ -358,6 +373,9 @@ const search = (async(req, res) => {
         message: error.message
     }));
 
+    console.log("Pre-Selection: ")
+    console.log(resdtandc)
+
     // For every found activity, narrow the result further down.
     for(var i=0; i<resdtandc.length; i++) {
         // First compare the age of the creator with the filter set by the searcher.
@@ -366,6 +384,9 @@ const search = (async(req, res) => {
         var ageOfCreator = getAge(rescrator["birthday"])
         // Only if creator-age matches move further on.
         if(ageOfCreator>=req.body.fromAge && ageOfCreator<=req.body.toAge) {
+
+            console.log("Age of creator is ok")
+
             // Now we have to do the same age-check vice versa
             // => Match the searcher age to the one specified in the activity.
             var ressearcher = await UserModel.findById(req.id)
@@ -373,11 +394,17 @@ const search = (async(req, res) => {
             var ageOfSearcher = getAge(ressearcher["birthday"])
             // Only if searcher-age matches move further on.
             if(ageOfSearcher>=resdtandc[i]["fromAge"] && ageOfSearcher<=resdtandc[i]["toAge"]) {
+
+                console.log("Age of searcher is ok")
+
                 // The genders have also to be matched accordingly;
                 // First off we match the gender-preference of the activity against the gender of the searcher.
                 if(!resdtandc[i].prefGender.toLowerCase().localeCompare("notdeclared") || !resdtandc[i].prefGender.toLowerCase().localeCompare(ressearcher.gender.toLowerCase())) {
                     // Secondly we mtach the gender-preferences of the searcher against the one of the creator.
-                    if(!req.body.gender.toLowerCase().localeCompare("notdeclared") || !req.body.gender.toLowerCase().localeCompare(rescrator.gender.toLowerCase())) {
+                    if(!req.body.prefGender.toLowerCase().localeCompare("notdeclared") || !req.body.prefGender.toLowerCase().localeCompare(rescrator.gender.toLowerCase())) {
+
+                        console.log("Gender-preferences are ok")
+
                         // Now we have tompare the searched activityName with the one from the current activity;
                         // The provided method compareTwoStrings from a nodejs library returns a number
                         // between 0 (no match) to 1 (complete match); The value 0.4 was choosen to allow

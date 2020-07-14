@@ -32,6 +32,8 @@ export class ActivityListView extends React.Component {
                 data: [...data],
                 loading: false
             });
+            
+            //console.log(this.state.data)
         }).catch((e) => {
             console.error(e);
         });
@@ -84,7 +86,7 @@ export class ActivityListView extends React.Component {
         .then((data) => {
             console.log("Returned data")
             console.log(data)
-            
+        
             this.setState({
                 data: [...data],
                 loading: false
@@ -112,6 +114,52 @@ export class ActivityListView extends React.Component {
         */
     }
 
+    onSort(sortBy) {
+        // Sorting done thorugh included searchfunction, which needs a function returning
+        // -1 if the left object should stay left or 1 if left value should go to the right.
+        switch(sortBy){
+            case "Activityname Ascending": {
+                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
+                    return (a.activityName<=b.activityName)?-1:1
+                    })
+                })
+            }
+            case "Activityname Descending": {
+                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
+                    return (a.activityName>=b.activityName)?-1:1
+                    })
+                })
+            }
+            case "Date Ascending": {
+                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
+                    return (a.dateTime<=b.dateTime)?-1:1
+                    })
+                })
+            }
+            case "Date Descending": {
+                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
+                    return (a.dateTime>=b.dateTime)?-1:1
+                    })
+                })
+            }
+            case "Price Ascending": {
+                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
+                    return (a.price<=b.price)?-1:1
+                    })
+                })
+            }
+            case "Price Descending": {
+                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
+                    return (a.price>=b.price)?-1:1
+                    })
+                })
+            }
+            default: {
+                console.log("Sorting went not as planned!")
+            }
+        }
+    }
+
     render() {
         if (this.state.loading) {
             return (<h2>Loading... forever... Ja ne, is klar... Mh...</h2>);
@@ -123,7 +171,7 @@ export class ActivityListView extends React.Component {
         return (
             <div>
                 <ActivitySearch onSearch={(filters) => this.searchActivities(filters)}/>
-                <ActivityList data={this.state.data} onDelete={(id) => this.deleteActivity(id)}/>
+                <ActivityList data={this.state.data} onDelete={(id) => this.deleteActivity(id)} onSort={(sortBy)=>this.sortBy(sortBy)}/>
             </div>
             
         );

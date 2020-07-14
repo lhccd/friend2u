@@ -10,6 +10,8 @@ export default class UserService {
 
     static baseURL() {return 'http://localhost:3000/auth'; }
     static userURL() {return "http://localhost:3000/users" }
+    static userServicebaseURL() { return 'http://localhost:3000/users' }
+
     static register(user) {
         return new Promise((resolve, reject) => {
             HttpService.post(`${UserService.baseURL()}/register`, {
@@ -26,6 +28,18 @@ export default class UserService {
                 resolve(data);
             }, function(textStatus) {
 				console.log(textStatus)
+                reject(textStatus);
+            });
+        });
+    }
+
+    static getUserInfo(userID) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${UserService.userServicebaseURL()}/${userID}`, function(data) {
+                console.log(data)
+                resolve(data);
+            }, function(textStatus) {
+                console.log(textStatus)
                 reject(textStatus);
             });
         });
@@ -93,18 +107,6 @@ export default class UserService {
 		return decodedToken.banTime >= Date.now();
 	}
 	
-	static getUserInfo(userID){
-        return new Promise((resolve, reject) => {
-            HttpService.get(`${UserService.userURL()}/${userID}`, function(data) {
-                if(data != undefined || Object.keys(data).length !== 0) {
-                    resolve(data);
-                }
-                else {
-                    reject('Error while retrieving the user');
-                }
-            }, function(textStatus) {
-                reject(textStatus);
-            });
-        });
-    }
+
+    
 }

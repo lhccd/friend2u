@@ -5,6 +5,7 @@ import React from 'react';
 import { ActivityDetail } from '../components/ActivityDetail';
 
 import ActivityService from '../services/ActivityService';
+import UserService from '../services/AuthService'
 
 
 export class ActivityDetailedView extends React.Component {
@@ -15,7 +16,8 @@ export class ActivityDetailedView extends React.Component {
 
     componentWillMount(props){
         this.setState({
-            loading: true
+            loading1: true,
+            loading2: true
         });
 
         let id = this.props.match.params.id;
@@ -26,12 +28,24 @@ export class ActivityDetailedView extends React.Component {
             console.log(data)
             this.setState({
                 activity: data,
-                loading: false
+                loading1: false
             });
+
+            console.log("UserId is:"+this.state.activity.creator)
+
+            UserService.getUserInfo(this.state.activity.creator).then((data) => {
+                console.log(data)
+                this.setState({
+                    user: data,
+                    loading2: false
+            });
+            }).catch((e) => {
+                console.log(e)
+            })
+
         }).catch((e) => {
             console.error(e);
         });
-
     }
 
     deleteActivity(id) {
@@ -61,11 +75,11 @@ export class ActivityDetailedView extends React.Component {
     }
 
     render() {
-        if (this.state.loading) {
+        if (this.state.loading1 || this.state.loading2) {
             return (<h2>Loading the selected activity...</h2>);
         }
         return (
-            <ActivityDetail activity={this.state.activity} onJoin={(activityID) => this.joinUser(activityID)} onUNJoin={(activityID) => this.unJoinUser(activityID)} onDelete={(id) => this.deleteActivity(id)}/>
+            <ActivityDetail activity={this.state.activity} user={this.state.user} onJoin={(activityID) => this.joinUser(activityID)} onUNJoin={(activityID) => this.unJoinUser(activityID)} onDelete={(id) => this.deleteActivity(id)}/>
         );
     }
 }

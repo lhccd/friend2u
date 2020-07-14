@@ -11,6 +11,7 @@ import {ActivityCreateView} from "../views/ActivityCreateView";
 import { ActivityHistoryView } from "../views/ActivityHistoryView";
 import {ActivityEditView} from "../views/ActivityEditView"
 import {CompanionView} from "../views/CompanionView"
+import UploadPage from "../components/UploadImage";
 
 export const routes = [
     {component: authSplashScreen(UserLoginView), path: '/login'},
@@ -26,5 +27,6 @@ export const routes = [
     {component: authSplashScreen(ActivityCreateView), path: '/activities/create' },
     {component: authSplashScreen(ActivityHistoryView), path: '/activityhistory'},
     {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' },
-    {component: authSplashScreen(CompanionView), path: '/chooseCompanion/:id' }
+    {component: authSplashScreen(CompanionView), path: '/chooseCompanion/:id' },
+    {component: UploadPage, path: '/uploadimage'}
 ];

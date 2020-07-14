@@ -15,7 +15,7 @@ export class ActivitySearch extends React.Component {
             toTime: this.getCurrentTime(),
             fromAge: "18",
             toAge: "150",
-            gender: "Female",
+            prefGender: "Female",
             minPrice: "1",
             maxPrice: "5",
             lat: 48.14137159149285,
@@ -27,11 +27,12 @@ export class ActivitySearch extends React.Component {
             maxDistance: "1000"
         };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleMapChange = this.handleMapChange.bind(this);
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleMapChange = this.handleMapChange.bind(this)
         this.handleRBChange = this.handleRBChange.bind(this)
         this.handleDistChange = this.handleDistChange.bind(this)
+        this.handleResetFilters = this.handleResetFilters.bind(this)
 
         // Creating Refs, to show the category-specific filters.
         this.sportRef = React.createRef()
@@ -44,6 +45,11 @@ export class ActivitySearch extends React.Component {
         //console.log(currTime)
         return currTime
     }
+
+    handleResetFilters() {
+        window.location.reload()
+    }
+
     handleDistChange(newDist) {
         console.log("New Dist.: "+newDist)
         this.setState({ ["maxDistance"]: newDist})
@@ -111,6 +117,9 @@ export class ActivitySearch extends React.Component {
     handleSubmit(event) {
         console.log(this.state)
         //alert('A name was submitted: ' + this.state.value);
+        // Gender-Preferences differ slightly in frontend and backend;
+        // Conversion is done here.
+        if(this.state.prefGender === "Does not matter") this.state.prefGender = "notdeclared"
         this.props.onSearch(this.state)
         event.preventDefault();
 
@@ -130,7 +139,11 @@ export class ActivitySearch extends React.Component {
     render() {
         var cT = this.getCurrentTime()
         if (this.state.fromTime < cT) {
-            this.setState({["fromTime"]: cT})
+            //this.setState({["fromTime"]: cT})
+            this.state.fromTime = cT
+        }
+        if(this.state.fromTime > this.state.toTime) {
+            this.state.toTime = this.state.fromTime
         }
         console.log(this.state.fromTime < cT)
         return (
@@ -181,17 +194,12 @@ export class ActivitySearch extends React.Component {
                                     <option>Other</option>
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Group as={Col}>
-                                <Form.Label>Activityname</Form.Label>
-                                <Form.Control type="text" name="activityName" placeholder="Search for activityname"
-                                              value={this.state.value} onChange={this.handleChange}/>
-                            </Form.Group>
-                            <Form.Group as={Col}>
+                            <Form.Group as={Col} md={{ span: "auto", offset: "auto" }}>
                                 <Form.Label>From Time</Form.Label>
                                 <Form.Control type="datetime-local" name="fromTime" value={this.state.fromTime} min={cT}
-                                              max={this.state.toTime} onChange={this.handleChange}/>
+                                              onChange={this.handleChange}/>
                             </Form.Group>
-                            <Form.Group as={Col}>
+                            <Form.Group as={Col} md={{ span: "auto", offset: "auto" }}>
                                 <Form.Label>To Time</Form.Label>
                                 <Form.Control type="datetime-local" name="toTime" value={this.state.toTime}
                                               min={this.state.fromTime} onChange={this.handleChange}/>
@@ -210,7 +218,7 @@ export class ActivitySearch extends React.Component {
                             </Form.Group>
                             <Form.Group as={Col}>
                                 <Form.Label>Preferred Gender</Form.Label>
-                                <Form.Control as="select" name="gender" defaultValue="Female"
+                                <Form.Control as="select" name="prefGender" defaultValue="Female"
                                               onChange={this.handleChange}>
                                     <option>Female</option>
                                     <option>Male</option>
@@ -339,6 +347,7 @@ export class ActivitySearch extends React.Component {
                     </Form>
                     <br/>
                     <Button onClick={this.handleSubmit}>Search for activities</Button>
+                    <Button style={{ float : "right"}} onClick={this.handleResetFilters} className="btn-warning">Reset filters</Button>
                 </Container>
             </React.Fragment>
         );

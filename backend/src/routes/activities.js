@@ -8,8 +8,8 @@ const middlewares    = require('../middleware/middlewares');
 const activityMiddlewares    = require('../middleware/activities');
 
 const ActivityHandler = require('../controllers/activities');
-const JoinedActivityHandler = require('../controllers/joinedActivities')
-
+const JoinedActivityHandler = require('../controllers/joinedActivities');
+const uploadControllerHandler = require('../controllers/images');
 // Using the checkBody method from middlewares to validate the body before pushing to backend, it is compared to requiredProperties
 const requiredProperties = require('./requiredProperties');
 //TO DO
@@ -32,7 +32,7 @@ router.get('/activityExists/:id', ActivityHandler.ActivityExists); // Check, whe
 router.delete('/unjoin/:id', middlewares.checkAuthentication, JoinedActivityHandler.unjoin, ActivityHandler.unjoin); // Remove a user form the participants-list.
 router.put('/creatorVoteForParticipant/:id', ActivityHandler.creatorVoteForParticipant); // Set the vote of the creator for the selPerson.
 router.put('/participantVoteForCreator/:id', ActivityHandler.participantVoteForCreator); // Set the vote of the selPerson for the creator.
-router.delete('/:id', ActivityHandler.remove); // Delete a activitie by Id
+router.delete('/:id', middlewares.checkAuthentication, ActivityHandler.remove); // Delete a activitie by Id
 router.put('/setSelectedPerson/:id', ActivityHandler.setSelectedPerson); // Set the selected person for an activity.
 router.put('/updateStatus/:id', middlewares.checkAuthentication, ActivityHandler.changeStatus); // Change the status of an activity; For valuerepresentation look into the controller.
 router.get('/user/:id', middlewares.checkAuthentication, ActivityHandler.findActivitiesForUser); 
