@@ -15,30 +15,44 @@ export class UserProfileView extends React.Component {
 
     constructor(props) {
         super(props);
+        
         this.state = {
 			user: null,
-			notFound: false,
 			loading: true,
 			serverError: false,
 			reports: [],
 			showModal: false,
+			id: null,
 		}
 		
-		this.id = this.props.match.params.id;
     }
     
-    async componentWillMount() {
-		let id = this.id
+    
+    async componentWillMount(){
+		let id = this.props.match.params.id
+		await this.updateUser(id)
+	}
+	
+    async componentWillReceiveProps(newProps){
+		this.setState({loading: true})
+		let id = newProps.match.params.id
+		if(this.props.match.params.id !== id){
+			await this.updateUser(id)
+		}
+	}
+	
+    
+    async updateUser(id) {
 		try{
 			let user = await UserService.getUserProfile(id)
-			this.setState({user: user, loading: false})
+			this.setState({user: user, loading: false, id: id})
 		}
 		catch(err){
 			if(err.error === 'Bad Request' || err.error == 'Not Found'){
-				this.setState({notFound: true, loading: false})
+				this.setState({id: null, loading: false})
 			}
 			else{
-				this.setState({serverError: true, loading: false})
+				this.setState({id: null, serverError: true, loading: false})
 			}
 		}
 	}
@@ -64,18 +78,18 @@ export class UserProfileView extends React.Component {
 
     render() {
 		
-		let { loading, user, notFound, serverError } = this.state
+		let { loading, user, notFound, serverError, id } = this.state
 		
 		if(serverError) return this.renderServerError()
 		
 		if(loading) return this.renderLoading();
 		
-		if(notFound) return this.renderNotFound()
+		if(!id) return this.renderNotFound()
 		
 		let me = AuthService.getCurrentUser()
-		if(me && me.id === this.id)		
-			return this.renderOtherProfile(user,true,this.id)
+		if(me && me.id === id)		
+			return this.renderOtherProfile(user,true,id)
         else
-			return this.renderOtherProfile(user,false,this.id)
+			return this.renderOtherProfile(user,false,id)
     }
 }

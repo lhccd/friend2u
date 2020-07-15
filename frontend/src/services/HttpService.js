@@ -143,12 +143,6 @@ export default class HttpService {
 			method: 'POST',
 			body: formData
 		}
-        
-        /*if(token) {
-            header['Authorization'] = `Bearer ${token}`
-        }*/
-
-		console.log(url)
 		
 		options.headers = header
 		

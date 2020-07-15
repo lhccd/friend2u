@@ -74,6 +74,7 @@ class UserSignup extends React.Component {
 		this.setState({mobile: mobile})
     }
     
+    /*
     handleChangePasswordMatch(event) {
 		if(this.state.passwordRepeat === this.state.password){
 			this.setState({passwordMatch: true})
@@ -82,6 +83,7 @@ class UserSignup extends React.Component {
 			this.setState({passwordMatch: false})
 		}
     }
+    */
     
     handleSubmit(event) {
         event.preventDefault();

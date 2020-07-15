@@ -120,6 +120,24 @@ UserSchema.pre('save', function(next) {
     });
 });
 
+UserSchema.pre('findOneAndUpdate', function(next) {
+    var user = this;
+
+    // generate a salt
+    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+        if (err) return next(err);
+
+        // hash the password using our new salt
+        bcrypt.hash(user._update.password, salt, function(err, hash) {
+            if (err) return next(err);
+
+            // override the cleartext password with the hashed one
+            user._update.password = hash;
+            next();
+        });
+    });
+ });
+
 //Also comparing the two passwords is done here
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
