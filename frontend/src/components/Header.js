@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from '../media/f2uLogo.svg';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
+
 
 import {Nav, Navbar, NavDropdown, Image, Form, FormControl, Button} from 'react-bootstrap';
 import {MenuButton} from 'react-md';
@@ -13,6 +15,25 @@ export class Header extends React.Component {
     constructor(props) {
         super(props);
     }
+    
+    renderMyAccountLinks(role) {
+		const user = AuthService.getCurrentUser()
+		return (
+				<NavDropdown title={`${user.username}`} alignRight>
+					<LinkContainer to={`profile/${user.id}`} >
+						<NavDropdown.Item>My profile</NavDropdown.Item>
+					</LinkContainer>
+					{role === 'moderator' ?
+						<LinkContainer to="moderator">
+							<NavDropdown.Item href="#/moderator">Moderator console</NavDropdown.Item>
+						</LinkContainer> : null}
+					<NavDropdown.Divider/>
+					
+					<NavDropdown.Item onClick={AuthService.logout}>Logout</NavDropdown.Item>
+					
+				</NavDropdown>
+		)
+	}
 
     render() {
         const Styles = styled.div`
@@ -77,20 +98,7 @@ export class Header extends React.Component {
                     </Nav>
                     <Nav>
                         <Nav.Item>
-                            <NavDropdown title="My Account" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#/report_user">Report user</NavDropdown.Item>
-                                <NavDropdown.Item href="#/report_activity">Report activity</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                {role === 'moderator' ?
-                                    <NavDropdown.Item href="#/moderator">Moderator console</NavDropdown.Item> : ''}
-                                <NavDropdown.Divider/>
-                                <NavDropdown.Item href="#/report">Test</NavDropdown.Item>
-                                <NavDropdown.Item onClick={() => {
-                                    console.log("logging out");
-                                    AuthService.logout();
-                                    window.location = "/#login"
-                                }}>Logout</NavDropdown.Item>
-                            </NavDropdown>
+							{this.renderMyAccountLinks(role)}
                         </Nav.Item>
                     </Nav>
                 </Navbar>
