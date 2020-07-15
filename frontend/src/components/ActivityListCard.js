@@ -4,7 +4,7 @@ import React, { Fragment } from 'react';
 import { Col, Card, Button, Row, Image, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import thumbnail from '../media/activity_mock.jpg';
-import AuthService from '../services/AuthService';
+import UserService from '../services/AuthService';
 import ActivityService from '../services/ActivityService';
 
 export class ActivityListCard extends React.Component {

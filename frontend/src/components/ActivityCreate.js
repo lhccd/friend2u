@@ -164,6 +164,9 @@ export class ActivityCreate extends React.Component {
             delete this.state["first"]
             delete this.state["submitTry"]
             console.log(this.state)
+            //console.log(this.props.activity.location)
+            console.log(this.state.location)
+            
             this.props.onCreate(this.state)
 
             window.location = '/#/activities/search'
@@ -217,11 +220,11 @@ export class ActivityCreate extends React.Component {
             this.state.duration = this.state.duration.toString()
             this.state.fromAge = this.state.fromAge.toString()
             this.state.toAge = this.state.toAge.toString()
-            
+
             this.state.first = false
         } else {
             console.log("The answer is false")
-            console.log(this.props.activity)
+            console.log(this.state)
         }
         return (
             <div>
