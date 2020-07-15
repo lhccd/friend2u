@@ -1,7 +1,7 @@
 import React from 'react';
 import LocationPicker from './LocationPicker';
 import {Button, Card, Row, Container, Col, Form, Alert, Dropdown, ListGroup, ListGroupItem, TextArea} from 'react-bootstrap';
-import UserService from '../services/AuthService';
+import AuthService from '../services/AuthService';
 
 export class ActivityCreate extends React.Component {
     constructor(props) {
@@ -123,7 +123,7 @@ export class ActivityCreate extends React.Component {
 
         //creator
         console.log("Infos about me: ")
-        console.log(UserService.getCurrentUser())
+        console.log(AuthService.getCurrentUser())
 
 
         var error = false
@@ -164,6 +164,9 @@ export class ActivityCreate extends React.Component {
             delete this.state["first"]
             delete this.state["submitTry"]
             console.log(this.state)
+            //console.log(this.props.activity.location)
+            console.log(this.state.location)
+            
             this.props.onCreate(this.state)
 
             window.location = '/#/activities/search'
@@ -217,11 +220,11 @@ export class ActivityCreate extends React.Component {
             this.state.duration = this.state.duration.toString()
             this.state.fromAge = this.state.fromAge.toString()
             this.state.toAge = this.state.toAge.toString()
-            
+
             this.state.first = false
         } else {
             console.log("The answer is false")
-            console.log(this.props.activity)
+            console.log(this.state)
         }
         return (
             <div>
@@ -543,7 +546,7 @@ export class ActivityCreate extends React.Component {
                             <LocationPicker onLocChange={this.handleMapChange} editLocation={(this.props.activity)?this.props.activity.location:""}/>
                         </ListGroupItem>
                         <ListGroupItem>
-                        <Button onClick={this.handleSubmit}>{(this.state.creator === UserService.getCurrentUser().id) ? "Update Your Activity" : "Create Your Activity"}</Button>
+                        <Button onClick={this.handleSubmit}>{(this.state.creator === AuthService.getCurrentUser().id) ? "Update Your Activity" : "Create Your Activity"}</Button>
                         <Alert ref={this.submitAlertRef} style={{display: "none"}}>
                             Please validate your input, there seems to be something wrong (especially check whether
                             every field is filled correctly).

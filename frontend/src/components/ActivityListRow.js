@@ -87,6 +87,17 @@ export class ActivityListRow extends React.Component {
         //this.setState({ ["price"]: symbols })
     }
 
+    componentDidUpdate(prevProps) {
+        console.log(this.props.activity._id)
+        console.log(prevProps.activity._id)
+        if(this.props.activity._id !== prevProps.activity._id){
+            this.setBadgeProps()
+            this.getLocation(this.props.activity.location)
+        }
+        
+        //this.state.first = true
+    }
+
     render() {
         console.log("ALW: ")
         console.log(this.props.activity)   
@@ -96,6 +107,7 @@ export class ActivityListRow extends React.Component {
             this.getLocation(this.props.activity.location)
             this.setBadgeProps()
             this.setState({ ["first"]: false })
+            this.state.update = false
         }
 
 

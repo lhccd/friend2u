@@ -40,6 +40,7 @@ const read   = (req, res) => {
                 message: `Activity not found`
             });
 
+            console.log()
             res.status(200).json(activity)
 
         })
@@ -65,11 +66,18 @@ const update = (req, res) => {
     ActivityModel.findByIdAndUpdate(req.params.id,req.body,{
         new: true,
         runValidators: true}).exec()
-        .then(activity => res.status(200).json(activity))
-        .catch(error => res.status(500).json({
+        .then(activity => {
+            console.log("Update was made, result:")
+            console.log(activity)
+            res.status(200).json(activity)
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({
             error: 'Internal server error - activities_update',
             message: error.message
-        }));
+            }
+        )});
 };
 
 // Add a person to the participants-list.
@@ -282,7 +290,9 @@ const remove = async (req, res) => {
 
 // List all existing activities.
 const list  = (req, res) => {
-    ActivityModel.find({}).exec()
+    ActivityModel.find({
+        status: 0
+    }).exec()
         .then(activities => res.status(200).json(activities))
         .catch(error => res.status(500).json({
             error: 'Internal server error - activities_list',

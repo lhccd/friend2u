@@ -5,7 +5,8 @@ import React from 'react';
 import { ActivityDetail } from '../components/ActivityDetail';
 
 import ActivityService from '../services/ActivityService';
-import UserService from '../services/AuthService'
+import UserService from '../services/UserService';
+import AuthService from '../services/AuthService'
 
 
 export class ActivityDetailedView extends React.Component {
@@ -32,8 +33,9 @@ export class ActivityDetailedView extends React.Component {
             });
 
             console.log("UserId is:"+this.state.activity.creator)
+            
 
-            UserService.getUserInfo(this.state.activity.creator).then((data) => {
+            UserService.getUserProfile(this.state.activity.creator).then((data) => {
                 console.log(data)
                 this.setState({
                     user: data,

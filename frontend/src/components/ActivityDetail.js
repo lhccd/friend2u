@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { FaFutbol, FaPizzaSlice, FaHammer, FaTv, FaTools} from "react-icons/fa";
 import { Button, Card , Row, Col, Container, Dropdown, Navbar, Nav, Form, ListGroup, ListGroupItem, Image } from 'react-bootstrap';
 import LocationShower from './LocationShower';
-import UserService from '../services/AuthService'
+import AuthService from '../services/AuthService'
 import thumbnail from '../media/activity_mock.jpg'
 
 //import Page from './Page';
@@ -20,8 +20,8 @@ export class ActivityDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            alreadyJoined: this.props.activity.participants.includes(UserService.getCurrentUser().id),
-            userID: UserService.getCurrentUser().id,
+            alreadyJoined: this.props.activity.participants.includes(AuthService.getCurrentUser().id),
+            userID: AuthService.getCurrentUser().id,
             isParticipant: "none",
             isCreator: "none",
             creatorButtonText: "Please Wait...",
@@ -198,7 +198,7 @@ export class ActivityDetail extends React.Component {
                                 </Button>
                             </Link>
                         </div>
-                        <div style={{float: "right", visibility: (this.props.activity.creator === UserService.getCurrentUser().id ) ? "block" : "hidden"}}>
+                        <div style={{float: "right", visibility: (this.props.activity.creator === AuthService.getCurrentUser().id ) ? "block" : "hidden"}}>
                             <Button onClick={this.deleteActivity} variant="danger">
                                 Delete this activity
                             </Button>

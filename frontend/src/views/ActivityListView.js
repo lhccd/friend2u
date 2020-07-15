@@ -17,6 +17,8 @@ export class ActivityListView extends React.Component {
             loading: false,
             data: []
         };
+
+        this.sortBy = this.sortBy.bind(this)
     }
 
     componentWillMount(){
@@ -114,49 +116,47 @@ export class ActivityListView extends React.Component {
         */
     }
 
-    onSort(sortBy) {
+    sortBy(sortBy) {
         // Sorting done thorugh included searchfunction, which needs a function returning
         // -1 if the left object should stay left or 1 if left value should go to the right.
-        switch(sortBy){
-            case "Activityname Ascending": {
-                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
-                    return (a.activityName<=b.activityName)?-1:1
-                    })
+        if(sortBy==="Activityname Ascending") {
+            this.setState({ ["data"]: this.state.data.sort((a,b) => {
+                return (a.activityName<=b.activityName)?-1:1
                 })
-            }
-            case "Activityname Descending": {
-                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
-                    return (a.activityName>=b.activityName)?-1:1
-                    })
+            })
+        } 
+        else if(sortBy==="Activityname Descending") {
+            this.setState({ ["data"]: this.state.data.sort((a,b) => {
+                return (a.activityName>=b.activityName)?-1:1
                 })
-            }
-            case "Date Ascending": {
-                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
-                    return (a.dateTime<=b.dateTime)?-1:1
-                    })
+            })
+        }
+        else if(sortBy==="Date Ascending") {
+            this.setState({ ["data"]: this.state.data.sort((a,b) => {
+                return (a.dateTime<=b.dateTime)?-1:1
                 })
-            }
-            case "Date Descending": {
-                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
-                    return (a.dateTime>=b.dateTime)?-1:1
-                    })
+            })
+        }
+        else if(sortBy==="Date Descending") {
+            this.setState({ ["data"]: this.state.data.sort((a,b) => {
+                return (a.dateTime>=b.dateTime)?-1:1
                 })
-            }
-            case "Price Ascending": {
-                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
-                    return (a.price<=b.price)?-1:1
-                    })
+            })
+        }
+        else if(sortBy==="Price Ascending") {
+            this.setState({ ["data"]: this.state.data.sort((a,b) => {
+                return (a.price<=b.price)?-1:1
                 })
-            }
-            case "Price Descending": {
-                this.state.setState({ ["data"]: this.state.data.sort((a,b) => {
-                    return (a.price>=b.price)?-1:1
-                    })
+            })
+        }
+        else if(sortBy==="Price Descending") {
+            this.setState({ ["data"]: this.state.data.sort((a,b) => {
+                return (a.price>=b.price)?-1:1
                 })
-            }
-            default: {
+            })
+        }
+        else {
                 console.log("Sorting went not as planned!")
-            }
         }
     }
 
