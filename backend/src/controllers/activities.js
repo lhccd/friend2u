@@ -62,6 +62,7 @@ const update = (req, res) => {
     }
     console.log("Update with the following:")
     console.log(req.body);
+    req.body.location.type = 'Point'
 
     ActivityModel.findByIdAndUpdate(req.params.id,req.body,{
         new: true,

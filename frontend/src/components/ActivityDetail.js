@@ -251,16 +251,16 @@ export class ActivityDetail extends React.Component {
                                     </div>
                                     </div>
                                 </ListGroupItem>
-                                <ListGroupItem className="list-group-item-warning">
+                                <ListGroupItem className="list-group-item-warning" style={{ display: (this.props.activity.creator !== AuthService.getCurrentUser().id) ? "block" : "none" }}>
                                     Is there something wrong with the creator and/or the activity?
                                     <br/>
-                                    <Link to={'/activities'}>
+                                    <Link to={'/report_activity'}>
                                     <Button>
                                         Report Activity
                                     </Button>
                                     </Link>
                                          
-                                    <Link to={'/activities'}>
+                                    <Link to={'/report_user'}>
                                     <Button>
                                         Report User
                                     </Button>

@@ -65,8 +65,8 @@ export class LocationPicker extends React.Component {
 
     onClick(t, map, coord) {
         const {latLng} = coord;
-        const lat = latLng.lat();
-        const lng = latLng.lng();
+        const lat = Number(latLng.lat())
+        const lng = Number(latLng.lng())
         const newcoords = {lat: lat, lng: lng}
         console.log("Marker set to: lat=" + newcoords.lat + "; lng=" + newcoords.lng)
 

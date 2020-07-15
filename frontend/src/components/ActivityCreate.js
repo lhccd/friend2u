@@ -135,6 +135,9 @@ export class ActivityCreate extends React.Component {
         if (this.state.category === "Entertainment" && this.state.title.length == 0) {
             error = true
         }
+        if (this.state.description.length == 0) {
+            this.state.description = "---No description provided---"
+        }
         console.log(error)
 
         if (error) {
