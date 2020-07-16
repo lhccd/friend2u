@@ -19,10 +19,14 @@ import {EditProfileView} from "../views/EditProfileView";
 import {ResetPasswordAskView} from "../views/ResetPasswordAskView";
 import {ResetPasswordView} from "../views/ResetPasswordView";
 
+import { NotFound } from "../components/NotFound" 
+import { ReportUserPageOld } from "../components/reports/ReportUserPageOld" 
+
 export const routes = [
     {component: authSplashScreen(UserLoginView), path: '/login'},
-    {component: authSplashScreen(ReportUserView), path: '/report_user'},
-    {component: authSplashScreen(ReportActivityView), path: '/report_activity'},
+    {component: authSplashScreen(ReportUserView), path: '/report/:category/:id'},
+    {component: authSplashScreen(ReportUserPageOld), path: '/report_user'},
+    {component: authSplashScreen(ReportActivityView), path: '/report_activity/:id'},
     {component: authSplashScreen(UserLoginView), path: '/login', exact: true},
     {component: authSplashScreen(UserSignupView), path: '/register', exact: true},
     {component: authSplashScreen(HomepageView), path: '/', exact: true},
@@ -40,4 +44,7 @@ export const routes = [
     {component: authSplashScreen(EditProfileView), path: '/editProfile' },
     {component: authSplashScreen(ResetPasswordAskView), path: '/password/reset', exact: true},
     {component: authSplashScreen(ResetPasswordView), path: '/password/reset/:id/:token' },
+    
+    //Not found route
+    {component: authSplashScreen(NotFound), path: '*', exact: true },
 ];

@@ -100,7 +100,7 @@ export default function authSplashScreen(WrappedComponent) {
       else if(this.state.authenticated) return this.renderAuthenticated();
       
       const { history, location } = this.props;
-	  
+
       return <Redirect to={{pathname: '/login', state: {from: location.pathname}}}/>
     }
   };
