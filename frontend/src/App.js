@@ -11,6 +11,7 @@ import { routes } from "./routes/routes";
 import { ActivityListView } from "./views/ActivityListView";
 import { ActivityDetailedView } from './views/ActivityDetailedView';
 import { ActivityCreateView } from './views/ActivityCreateView'
+import {Footer} from "./components/Footer";
 
 
 
@@ -57,6 +58,7 @@ export default class App extends React.Component {
             <Router history={history}>
                 <Switch>
                     {this.state.routes.map((route, i) => (<Route key={i} {...route}/>) )}
+
                 </Switch>
             </Router>
         );
