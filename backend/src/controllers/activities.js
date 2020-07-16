@@ -291,10 +291,42 @@ const remove = async (req, res) => {
 
 // List all existing activities.
 const list  = (req, res) => {
-    ActivityModel.find({
-        status: 0
-    }).exec()
+    ActivityModel.find({}).exec()
         .then(activities => res.status(200).json(activities))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error - activities_list',
+            message: error.message
+        }));
+};
+
+// List all existing activities for a specific category, while
+// also ensuring, that the user fullfills the creators preferences.
+const getActivitiesByCategory  = async (req, res) => {
+    //console.log("Searching activities in category: "+req.params.category)
+    var propCurrUser = await UserModel.findById(req.id)
+    var ageCurrUser = getAge(propCurrUser["birthday"])
+    //console.log("Properties of current user:")
+    //console.log(propCurrUser)
+    //console.log(ageCurrUser)
+    var catForSearch = req.params.category.charAt(0).toUpperCase() + req.params.category.substring(1)
+    //console.log(catForSearch)
+    ActivityModel.find({
+        status: 0,
+        category: catForSearch,
+        fromAge: { $lte: ageCurrUser},
+        toAge: { $gte: ageCurrUser},
+        creator: { $ne: req.id}
+    }).exec()
+        .then(activities => {
+            var resact = []
+            for(var i=0; i<activities.length; i++) {
+                //console.log("Gendercheck: "+activities[i].prefGender.toLowerCase()+" === "+propCurrUser.gender.toLowerCase())
+                if(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || activities[i].prefGender.toLowerCase() === "notdeclared" || propCurrUser.gender.toLowerCase() === "notdeclared") {
+                    resact.push(activities[i])
+                }
+            }
+            res.status(200).json(activities)
+        })
         .catch(error => res.status(500).json({
             error: 'Internal server error - activities_list',
             message: error.message
@@ -657,5 +689,6 @@ module.exports = {
     search,
     test,
     getVotes,
-    findActivitiesForUser
+    findActivitiesForUser,
+    getActivitiesByCategory
 };

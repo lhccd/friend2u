@@ -9,10 +9,10 @@ export class ActivitySearch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            category: "Other",
+            category: this.props.category,
             activityName: "",
-            fromTime: this.getCurrentTime(),
-            toTime: this.getCurrentTime(),
+            fromTime: this.getCurrentTime(false),
+            toTime: this.getCurrentTime(true),
             fromAge: "18",
             toAge: "150",
             prefGender: "Female",
@@ -33,6 +33,8 @@ export class ActivitySearch extends React.Component {
         this.handleRBChange = this.handleRBChange.bind(this)
         this.handleDistChange = this.handleDistChange.bind(this)
         this.handleResetFilters = this.handleResetFilters.bind(this)
+        this.localTimeToUTC = this.localTimeToUTC.bind(this)
+        this.categoryClick = this.categoryClick.bind(this)
 
         // Creating Refs, to show the category-specific filters.
         this.sportRef = React.createRef()
@@ -40,10 +42,26 @@ export class ActivitySearch extends React.Component {
         this.foodRef = React.createRef()
     }
 
-    getCurrentTime() {
-        var currTime = new Date().toISOString().substring(0, 16) // Cut the time before the sec.
-        //console.log(currTime)
-        return currTime
+    getCurrentTime(plusZwei) {
+        // ToTime should be one day in the future;
+        // Offset privided in milliseconds.
+        var toTimeOffset = 0
+        if(plusZwei) toTimeOffset = 24*60*60000
+
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        var localISOTime = (new Date(Date.now() - tzoffset + toTimeOffset)).toISOString().slice(0, -1);
+
+        console.log("Current time:")
+        console.log(toTimeOffset)
+        console.log(localISOTime)
+        return localISOTime.substring(0, 16)
+    }
+
+    categoryClick(event) {
+        console.log("CategoryClick: ")
+        console.log(event.target)
+        this.props.onCategoryChange(event.target.name)
+        this.setState({ ["category"]: event.target.name})
     }
 
     handleResetFilters() {
@@ -109,21 +127,32 @@ export class ActivitySearch extends React.Component {
                 }
             }
         }
-
+        console.log("HandleChange:")
         console.log(event.target.value)
         this.setState({[event.target.name]: event.target.value});
+    }
+
+    localTimeToUTC(oldTime) {
+        var isoDateUTC = new Date(oldTime).toISOString().substring(0, 16)
+        //console.log(isoDateUTC)
+        return isoDateUTC
     }
 
     handleSubmit(event) {
         console.log(this.state)
         //alert('A name was submitted: ' + this.state.value);
         // Gender-Preferences differ slightly in frontend and backend;
-        // Conversion is done here.
+        // Conversion is done here; Additionally UTC and timezone time 
+        // have to be considered, also handled here.
+        var tmpFromTime = this.state.fromTime
+        var tmpToTime = this.state.toTime
+        this.state.fromTime = this.localTimeToUTC(this.state.fromTime)
+        this.state.toTime = this.localTimeToUTC(this.state.toTime)
         if(this.state.prefGender === "Does not matter") this.state.prefGender = "notdeclared"
         this.props.onSearch(this.state)
         event.preventDefault();
-
-
+        this.state.fromTime = tmpFromTime
+        this.state.toTime = tmpToTime
     }
 
     handleMapChange(event) {
@@ -137,7 +166,7 @@ export class ActivitySearch extends React.Component {
     }
 
     render() {
-        var cT = this.getCurrentTime()
+        var cT = this.getCurrentTime(false)
         if (this.state.fromTime < cT) {
             //this.setState({["fromTime"]: cT})
             this.state.fromTime = cT
@@ -145,30 +174,32 @@ export class ActivitySearch extends React.Component {
         if(this.state.fromTime > this.state.toTime) {
             this.state.toTime = this.state.fromTime
         }
+        console.log(this.state.fromTime)
         console.log(this.state.fromTime < cT)
+        console.log(this.state.category)
         return (
             <React.Fragment>
                     <Navbar className="bg-dark justify-content-around" variant="dark" style={{fontSize: "40px"}}>
                         <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                         <Nav>
-                            <Nav.Item>
-                                <Nav.Link href="#/activities/search"><FaFutbol/></Nav.Link>
-                            </Nav.Item>
+                            <Button href="#/activities/sport" name="sport" onClick={this.categoryClick} className={(this.state.category === "sport")? "btn-success btn-lg":"btn-outline-success btn-light btn-lg"}>
+                                Sport
+                            </Button>
                         </Nav>
                         <Nav>
-                            <Nav.Item>
-                                <Nav.Link href="#/activities/create"><FaPizzaSlice/></Nav.Link>
-                            </Nav.Item>
+                            <Button href="#/activities/food" name="food" onClick={this.categoryClick} className={(this.state.category === "food")? "btn-danger btn-lg":"btn-outline-danger btn-light btn-lg"}>
+                                Food
+                            </Button>
                         </Nav>
                         <Nav>
-                            <Nav.Item>
-                                <Nav.Link href="#/activityhistory"><FaTv/></Nav.Link>
-                            </Nav.Item>
+                            <Button href="#/activities/entertainment" name="entertainment" onClick={this.categoryClick} className={(this.state.category === "entertainment")? "btn-warning btn-lg":"btn-outline-warning btn-light btn-lg"}>
+                                Entertainment
+                            </Button>
                         </Nav>
                         <Nav>
-                            <Nav.Item>
-                                <Nav.Link href="#/activityhistory"><FaTools/></Nav.Link>
-                            </Nav.Item>
+                            <Button href="#/activities/other" name="other" onClick={this.categoryClick} className={(this.state.category === "other")? "btn-primary btn-lg":"btn-outline-primary btn-light btn-lg"}>
+                                Other
+                            </Button>
                         </Nav>
                     </Navbar>
 
@@ -185,14 +216,7 @@ export class ActivitySearch extends React.Component {
                         <Form.Row className="justify-content-between">
                             <Form.Group as={Col}>
 
-                                <Form.Label>Category</Form.Label>
-                                <Form.Control as="select" name="category" defaultValue="Other"
-                                              onChange={this.handleChange}>
-                                    <option>Sport</option>
-                                    <option>Entertainment</option>
-                                    <option>Food</option>
-                                    <option>Other</option>
-                                </Form.Control>
+                                
                             </Form.Group>
                             <Form.Group as={Col} md={{ span: "auto", offset: "auto" }}>
                                 <Form.Label>From Time</Form.Label>
@@ -353,3 +377,32 @@ export class ActivitySearch extends React.Component {
         );
     }
 }
+
+
+
+// Category selection no longer needed!
+/*
+<Form.Label>Category</Form.Label>
+                                <Form.Control as="select" name="category" defaultValue="Other"
+                                              onChange={this.handleChange}>
+                                    <option>Sport</option>
+                                    <option>Entertainment</option>
+                                    <option>Food</option>
+                                    <option>Other</option>
+                                </Form.Control>
+                                */
+
+
+/*
+<Nav.Item name="food" onClick={this.categoryClick}>
+                                <Nav.Link href="#/activities/food"><FaPizzaSlice/></Nav.Link>
+                            </Nav.Item>
+
+<Nav.Item>
+    <Nav.Link href="#/activities/entertainment"><FaTv name="entertainment" onClick={this.categoryClick}/></Nav.Link>
+</Nav.Item>
+
+<Nav.Item>
+    <Nav.Link href="#/activities/other"><FaTools name="other" onClick={this.categoryClick}/></Nav.Link>
+</Nav.Item>
+*/

@@ -28,9 +28,9 @@ export const routes = [
     {component: authSplashScreen(HomepageView), path: '/', exact: true},
     {component: authSplashScreen(ModeratorView), path: '/moderator'},
     {component: authSplashScreen(HomepageView), path:'/', exact: true},
-    {component: authSplashScreen(ActivityListView), path: '/activities/search', exact: true},
+    {component: authSplashScreen(ActivityCreateView), path: '/activities/create'},
+    {component: authSplashScreen(ActivityListView), path: '/activities/:category'},
     {component: authSplashScreen(ActivityDetailedView), path: '/detail/:id'},
-    {component: authSplashScreen(ActivityCreateView), path: '/activities/create' },
 
     {component: authSplashScreen(ActivityHistoryView), path: '/activityhistory'},
     {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' },

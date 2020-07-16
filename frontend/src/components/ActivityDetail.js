@@ -230,7 +230,7 @@ export class ActivityDetail extends React.Component {
                                     <br/>
                                     Name: {this.props.user.name} {this.props.user.surname}
                                 </ListGroupItem>
-                                <ListGroupItem>Gender: {this.state.cGender}</ListGroupItem>
+                                <ListGroupItem style={{ display: (this.state.cGender !== "notDeclared") ? "block" : "none" }}>Gender: {this.state.cGender}</ListGroupItem>
                                 <ListGroupItem>Age: {this.getAge(new Date(this.props.user.birthday))}</ListGroupItem>
                                 <ListGroupItem className="list-group-item-secondary">Restricions for this activity (made by the creator)
                                 </ListGroupItem>

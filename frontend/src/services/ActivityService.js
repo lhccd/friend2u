@@ -9,11 +9,11 @@ export default class ActivityService {
 
     static baseURL() {return "http://localhost:3000/activities" }
 
-    static getActivities(){
-        console.log("Yes");
+    static getActivities(category){
+        console.log("Getting activities for: "+category);
         console.log(this.baseURL())
        return new Promise((resolve, reject) => {
-           HttpService.get(this.baseURL(), function(data) {
+           HttpService.get(`${ActivityService.baseURL()}/list/${category}`, function(data) {
                console.log(data)
                resolve(data);
            }, function(textStatus) {

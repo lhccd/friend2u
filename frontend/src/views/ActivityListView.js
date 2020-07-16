@@ -4,6 +4,7 @@ import React from 'react';
 
 import { ActivityList } from '../components/ActivityList';
 import { ActivitySearch } from '../components/ActivitySearch';
+import { ActivityListNothing } from '../components/ActivityListNothing'
 
 import ActivityService from '../services/ActivityService';
 
@@ -15,10 +16,12 @@ export class ActivityListView extends React.Component {
 
         this.state = {
             loading: false,
-            data: []
+            data: [],
+            sortBy: "Activityname Ascending"
         };
 
         this.sortBy = this.sortBy.bind(this)
+        this.onCategoryChange = this.onCategoryChange.bind(this)
     }
 
     componentWillMount(){
@@ -26,13 +29,23 @@ export class ActivityListView extends React.Component {
             loading: true
         });
 
-        console.log("Let's try to get activites.")
+        var category = this.props.match.params.category
+
+        console.log("Let's try to get activites, for: "+category)
+
+        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "other") {
+            // Go to error-page!
+        }
         
-        ActivityService.getActivities().then((data) => {
+        ActivityService.getActivities(category).then((data) => {
             console.log('Heeeelooooo')
             this.setState({
-                data: [...data],
-                loading: false
+                // Per default, the activities are sorted by their name (ascending)
+                data: data.sort((a,b) => {
+                    return (a.activityName<=b.activityName)?-1:1
+                    }),
+                loading: false,
+                category: category
             });
             
             //console.log(this.state.data)
@@ -40,6 +53,26 @@ export class ActivityListView extends React.Component {
             console.error(e);
         });
         
+    }
+
+    onCategoryChange(category) {
+        ActivityService.getActivities(category).then((data) => {
+            console.log('Categorychange to: '+category)
+            this.setState({
+                // Per default, the activities are sorted by their name (ascending)
+                data: data.sort((a,b) => {
+                    return (a.activityName<=b.activityName)?-1:1
+                    }),
+                loading: false,
+                category: category
+            });
+
+            this.sortBy(this.state.sortBy)
+            
+            //console.log(this.state.data)
+        }).catch((e) => {
+            console.error(e);
+        });
     }
 
     deleteActivity(id) {
@@ -117,6 +150,7 @@ export class ActivityListView extends React.Component {
     }
 
     sortBy(sortBy) {
+        this.setState({ ["sortBy"]: sortBy})
         // Sorting done thorugh included searchfunction, which needs a function returning
         // -1 if the left object should stay left or 1 if left value should go to the right.
         if(sortBy==="Activityname Ascending") {
@@ -170,10 +204,13 @@ export class ActivityListView extends React.Component {
 
         return (
             <div>
-                <ActivitySearch onSearch={(filters) => this.searchActivities(filters)}/>
+                <ActivitySearch onCategoryChange={(category) => this.onCategoryChange(category)} category={this.state.category} onSearch={(filters) => this.searchActivities(filters)}/>
                 <ActivityList data={this.state.data} onDelete={(id) => this.deleteActivity(id)} onSort={(sortBy)=>this.sortBy(sortBy)}/>
+                <div style={{ display: (this.state.data.length == 0) ? "block" : "none" }}>
+                    <ActivityListNothing/>
+                </div>
+                
             </div>
-            
         );
     }
 }
