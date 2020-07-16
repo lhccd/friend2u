@@ -1,17 +1,33 @@
 "use strict";
 
-const jwt        = require('jsonwebtoken');
-const bcrypt     = require('bcryptjs');
+const jwt         = require('jsonwebtoken');
+const bcrypt      = require('bcryptjs');
+const nodemailer  = require('nodemailer');
 
-const config           = require('../config');
-const UserSchema       = require('../models/user');
-const AuthSchema       = require('../models/auth');
+const config              = require('../config');
+const UserSchema          = require('../models/user');
+const AuthSchema          = require('../models/auth');
 const requiredProperties  = require('../models/user_config');
+
+
+const transporter = nodemailer.createTransport({
+	host: 'smtp.office365.com', // Office 365 server
+	port: 587,     // secure SMTP
+	secure: false,
+	auth: {
+		user: config.email_address,
+		pass: config.email_password
+	},
+	tls: {
+		ciphers: 'SSLv3'
+	}
+})
+
 
 
 const authenticationFailedCB = (res,err) => {
 	if(err === 404){
-		return res.status(404).json("Authentication failed");
+		return res.status(404).json({"error": "Not found", "message":"Authentication failed"});
 	}
 	console.log(err)
 	return res.status(500).json(err);
@@ -134,7 +150,7 @@ const refresh_token = async (req,res) => {
 			}
 
 			// if everything is good, save to request for use in other routes
-			const accessToken  = jwt.sign({id: decoded.id, username: decoded.username, role: decoded.role}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
+			const accessToken = jwt.sign({id: decoded.id, username: decoded.username, role: decoded.role}, config.accessTokenSecret, {expiresIn: config.accessTokenLife});
 			const response = {
 				"accessToken": accessToken,
 			}
@@ -159,8 +175,6 @@ const refresh_token = async (req,res) => {
 const register = async (req,res) => {
 	
 	var newUser = {}
-	
-	console.log('here')
 	
 	for(var prop of requiredProperties){
 		if (!Object.prototype.hasOwnProperty.call(req.body, prop)) return res.status(400).json({
@@ -245,6 +259,7 @@ const changePassword = (req,res) => {
 			if(err) return authenticationFailedCB(res,err);
 			
 			const response = {
+				"ok": true,
 				"message": "Password changed succesfully!",
 			}
 			
@@ -303,6 +318,120 @@ const logout = (req, res) => {
 };
 
 
+
+
+
+//----------------------------------------------------------------------------------
+// Functions for password reset
+
+const createTokenFromPassword = (password,id) => {
+	
+	//We use our secrete and the password to create a new secret for the token
+	const secret = password + "-" + config.resetPasswordSecret
+	
+	//We sign the id of the user requesting for the password
+	const token = jwt.sign({id: id}, secret, {expiresIn: config.resetPasswordLife});
+	
+	return token;
+
+}
+
+const resetPasswordEmailTemplate = (email, name, url) => {
+	const from = config.email_address
+	const to = email
+	const subject = "Friend2U Password Reset"
+	const html = `<p>Hey ${name},</p>
+				  <p>It seems that you asked for a password reset.</p>
+			      <p>You can use the following link to reset your password:</p>
+			      <a href=${url}>${url}</a>
+			      <p>If you didn't ask for a password reset you can ignore this email</p>
+			      <p>Hope you enjoyed our application! </p>
+			      <p>---Friend2U team---</p>
+				  `
+
+	return { from, to, subject, html }
+}
+
+//Send Password Link
+const sendPasswordResetEmail = (req, res) => {
+	if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a email property'
+    });
+    
+    const email = req.body.email;
+    
+    UserSchema.findOne({email: email}, (err, user) => {
+		if(err) return authenticationFailedCB(res,err);
+		else if(!user) return res.status(404).json({ok: false, message: "No user with that email"});
+		
+		const token = createTokenFromPassword(user.password, user._id);
+		const url = `http://localhost:8000/#/password/reset/${user._id}/${token}`;
+		const template = resetPasswordEmailTemplate(user.email, user.name, url);
+	
+		//return res.status(200).json({ok: true, urls: url})	
+		
+		
+		transporter.sendMail(template, (err, info) => {
+			if (err) {
+				return authenticationFailedCB(res,err);
+			}
+
+			console.log(`** Email sent **`, info.response)
+			
+			return res.status(200).json({"ok": true, "message": "Email sent successfully"})
+		})
+		
+		
+	})
+}
+
+//Reset password with link
+const resetPassword = (req, res) => {
+	if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a password property'
+    });
+    
+    const password = req.body.password
+    const { id, token } = req.params
+    
+    //First we find the user by id
+    UserSchema.findById(id, (err, user) => {
+		if(err) return authenticationFailedCB(res,err);
+		else if(!user) return res.status(404).json({ok: false, message: "No user found"});
+		
+		const secret = user.password + "-" + config.resetPasswordSecret
+		
+		jwt.verify(token, secret, (err, decoded) => {
+			if (err){
+				console.log(err)
+				return res.status(400).json({
+					error: 'Token invalid',
+					message: 'The token provided is invalid',
+				});
+			}
+			
+			
+			user.comparePassword(password,(err, match) => {
+				if(err) return authenticationFailedCB(res,err);
+				if(match) return res.status(400).json({error: "Update error", message: "The new password should be different from the old one"});
+				
+				UserSchema.findByIdAndUpdate(id, {password: password}, {new: true}, (err, user) => {
+					if(err) return authenticationFailedCB(res,err);
+					console.log(user)
+					return res.status(200).json({ok: true, message: "Password updated successfully"})
+				})
+			})
+		})
+		
+	})
+    
+    
+	
+} 
+
+
 module.exports = {
     login,
     register,
@@ -310,5 +439,7 @@ module.exports = {
     logout,
     me,
     moderator,
-    changePassword
+    changePassword,
+    sendPasswordResetEmail,
+    resetPassword
 };

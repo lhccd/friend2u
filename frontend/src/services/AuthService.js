@@ -57,22 +57,67 @@ export default class AuthService {
             });
         });
     }
-
-    static logout(){
-        window.localStorage.removeItem('accessToken');
-        window.localStorage.removeItem('refreshToken');
+    
+    static changePassword(oldPassword, newPassword) {
+        return new Promise((resolve, reject) => {
+            HttpService.post(`${AuthService.baseURL()}/password/change`, {
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            }, function(data) {
+                resolve(data);
+            }, function(textStatus) {
+                reject(textStatus);
+            });
+        });
     }
+
+    static logout(){  
+		HttpService.post(`${AuthService.baseURL()}/logout`, {}, function(data) {
+			window.localStorage.removeItem('accessToken');
+			window.localStorage.removeItem('refreshToken');
+			window.location = "/#login"
+		}, function(textStatus) {
+			console.log(textStatus);
+			
+			//There shouldn't be any error so this should vener been executed anyway
+			window.localStorage.removeItem('accessToken');
+			window.localStorage.removeItem('refreshToken');
+			window.location = "/#login"	
+		});
+    }
+    
+    static resetPasswordAsk(email) {
+		return new Promise((resolve, reject) => {
+			HttpService.post(`${AuthService.baseURL()}/password/reset`, {email: email}, function(data) {
+				resolve(data)
+			}, function(textStatus) {
+				reject(textStatus);
+			});
+		})
+	}
+    
+    static resetPassword(password,id,token) {
+		return new Promise((resolve, reject) => {
+			HttpService.post(`${AuthService.baseURL()}/password/reset/${id}/${token}`, {password: password}, function(data) {
+				resolve(data)
+			}, function(textStatus) {
+				console.log(textStatus)
+				reject(textStatus);
+			});
+		})
+	}
 
     static getCurrentUser() {
         let token = window.localStorage['accessToken'];
-        //console.log(window.localStorage)
-        if (!token) return {};
+        if (!token){
+			window.location = '/#login';
+		};
 
-        let base64Url = token.split('.')[1];
-        let base64 = base64Url.replace('-', '+').replace('_', '/');
+		let decodedToken = TokenService.decodeToken(token);
+		
         return {
-            id : JSON.parse(window.atob(base64)).id,
-            username: JSON.parse(window.atob(base64)).username
+            id : decodedToken.id,
+            username: decodedToken.username
         };
     }
 

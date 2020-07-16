@@ -32,6 +32,7 @@ export class EditProfileView extends React.Component {
 		
 		this.updateProfile = this.updateProfile.bind(this)
 		this.uploadImage = this.uploadImage.bind(this)
+		this.changePassword = this.changePassword.bind(this)
     }
     
     async componentWillMount() {
@@ -74,8 +75,30 @@ export class EditProfileView extends React.Component {
 		}
 	}
 	
+	async changePassword(oldPassword,newPassword) {
+		try{
+			let res = await AuthService.changePassword(oldPassword,newPassword)
+			console.log(res)
+			this.setState({passwordSuccess: 'The password has been updated successfully'})
+			//this.props.history.push(`/profile/${this.id}`);
+			//window.location = `/#profile/${this.id}`;
+		}
+		catch(err){
+			if(err === 'Not found') this.setState({passwordError: 'The provided password is not correct'})
+			else this.setState({passwordError: 'An error occured. If it persists please contact us'})
+		}
+	}
+	
 	renderProfile(user) {
-		return <EditProfile uploadImage={this.uploadImage} user={user} onSubmit={this.updateProfile}/>
+		return <EditProfile
+					uploadImage={this.uploadImage}
+					passwordStatus={this.state.passwordStatus}
+					changePassword={this.changePassword}
+					user={user}
+					onSubmit={this.updateProfile}
+					passwordError={this.state.passwordError}
+					passwordSuccess={this.state.passwordSuccess}
+				/>
 	}
 	
 	renderLoading() {

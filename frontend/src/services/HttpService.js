@@ -108,9 +108,10 @@ export default class HttpService {
 		
 		options.headers = header
 		
-		console.log(options)
+		console.log(url)
 
         fetch(url, options).then((resp) => {
+			console.log(resp)
 			 if(!this.isResAuthenticated(resp)){
 				 window.location = '/#login';
 			 }
@@ -143,12 +144,6 @@ export default class HttpService {
 			method: 'POST',
 			body: formData
 		}
-        
-        /*if(token) {
-            header['Authorization'] = `Bearer ${token}`
-        }*/
-
-		console.log(url)
 		
 		options.headers = header
 		

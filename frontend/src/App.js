@@ -6,7 +6,7 @@ import './App.css';
 import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 
 import { UserLoginView } from "./views/UserLoginView";
-import {HomepageView} from "./views/HomepageView";
+import { HomepageView } from "./views/HomepageView";
 import { routes } from "./routes/routes";
 import { ActivityListView } from "./views/ActivityListView";
 import { ActivityDetailedView } from './views/ActivityDetailedView';
@@ -23,25 +23,6 @@ export default class App extends React.Component {
         this.state = {
             title: 'Friend2U App',
             routes: routes,
-            //routes: []
-
-                /*
-                { render: (props) => {
-                        if(true) { //UserService.isAuthenticated()) {
-                            return (<MovieFormView {... props} />)
-                        }
-                        else {
-                            return (<Redirect to={'/login'}/>)
-                        }} , path: '/edit/:id'},
-                { render: (props) => {
-                    if(UserService.isAuthenticated()) {
-                        return (<MovieFormView {... props} />)
-                    }
-                    else {
-                        return (<Redirect to={'/login'}/>)
-                    }}, path: '/add',},
-                { component: UserLoginView, path: '/login'}, */
-                //{ component: UserSignupView, path: '/register'}
         };
     }
     
@@ -55,7 +36,7 @@ export default class App extends React.Component {
 
     render() {
         return(
-            <Router history={history}>
+            <Router>
                 <Switch>
                     {this.state.routes.map((route, i) => (<Route key={i} {...route}/>) )}
 
@@ -64,6 +45,3 @@ export default class App extends React.Component {
         );
     }
 }
-
-//export default App;
-//export default App;

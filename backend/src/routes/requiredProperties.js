@@ -22,7 +22,6 @@ const activityProperties = [
 	'prefGender',
 	'fromAge',
 	'toAge',
-	'description',
 	'price',
 	'phyCondition',
 	'kitchen',

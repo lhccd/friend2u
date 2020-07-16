@@ -8,8 +8,7 @@ import UserService from '../services/AuthService'
 
 import { ServerError } from './ServerError';
 
-
-//import Page from './Page';
+import { ChangePasswordModal } from './ChangePasswordModal';
 
 //import UserService from '../services/UserService';
 
@@ -39,7 +38,8 @@ export class EditProfile extends React.Component {
 				profilePicture: user.profilePicture,
 				serverError: false,
 				imagePreviewUrl: null,
-				file: null
+				file: null,
+				changingPassword: false,
 			}
 		}
 		        
@@ -49,7 +49,12 @@ export class EditProfile extends React.Component {
         this.uploadImage = this.uploadImage.bind(this);
         this.handleChangeFile = this.handleChangeFile.bind(this);
         this.areParametersNotOk = this.areParametersNotOk.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
     }
+    
+    toggleModal(changingPassword) {
+		this.setState({changingPassword: changingPassword})
+	}
 
 	removePicture(){
 		this.setState({file: null, imagePreviewUrl: null})
@@ -58,7 +63,6 @@ export class EditProfile extends React.Component {
 	uploadImage(){
 		this.props.uploadImage(this.state.file)
 	}
-	
 	
 	handleChangeFile(e){
 		e.preventDefault(); 
@@ -102,7 +106,7 @@ export class EditProfile extends React.Component {
 
 
     render() {
-		let { username, name, surname, age, gender, bio, id, profilePicture, file, imagePreviewUrl} = this.state
+		let { username, name, surname, age, gender, bio, id, profilePicture, file, imagePreviewUrl, changingPassword} = this.state
 		let wholeName = `${name} ${surname}`
 		
 		console.log(profilePicture)
@@ -229,6 +233,11 @@ export class EditProfile extends React.Component {
 										</Button>
 									</Link>
 								</ButtonGroup>
+								<ButtonGroup className="mr-2">
+									<Button onClick={() => this.toggleModal(true)} variant="warning" >
+										Change password
+									</Button>
+								</ButtonGroup>
 							</Form.Group>
 
 						</div>
@@ -238,6 +247,13 @@ export class EditProfile extends React.Component {
 				<Card.Footer>
 					<small className="text-muted">Friend2U loves U</small>
 				</Card.Footer>
+				<ChangePasswordModal
+					show={changingPassword}
+					toggleModal={this.toggleModal}
+					onSubmit={this.props.changePassword}
+					error={this.props.passwordError}
+					success={this.props.passwordSuccess}
+				/>
 			</Card>
         );
     }

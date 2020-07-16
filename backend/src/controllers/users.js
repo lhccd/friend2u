@@ -33,7 +33,9 @@ const read = (req, res) => {
 		'bio',
 		'birthday',
 		'profilePicture',
-		'role',
+        'role',
+        'email',
+        'mobile'
 	]
 	
 	
