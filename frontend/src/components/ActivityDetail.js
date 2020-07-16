@@ -78,7 +78,7 @@ export class ActivityDetail extends React.Component {
             window.location = '/#/activities/edit/'+this.props.activity._id
         }
         else {
-            // GoTo select person page
+            window.location = '/#/chooseCompanion/'+this.props.activity._id
         }
     }
 
@@ -180,6 +180,11 @@ export class ActivityDetail extends React.Component {
             this.setCreatorGender()
             console.log(this.props.user)
             this.setState({ ["first"]: false})
+            console.log("Infos show user details:")
+            console.log((this.props.activity.status == 1))
+            console.log(this.props.activity.selPerson === AuthService.getCurrentUser().id)
+            console.log("Next-Test:")
+            console.log((this.props.activity.status == 0))
         }
         
 
@@ -231,7 +236,7 @@ export class ActivityDetail extends React.Component {
                                 </ListGroupItem>
                                 <ListGroupItem>Age:<br/>From: {this.props.activity.fromAge} - To: {this.props.activity.toAge}</ListGroupItem>
                                 <ListGroupItem>Gender:<br/>{this.state.prefGender}</ListGroupItem>
-                                <ListGroupItem className="list-group-item-info">
+                                <ListGroupItem className="list-group-item-info" style={{ display: (this.props.activity.status == 0) ? "block" : "none" }}>
                                     <div>
                                     <div style={{display: this.state.isParticipant}}>
                                     <Col>
@@ -250,6 +255,37 @@ export class ActivityDetail extends React.Component {
                                         </Col>
                                     </div>
                                     </div>
+                                </ListGroupItem>
+                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status == 1 && this.props.activity.selPerson === AuthService.getCurrentUser().id) ? "block" : "none" }}>
+                                    <ListGroupItem>
+                                        YOU HAVE BEEN SELECTED!
+                                        <br/>
+                                        Have a look at the creators contact details:
+                                    </ListGroupItem>
+                                    <ListGroupItem>
+                                        E-Mail: {this.props.user.email}
+                                    </ListGroupItem>
+                                    <ListGroupItem>
+                                        Phone: {this.props.user.mobile}
+                                    </ListGroupItem>
+                                </ListGroupItem>
+                                <ListGroupItem className="list-group-item-danger" style={{ display: (this.props.activity.status == 1 && this.props.activity.selPerson !== AuthService.getCurrentUser().id) ? "block" : "none" }}>
+                                    <ListGroupItem>
+                                        You have not been selected.
+                                    </ListGroupItem>
+                                    <ListGroupItem>
+                                        <Link to={'/activities/create'}>
+                                            <Button>
+                                                Create your own activity
+                                            </Button>
+                                        </Link>
+                                        <br/>or<br/>
+                                        <Link to={'/activities/search'}>
+                                            <Button>
+                                                Search for other activities
+                                            </Button>
+                                        </Link>
+                                    </ListGroupItem>
                                 </ListGroupItem>
                                 <ListGroupItem className="list-group-item-warning" style={{ display: (this.props.activity.creator !== AuthService.getCurrentUser().id) ? "block" : "none" }}>
                                     Is there something wrong with the creator and/or the activity?
