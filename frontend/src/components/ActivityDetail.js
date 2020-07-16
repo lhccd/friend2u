@@ -63,8 +63,8 @@ export class ActivityDetail extends React.Component {
         } else {
             let contact = await ActivityService.getContact(this.state.userID,userID,this.props.activity._id)
             var contacts = this.state.contact
-            contacts.email = contact.creator.email
-            contacts.mobile= contact.creator.mobile
+            contacts.email = contact.participant.email
+            contacts.mobile= contact.participant.mobile
             this.setState({contact: contacts})
         }
     }
@@ -282,7 +282,8 @@ export class ActivityDetail extends React.Component {
                                     </div>
                                     </div>
                                 </ListGroupItem>
-                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status == 1 && this.props.activity.selPerson === AuthService.getCurrentUser().id) ? "block" : "none" }}>
+                                
+                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status ==1 && this.props.activity.creator !== this.state.userID && this.props.activity.selPerson === this.state.userID ) ? "block" : "none" }}>
                                     <ListGroupItem>
                                         YOU HAVE BEEN SELECTED!
                                         <br/>
@@ -294,8 +295,9 @@ export class ActivityDetail extends React.Component {
                                     <ListGroupItem>
                                         Phone: {this.state.contact.mobile}
                                     </ListGroupItem>
-                                </ListGroupItem>
-                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status == 1 && this.props.activity.selPerson !== undefined && this.props.activity.creator == this.state.userID)}}>
+                                </ListGroupItem> 
+
+                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status ==1 && this.props.activity.creator == this.state.userID && this.props.activity.selPerson !== this.state.userID ) ? "block" : "none" }}>
                                     <ListGroupItem>
                                         YOU HAVE NOW THE PARTICIPANT FOR THIS ACTIVITY!
                                         <br/>
@@ -308,6 +310,7 @@ export class ActivityDetail extends React.Component {
                                         Phone: {this.state.contact.mobile}
                                     </ListGroupItem>
                                 </ListGroupItem>
+                                
                                 <ListGroupItem className="list-group-item-danger" style={{ display: (this.props.activity.status == 1 && this.props.activity.selPerson !== AuthService.getCurrentUser().id && this.props.activity.creator !== this.state.userID) ? "block" : "none" }}>
                                     <ListGroupItem>
                                         You have not been selected.
