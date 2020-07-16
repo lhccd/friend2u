@@ -7,7 +7,9 @@ export class ActivityHistory extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+           
+        }
     }
 
     render() {
@@ -38,12 +40,13 @@ export class ActivityHistory extends React.Component {
             }
         `
 
+    
        
 
         return (
             <Styles>
                 <h1 className="h1">My Activity History</h1>
-                <Tabs defaultActiveKey="activityhistory" id="activityhistory" onChange={this.handleSelect} >
+                <Tabs defaultActiveKey="activityhistory" id="activityhistory" onSelect={this.handleSelect} >
                     <Tab eventKey="Created" title="Created">
                         <ActivityListCards
                             activities={this.props.createdactivities}
@@ -69,3 +72,4 @@ export class ActivityHistory extends React.Component {
         );
     }
 }
+

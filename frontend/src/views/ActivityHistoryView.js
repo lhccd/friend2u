@@ -13,12 +13,11 @@ export class ActivityHistoryView extends React.Component {
             createdactivities: [
             ],
             joinedactivities:
-                [],
+            [],
             historyCreatedactivities: [],
             historyJoinedactivities: [],
-            userID: UserService.getCurrentUser().id
+            userID: UserService.getCurrentUser().id,
         }
-
     }
 
     componentDidMount() {
@@ -29,7 +28,6 @@ export class ActivityHistoryView extends React.Component {
 
     async getActivities() {
         var today = new Date();
-
         try {
             let createdactivities = await ActivityService.getActivitiesByUserID(this.state.userID)
             var historyactivities = new Array()
@@ -80,6 +78,7 @@ export class ActivityHistoryView extends React.Component {
             this.setState({ joinedactivities: joinedactivities })
             this.setState({ historyJoinedactivities: historyactivities })
         }
+
         catch (err) {
             console.error(err);
             this.setState({

@@ -36,7 +36,7 @@ export default class AuthService {
     static getUserInfo(userID) {
         return new Promise((resolve, reject) => {
             HttpService.get(`${this.userServicebaseURL()}/${userID}`, function(data) {
-                console.log(data)
+            
                 resolve(data);
             }, function(textStatus) {
                 console.log(textStatus)
