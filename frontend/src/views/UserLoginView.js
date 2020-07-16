@@ -41,15 +41,17 @@ export class UserLoginView extends React.Component {
         } catch(err) {
 			console.log("Error");
             console.error(err);
-            this.setState({
-                error: err
-            });
+            let error = 'It was not possible to login'
+            if(err === 'Not found'){
+				error = 'Wrong credentials!'
+			}
+            this.setState({error: error});
         }
     }
 
     render() {
         return (
-          <UserLogin onSubmit={(user) => this.login(user)} error={this.state.error}></UserLogin>
+          <UserLogin onSubmit={(user) => this.login(user)} error={this.state.error} />
         );
     }
 }

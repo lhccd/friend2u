@@ -3,14 +3,17 @@ import {Fragment} from 'react';
 
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { Banned } from './components/Banned'
+import { LoadingScreen } from './components/LoadingScreen'
 
 import AuthService from './services/AuthService';
+
+import { unauthenticatedRoutes } from './routes/unauthenticatedRoutes'
 
 import { Redirect } from 'react-router-dom';
 
 import Page from './components/Page'
-import { Banned } from './components/Banned'
-import { LoadingScreen } from './components/LoadingScreen'
+
 
 import styled from "styled-components";
 
@@ -89,13 +92,9 @@ export default function authSplashScreen(WrappedComponent) {
       if (this.state.loading) return <LoadingScreen />;
 
       // otherwise, show the desired route
-      if(WrappedComponent.name === 'UserLoginView') {
+      if(unauthenticatedRoutes.includes(WrappedComponent.name)) {
 		  if(this.state.authenticated) return <Redirect to={{pathname: '/'}}/>
 		  else return <WrappedComponent {...this.props} setRole={(role) => this.setRole(role)} />
-	  }
-      else if(WrappedComponent.name === 'UserSignupView') {
-		  if(this.state.authenticated) return <Redirect to={{pathname: '/'}}/>
-		  else return <WrappedComponent {...this.props} />
 	  }
       else if(this.state.banDate) return this.renderBanned(this.state.banDate);
       else if(this.state.authenticated) return this.renderAuthenticated();

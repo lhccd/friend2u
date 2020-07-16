@@ -120,9 +120,10 @@ UserSchema.pre('save', function(next) {
     });
 });
 
-UserSchema.pre('findOneAndUpdate', function(next) {
+UserSchema.pre('findOneAndUpdate', function(next,some) {
     var user = this;
-
+    
+    if(!user._update.password) return next()
     // generate a salt
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
         if (err) return next(err);

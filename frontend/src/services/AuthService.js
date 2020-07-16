@@ -57,8 +57,7 @@ export default class AuthService {
         });
     }
 
-    static logout(){
-        
+    static logout(){  
 		HttpService.post(`${AuthService.baseURL()}/logout`, {}, function(data) {
 			window.localStorage.removeItem('accessToken');
 			window.localStorage.removeItem('refreshToken');
@@ -66,8 +65,33 @@ export default class AuthService {
 		}, function(textStatus) {
 			console.log(textStatus);
 			
+			//There shouldn't be any error so this should vener been executed anyway
+			window.localStorage.removeItem('accessToken');
+			window.localStorage.removeItem('refreshToken');
+			window.location = "/#login"	
 		});
     }
+    
+    static resetPasswordAsk(email) {
+		return new Promise((resolve, reject) => {
+			HttpService.post(`${AuthService.baseURL()}/password/reset`, {email: email}, function(data) {
+				resolve(data)
+			}, function(textStatus) {
+				reject(textStatus);
+			});
+		})
+	}
+    
+    static resetPassword(password,id,token) {
+		return new Promise((resolve, reject) => {
+			HttpService.post(`${AuthService.baseURL()}/password/reset/${id}/${token}`, {password: password}, function(data) {
+				resolve(data)
+			}, function(textStatus) {
+				console.log(textStatus)
+				reject(textStatus);
+			});
+		})
+	}
 
     static getCurrentUser() {
         let token = window.localStorage['accessToken'];

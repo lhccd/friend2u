@@ -366,13 +366,12 @@ const sendPasswordResetEmail = (req, res) => {
 		else if(!user) return res.status(404).json({ok: false, message: "No user with that email"});
 		
 		const token = createTokenFromPassword(user.password, user._id);
-		const url = `http://localhost:3000/auth/password/reset/${user._id}/${token}`;
+		const url = `http://localhost:8000/#/password/reset/${user._id}/${token}`;
 		const template = resetPasswordEmailTemplate(user.email, user.name, url);
+	
+		//return res.status(200).json({ok: true, urls: url})	
 		
-		return res.status(200).json({ok: true, urls: url})
 		
-		
-		/*
 		transporter.sendMail(template, (err, info) => {
 			if (err) {
 				return authenticationFailedCB(res,err);
@@ -382,7 +381,7 @@ const sendPasswordResetEmail = (req, res) => {
 			
 			return res.status(200).json({"ok": true, "message": "Email sent successfully"})
 		})
-		*/
+		
 		
 	})
 }
@@ -407,31 +406,23 @@ const resetPassword = (req, res) => {
 		jwt.verify(token, secret, (err, decoded) => {
 			if (err){
 				console.log(err)
-				return res.status(401).json({
-					ok: false,
+				return res.status(400).json({
+					error: 'Token invalid',
 					message: 'The token provided is invalid',
 				});
 			}
 			
-			user.updatePassword(req.body.oldPassword, req.body.newPassword, (err) => {
-				//If an error occured or if the passwords didn't match we throw an error
+			
+			user.comparePassword(password,(err, match) => {
 				if(err) return authenticationFailedCB(res,err);
+				if(match) return res.status(400).json({error: "Update error", message: "The new password should be different from the old one"});
 				
-				const response = {
-					"ok": true,
-					"message": "Password changed succesfully!",
-				}
-				
-				return res.status(200).json(response);		
-				
+				UserSchema.findByIdAndUpdate(id, {password: password}, {new: true}, (err, user) => {
+					if(err) return authenticationFailedCB(res,err);
+					console.log(user)
+					return res.status(200).json({ok: true, message: "Password updated successfully"})
+				})
 			})
-				
-			/*
-			UserSchema.findByIdAndUpdate(id, {password: password},{new: true}, (err, user) => {
-				if(err) return authenticationFailedCB(res,err);
-				console.log(user)
-				return res.status(200).json({ok: true, message: "Password updated successfully"})
-			})*/
 		})
 		
 	})

@@ -21,8 +21,6 @@ class UserLogin extends React.Component {
 
     constructor(props) {
         super(props);
-        
-        console.log(props)
 
         this.state = {
             username : '',
@@ -66,8 +64,8 @@ class UserLogin extends React.Component {
 									type="text"
 									name="username"
 									placeholder="Enter username"
-									label="Login"
-									id="LoginField"
+									//label="Login"
+									//id="LoginField"
 									//value={this.state.username}
 									onChange={this.handleChange}
 									errortext="Login is required"
@@ -96,6 +94,7 @@ class UserLogin extends React.Component {
 							Submit
 						</Button>
 						<Link to={'/register'} className="md-cell">Not registered yet?</Link>
+						<Link to={'/password/reset'} className="md-cell">Did you forget your password?</Link>
 						<AlertMessage>{this.props.error ? `${this.props.error}` : ''}</AlertMessage>
 					  </Form>
 					</Card.Body>
