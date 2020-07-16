@@ -20,7 +20,7 @@ export class Header extends React.Component {
 		const user = AuthService.getCurrentUser()
 		return (
 				<NavDropdown title={`${user.username}`} alignRight>
-					<LinkContainer to={`profile/${user.id}`} >
+					<LinkContainer to={`/profile/${user.id}`} >
 						<NavDropdown.Item>My profile</NavDropdown.Item>
 					</LinkContainer>
 					{role === 'moderator' ?

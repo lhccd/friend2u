@@ -69,7 +69,7 @@ export class ChangePasswordModal extends React.Component{
 					<Form.Group as={Col}>
 						<Form.Label>Insert old password</Form.Label>
 						<Form.Control
-							type="text"
+							type="password"
 							name="oldPassword"
 							placeholder="Insert old password"
 							onChange={this.handleChange}
