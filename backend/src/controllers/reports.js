@@ -17,13 +17,15 @@ const create = (req, res) => {
     const projection = (category === 'user')?'username':'';
     
 	newReport.populate('reported', '_id', function(err,report) {
-		console.log('here')
 		if(err){
 			console.log(err);
 			return res.status(500).json({error: 'Internal error', message: 'It was not possible to create a new report'})
 		}
 		
-		if(!report.reported) return res.status(404).json({error: `${category} not found`, message: `The reported ${category} doesn\'t exist`})
+		console.log(report)
+		
+		
+		if(!report.reported) return res.status(404).json({error: 'Not found', message: `The reported ${category} doesn\'t exist`})
 
 		report.save().then((report) =>{
 			console.log(report)
@@ -32,7 +34,7 @@ const create = (req, res) => {
 			})
         .catch((err) => {
 			console.log(err)
-			if(err.code === 11000) return res.status(401).json({error: 'Duplicate key', message: `The user has already reported this ${category}`})
+			if(err.code === 11000) return res.status(400).json({error: 'Duplicate key', message: `The user has already reported this ${category}`})
 			else return res.status(500).json({error: 'Internal error', message: 'It was not possible to create a new report'})
 		});
 	});

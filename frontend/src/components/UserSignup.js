@@ -98,8 +98,6 @@ class UserSignup extends React.Component {
             gender: this.state.gender,
             mobile: this.state.mobile,
         };
-        
-        console.log(user)
 
         this.props.onSubmit(user);
     }

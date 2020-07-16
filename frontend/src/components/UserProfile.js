@@ -91,9 +91,9 @@ export class UserProfile extends React.Component {
 													<FaUserShield color={'#37cf23'} size={40}/>
 												</OverlayTrigger>:null}
 							{!this.props.editable?<OverlayTrigger placement='top' overlay={<Tooltip>Report this user</Tooltip>}>
-													<Button style={{color: 'grey'}} variant="link" onClick={() => {}}>
+													<Link to={`/report/user/${this.props.id}`} style={{color: 'grey'}} className="md-cell">
 														<FaFlag size={30}/>
-													</Button>
+													</Link>
 												</OverlayTrigger>:null}
 							{!this.props.editable && this.props.role === 'moderator'?
 													<OverlayTrigger placement='top' overlay={<Tooltip>See the reports of this user</Tooltip>}>
@@ -137,14 +137,14 @@ export class UserProfile extends React.Component {
 								</Col>
 							</Form.Group>
 							
-							<Form.Group as={Row} >
-								<Form.Label column sm="2">
-									Gender:
-								</Form.Label>
-								<Col sm="10">
-								  <Form.Control plaintext readOnly defaultValue={gender} />
-								</Col>
-							</Form.Group>
+							{gender !== 'notDeclared'? <Form.Group as={Row} >
+														<Form.Label column sm="2">
+															Gender:
+														</Form.Label>
+														<Col sm="10">
+														  <Form.Control plaintext readOnly defaultValue={gender} />
+														</Col>
+													</Form.Group>:''}
 							
 							<Form.Group as={Row}>
 								<Form.Label column sm="2">
