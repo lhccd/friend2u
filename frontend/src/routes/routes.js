@@ -16,6 +16,8 @@ import UploadPage from "../components/UploadImage";
 
 import {UserProfileView} from "../views/UserProfileView";
 import {EditProfileView} from "../views/EditProfileView";
+import {ResetPasswordAskView} from "../views/ResetPasswordAskView";
+import {ResetPasswordView} from "../views/ResetPasswordView";
 
 export const routes = [
     {component: authSplashScreen(UserLoginView), path: '/login'},
@@ -34,8 +36,8 @@ export const routes = [
     {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' },
     {component: authSplashScreen(CompanionView), path: '/chooseCompanion/:id' },
     {component: UploadPage, path: '/uploadimage'},
-
     {component: authSplashScreen(UserProfileView), path: '/profile/:id' },
-    {component: authSplashScreen(EditProfileView), path: '/editProfile' }
-
+    {component: authSplashScreen(EditProfileView), path: '/editProfile' },
+    {component: authSplashScreen(ResetPasswordAskView), path: '/password/reset', exact: true},
+    {component: authSplashScreen(ResetPasswordView), path: '/password/reset/:id/:token' },
 ];
