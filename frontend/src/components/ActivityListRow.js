@@ -123,10 +123,6 @@ export class ActivityListRow extends React.Component {
                         <Card.Header>{this.props.activity.category}</Card.Header>
                         <Card.Body>
                             <Card.Title>{(this.state.showBadge) ? <Badge className={this.state.badgeClassName}>{this.state.badgeText}</Badge> : ""} <br/> {this.props.activity.activityName}</Card.Title>
-                            <Card.Text>
-                                Some quick example text to build on the card title and make up the bulk of
-                                the card's content.
-                            </Card.Text>
                             <ListGroup className="list-group-flush">
                                 <ListGroupItem>Date&Time: {new Date(this.props.activity.dateTime).toLocaleString()}</ListGroupItem>
                                 <ListGroupItem>Address: {this.state.address}</ListGroupItem>
