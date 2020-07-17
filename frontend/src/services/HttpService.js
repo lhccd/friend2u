@@ -98,6 +98,7 @@ export default class HttpService {
         
         let options = {
 			method: 'POST',
+			credentials: 'include'
 		}
         
         if(token) {

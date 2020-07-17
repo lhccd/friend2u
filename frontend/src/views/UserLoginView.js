@@ -19,8 +19,8 @@ export class UserLoginView extends React.Component {
     async login(user) {
         try {
             let tokens = await AuthService.login(user.username, user.password);
-            if(tokens.hasOwnProperty('accessToken') && tokens.hasOwnProperty('refreshToken')){
-				TokenService.setTokens(tokens.accessToken,tokens.refreshToken);
+            if(tokens.hasOwnProperty('accessToken')){
+				TokenService.setTokens(tokens.accessToken);
 				
 				this.props.setRole(AuthService.getUserRole(tokens.accessToken))
 			

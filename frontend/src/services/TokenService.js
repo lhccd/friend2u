@@ -13,13 +13,13 @@ export default class TokenService {
 		window.localStorage['accessToken'] = token;
 	}
 	
-    static setRefreshToken(token) {
+    /*static setRefreshToken(token) {
 		window.localStorage['refreshToken'] = token;
-	}
+	}*/
 	
-	static setTokens(access,refresh) {
+	static setTokens(access) {
 		this.setAccessToken(access);
-		this.setRefreshToken(refresh);
+		//this.setRefreshToken(refresh);
 	}
     
     static removeAccessToken() {
@@ -54,14 +54,14 @@ export default class TokenService {
 		let accessToken = window.localStorage['accessToken'];
 		if(!accessToken) return null;
 		
-		let refreshToken = window.localStorage['refreshToken'];
-		if(!refreshToken) return null;
+		//let refreshToken = window.localStorage['refreshToken'];
+		//if(!refreshToken) return null;
 		
 		if(this.isTokenValid(accessToken)) return accessToken;
 		
 		
 		//To delete when using httponly cookie
-		if(!this.isTokenValid(refreshToken)) return null;
+		//if(!this.isTokenValid(refreshToken)) return null;
 		
 		const url = `${this.apiURL()}/auth/refresh_token`;
 		
@@ -70,7 +70,7 @@ export default class TokenService {
 		
 		header.append('Content-Type', 'application/json');
 		
-		const res = await fetch(url,{method: 'POST', headers: header, body: JSON.stringify({refreshToken: refreshToken})})
+		const res = await fetch(url,{method: 'POST',credentials: 'include', headers: header, })
 		.then((res) => {
 			return Promise.all([res.status, res.json()])
 		})
