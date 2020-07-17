@@ -106,11 +106,14 @@ const ActivitySchema  = new mongoose.Schema({
     },
 
     // Storing the ID of the creator.
-    creator: String,
+    creator: {
+        type: mongoose.Schema.Types.ObjectId, ref:"User"
+    },
 
     // Storing the selected persons ID.
-    selPerson: String,
-
+    selPerson:{
+        type: mongoose.Schema.Types.ObjectId, ref:"User"
+    },
     // Storing the vote from the selPerson for the creator.
     voteForCreator: {
         type: Number,

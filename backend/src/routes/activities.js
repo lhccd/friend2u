@@ -36,6 +36,6 @@ router.delete('/:id', middlewares.checkAuthentication, ActivityHandler.remove); 
 router.put('/setSelectedPerson/:id', ActivityHandler.setSelectedPerson); // Set the selected person for an activity.
 router.put('/updateStatus/:id', middlewares.checkAuthentication, ActivityHandler.changeStatus); // Change the status of an activity; For valuerepresentation look into the controller.
 router.get('/list/:category', middlewares.checkAuthentication, ActivityHandler.getActivitiesByCategory)
-router.get('/user/:id', middlewares.checkAuthentication, ActivityHandler.findActivitiesForUser); 
-
+router.get('/user/:id', middlewares.checkAuthentication, ActivityHandler.findActivitiesForUser); //Get a list of created activities for a specific user.
+router.get('/match/:id', middlewares.checkAuthentication, ActivityHandler.getContact); // get the contact details if matched 
 module.exports = router;

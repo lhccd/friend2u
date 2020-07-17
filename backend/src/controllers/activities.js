@@ -30,7 +30,7 @@ const create = (req, res) => {
 };
 
 // Reading an existing activity.
-const read   = (req, res) => {
+const read = (req, res) => {
 
     ActivityModel.findById(req.params.id).exec()
         .then(activity => {
@@ -667,6 +667,38 @@ const getVotes  = async (req, res) => {
         downVotes: downVotes,
         notYetDecided: notYetDecided
     })    
+}
+
+const getContact = async (req, res) => {
+    const creator = req.query.creator;
+    const participant = req.query.participant;
+
+    if(creator == participant) {
+		return res.status(400).json({error: 'Bad Request', message: 'You can\'t pair yourself'})
+	}
+
+    var activity = await ActivityModel.findById(req.params.id).exec()
+    if (activity.selPerson == participant && activity.creator == creator){
+        var populateQuery = [{path:'selPerson', select:['email','mobile']}, { path:'creator', select:['email','mobile']}];
+        activity.populate(populateQuery,function (err, contacts) {
+            if (err) return res.status(500).json({
+                error: 'Internal server error - getContact',
+                message: error.message
+            });
+            let contact = {}
+		if(contacts.length !== 0){
+			contact.creator = contacts.creator
+			contact.participant = contacts.selPerson
+		}
+		else{
+            contact.creator = []
+            contact.participant = []
+		}	
+		return res.status(200).json(contact)
+          });
+    } else return res.status(202).json(activity)
+        
+     
 };
 
 
@@ -690,5 +722,6 @@ module.exports = {
     test,
     getVotes,
     findActivitiesForUser,
-    getActivitiesByCategory
+    getActivitiesByCategory,
+    getContact
 };

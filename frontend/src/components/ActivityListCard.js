@@ -49,6 +49,7 @@ export class ActivityListCard extends React.Component {
         this.setPriceSymbols = this.setPriceSymbols.bind(this);
         this.getLocation = this.getLocation.bind(this);
         this.getUserInfo = this.getUserInfo.bind(this);
+        this.getContact = this.getContact.bind(this);
     }
 
     handleUNJoin() {
@@ -62,7 +63,7 @@ export class ActivityListCard extends React.Component {
     }
 
     async getUserInfo(userID, role) {
-        UserService.getUserInfo(userID)
+
         let creator = await UserService.getUserInfo(userID)
 
         var today = new Date();
@@ -75,9 +76,29 @@ export class ActivityListCard extends React.Component {
         creator.age = age_now;
 
         if (role == "creator") {
+            creator.email = this.state.creator.email;
+            creator.mobile = this.state.creator.mobile;
             this.setState({ creator: creator })
         } else {
+            creator.email = this.state.creator.email;
+            creator.mobile = this.state.creator.mobile;
             this.setState({ participant: creator })
+        }
+    }
+
+    async getContact(userID, role) {
+        if (role == "participant") {
+            let creator = await ActivityService.getContact(userID, this.state.userID, this.props.activity._id)
+            var participants = this.state.participant
+            participants.email = creator.participant.email
+            participants.mobile = creator.participant.mobile
+            this.setState({ participant: participants })
+        } else {
+            let contact = await ActivityService.getContact(this.state.userID, userID, this.props.activity._id)
+            var creator = this.state.creator
+            creator.email = contact.creator.email
+            creator.mobile = contact.creator.mobile
+            this.setState({ creator: creator })
         }
     }
 
@@ -119,16 +140,19 @@ export class ActivityListCard extends React.Component {
         const joinedMode = this.props.mode == 'Joined'
         const hasSelPerson = this.props.activity.selPerson != undefined
         const paired = this.props.activity.selPerson == this.state.userID
-        const notMe = hasSelPerson && !paired
+
 
         if (this.state.first) {
             this.getLocation(this.props.activity.location)
 
             if (createdMode && hasSelPerson) {
-                this.getUserInfo(this.props.activity.selPerson, "participant")
+                this.getUserInfo(this.props.activity.selPerson, "participant").then(() => this.getContact(this.props.activity.selPerson, "participant"))
             }
             if (joinedMode) {
                 this.getUserInfo(this.props.activity.creator, "creator")
+                if (joinedMode && hasSelPerson) {
+                    this.getContact(this.props.activity.creator, "creator")
+                }
             }
             this.setState({ ["first"]: false })
         }
@@ -154,7 +178,7 @@ export class ActivityListCard extends React.Component {
                                     <React.Fragment>
                                         {!hasSelPerson ?
                                             <React.Fragment>
-                                                <ListGroupItem> Currently {this.props.activity.participants.length} participants are interested in your activity.
+                                                <ListGroupItem className="list-group-item-info"> Currently {this.props.activity.participants.length} participants are interested in your activity.
                                                     <div className='activity-participateButton' >
                                                         <Link to={`/detail/${this.props.activity._id}`} >
                                                             <Button variant="primary" > See details</Button>
@@ -176,20 +200,33 @@ export class ActivityListCard extends React.Component {
                                             </React.Fragment>
 
                                             :
-                                            <ListGroup className="list-group-flush"> Information about the participant:
-                                    <ListGroupItem>Name: {this.state.participant.name}</ListGroupItem>
-                                                <ListGroupItem>Age:: {this.state.participant.age} Gender: {this.state.participant.gender}</ListGroupItem>
-                                                <ListGroupItem>Contact:  Mobile: {this.state.participant.mobile} E-mail:
-                                    {this.state.participant.email}</ListGroupItem>
-                                            </ListGroup>
+                                            <React.Fragment>
+                                                <ListGroup className="list-group-flush">
+                                                    <ListGroupItem className="list-group-item-secondary"> Information about the participant:</ListGroupItem>
+                                                    <ListGroupItem>Name: {this.state.participant.name}</ListGroupItem>
+                                                    <ListGroupItem>Age: {this.state.participant.age} Gender: {this.state.participant.gender}</ListGroupItem>
+                                                    <ListGroupItem className="list-group-item-secondary">Contact details: </ListGroupItem>
+                                                    <ListGroupItem>Mobile: {this.state.participant.mobile}</ListGroupItem>
+                                                    <ListGroupItem>E-mail: {this.state.participant.email}</ListGroupItem>
+                                                    <ListGroupItem className="list-group-item-success">
+                                                        YOU HAVE NOW THE PARTICIPANT FOR THIS ACTIVITY!
+                                                        <br/>
+                                                        <Link to={`/detail/${this.props.activity._id}`} >
+                                                            <Button variant="primary" > See details</Button>
+                                                        </Link>
+                                                    </ListGroupItem>
+                                                </ListGroup>
 
+                                            </React.Fragment>
                                         }
                                     </React.Fragment> : null}
                                 {joinedMode ?
                                     <React.Fragment>
-                                        <ListGroup className="list-group-flush"> Information about the creator:
-                                    <ListGroupItem>Name: {this.state.creator.name}</ListGroupItem>
-                                            <ListGroupItem>Age:: {this.state.creator.age} Gender: {this.state.creator.gender}</ListGroupItem>
+                                        <ListGroup className="list-group-flush">
+                                            <ListGroupItem className="list-group-item-secondary">Information about the creator: </ListGroupItem>
+
+                                            <ListGroupItem>Name: {this.state.creator.name}</ListGroupItem>
+                                            <ListGroupItem>Age: {this.state.creator.age} Gender: {this.state.creator.gender}</ListGroupItem>
 
                                         </ListGroup>
                                         <ListGroup>
@@ -197,9 +234,24 @@ export class ActivityListCard extends React.Component {
                                                 <React.Fragment>
                                                     {hasSelPerson ?
 
-                                                        <ListGroupItem>you are not chosen.</ListGroupItem>
+                                                        <ListGroupItem className="list-group-item-danger"> You have not been selected. <br/>
+                                         <div className='activity-participateButton' >  
+                                        <Link to={'/activities/create'}>
+                                            <Button>
+                                                Create your own activity
+                                            </Button>
+                                        </Link>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <Link to={'/activities/search'}>
+                                            <Button>
+                                                Search for other activities
+                                            </Button>
+                                        </Link>
+                                        </div>
+                                        
+                                    </ListGroupItem>
                                                         : <React.Fragment>
-                                                            <ListGroupItem>The creator has not yet decided.
+                                                            <ListGroupItem className="list-group-item-info">The creator has not yet decided.
                                                     <div className='unjoinButton' >
                                                                     <Button variant="primary" onClick={this.handleUNJoin}> Unjoin activity</Button>
                                                                     &nbsp;&nbsp;&nbsp;
@@ -213,16 +265,20 @@ export class ActivityListCard extends React.Component {
                                                 </React.Fragment>
                                                 :
                                                 <React.Fragment>
-                                                    <ListGroupItem>Contact:  Mobile: {this.state.creator.mobile} E-mail:
-                                    {this.state.creator.email}</ListGroupItem>
-                                                    <ListGroupItem>
-                                                        You are chosen.<br></br>
+                                                    <ListGroup className="list-group-flush">
+                                                        <ListGroupItem className="list-group-item-secondary">Contact details: </ListGroupItem>
+                                                        <ListGroupItem>Mobile: {this.state.creator.mobile}</ListGroupItem>
+                                                        <ListGroupItem>E-mail: {this.state.creator.email}</ListGroupItem>
 
+                                                        <ListGroupItem className="list-group-item-success">
+                                                            YOU HAVE BEEN SELECTED!
+    <br/>
                                                         <Link to={`/detail/${this.props.activity._id}`} >
-                                                            <Button variant="primary" > See details</Button>
-                                                        </Link>
+                                                                <Button variant="primary" > See details</Button>
+                                                            </Link>
 
-                                                    </ListGroupItem>
+                                                        </ListGroupItem>
+                                                    </ListGroup>
                                                 </React.Fragment>
                                             }
 

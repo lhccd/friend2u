@@ -4,10 +4,10 @@ import React from 'react';
 import {Container, Row, Col, Nav, NavDropdown, Image} from 'react-bootstrap';
 import Page from './Page'
 import Logo from '../media/f2uLogo.png'
-import HikeLogo from '../views/HomepageViewMediaFiles/bordered-F2U_1.JPG';
-import OtherLogo from '../views/HomepageViewMediaFiles/bordered-F2U_2.JPG';
+import HikeLogo from '../views/HomepageViewMediaFiles/bordered-F2U_6.JPG';
+import OtherLogo from '../views/HomepageViewMediaFiles/bordered-F2U_7.JPG';
 import FoodLogo from '../views/HomepageViewMediaFiles/bordered-F2U_3.JPG';
-import EntertainmentLogo from '../views/HomepageViewMediaFiles/bordered-F2U_4.JPG';
+import EntertainmentLogo from '../views/HomepageViewMediaFiles/bordered-F2U_5.JPG';
 import logo from "../media/f2uLogo.svg";
 import {Jumbotron} from "./Jumbotron";
 import styled from "styled-components";
@@ -38,6 +38,10 @@ const Styles = styled.div`
         } 
     }
     
+    .column{
+        height: 600px;
+    }
+    
     .img:hover {
       opacity: 0.3;
     }
@@ -64,7 +68,7 @@ const Styles = styled.div`
       -ms-transform: translate(-50%, -50%);
       text-align: center;
     }
-    
+    .box {position: absolute;}
     .container {
         margin: auto; 
         padding: auto;
@@ -88,21 +92,6 @@ const Styles = styled.div`
 
 export const Homepage = () => (
     <Styles>
-            {/*<Nav justify>
-                <Nav.Item><Nav.Link href="/"><Image src={logo} width="46px"/></Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link href="/search">Search</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link href="/create">Create</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link href="/activityhistory">My Activity History</Nav.Link></Nav.Item>
-                <Nav.Item>
-                    <NavDropdown title="My Account">
-                        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                        <NavDropdown.Divider/>
-                        <NavDropdown.Item href="#/report">Report</NavDropdown.Item>
-                    </NavDropdown>
-                </Nav.Item>
-            </Nav>*/}
             <Jumbotron/>
             <Container fluid>
                 <Row>
@@ -127,7 +116,9 @@ export const Homepage = () => (
                         </Nav.Link>
                     </Col>
                 </Row>
-                <br/>
+            </Container>
+        <br/>
+            <Container fluid>
                 <Row>
                     <Col>
                         <Nav.Link href="#/activities/entertainment">
@@ -151,17 +142,6 @@ export const Homepage = () => (
                     </Col>
                 </Row>
             </Container>
-
-             {/*   <h1>Welcome to Friend2U!</h1>
-                <img src={Logo} alt="website logo"/>
-                <h2>Friend2U is an innovative meeting platform!</h2>
-                <ul>
-                    <li>Our platform brings exactly two people together.</li>
-                    <li>Have the activity your way. Create it or join it.</li>
-                    <li>Activities require a physical meetup in real life.</li>
-                    <li>Friend2U is an activity-based platform instead of communication platform.</li>
-                    <li>Rather a 'setup an activity and find a companion with same interests' solution</li>
-                </ul>*/}
     </Styles>
 );
 

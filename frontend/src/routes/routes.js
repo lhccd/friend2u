@@ -10,8 +10,9 @@ import {ActivityDetailedView} from "../views/ActivityDetailedView";
 import {ActivityCreateView} from "../views/ActivityCreateView";
 
 import { ActivityHistoryView } from "../views/ActivityHistoryView";
-import {ActivityEditView} from "../views/ActivityEditView"
-import {CompanionView} from "../views/CompanionView"
+import {ActivityEditView} from "../views/ActivityEditView";
+import {CompanionView} from "../views/CompanionView";
+import {LandingPageView} from "../views/LandingPageView";
 import UploadPage from "../components/UploadImage";
 
 import {UserProfileView} from "../views/UserProfileView";
@@ -31,10 +32,10 @@ export const routes = [
     {component: authSplashScreen(ActivityCreateView), path: '/activities/create'},
     {component: authSplashScreen(ActivityListView), path: '/activities/:category'},
     {component: authSplashScreen(ActivityDetailedView), path: '/detail/:id'},
-
     {component: authSplashScreen(ActivityHistoryView), path: '/activityhistory'},
     {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' },
     {component: authSplashScreen(CompanionView), path: '/chooseCompanion/:id' },
+    {component: LandingPageView, path: '/landing', exact: true},
     {component: UploadPage, path: '/uploadimage'},
     {component: authSplashScreen(UserProfileView), path: '/profile/:id' },
     {component: authSplashScreen(EditProfileView), path: '/editProfile' },

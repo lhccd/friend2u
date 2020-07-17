@@ -172,4 +172,16 @@ export default class ActivityService {
             });
         })
     }
+
+    static getContact(participantID,creatorID,activityID) {
+        var match = {"creator": creatorID, "participant":participantID}
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${this.baseURL()}/match/${activityID}?creator=${creatorID}&participant=${participantID}`,function(data) {
+                resolve(data)
+            }, function(textStatus) {
+                reject(textStatus);
+            })
+           
+        })
+    }
 }
