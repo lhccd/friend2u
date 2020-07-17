@@ -190,7 +190,7 @@ export class LandingPage extends React.Component {
                                 problem!</p><br/>
                             <p style={{color: "white", fontSize: "25px"}}>Our app helps You find a companion and
                                 possibly a friend to do all the activities You'd like to do!</p>
-                            <h1 style={{color: "white", fontSize: "25px", paddingBottom: "100px"}}>If you are interested, please sign up or log in! <Link to="/">Sign Up / Log In</Link></h1>
+                            <h1 style={{color: "white", fontSize: "25px", paddingBottom: "100px"}}>If you are interested, please sign up or log in! <Link to="/login">Sign Up / Log In</Link></h1>
                         </Container>
                         <div className="overlay"></div>
                     </Jumbo>
@@ -492,7 +492,7 @@ export class LandingPage extends React.Component {
                     </Tabs>
                     <Jumbo fluid className="jumbo">
                         <Container fluid className="jumbo__text">
-                            <h1 style={{color: "white", fontSize: "40px", paddingTop: "100px", paddingBottom: "100px"}}>If you are interested, please sign up or log in! <Link to="/">Sign Up / Log In</Link></h1>
+                            <h1 style={{color: "white", fontSize: "40px", paddingTop: "100px", paddingBottom: "100px"}}>If you are interested, please sign up or log in! <Link to="/login">Sign Up / Log In</Link></h1>
                         <div className="overlay"></div>
                         </Container>
                     </Jumbo>

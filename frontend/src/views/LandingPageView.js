@@ -20,7 +20,7 @@ export class LandingPageView extends React.Component {
             return (<h2>Loading...</h2>);
         }
         return (
-            <LandingPage></LandingPage>
+            <LandingPage/>
         );
     }
 }
