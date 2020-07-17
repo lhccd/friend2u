@@ -1,87 +1,129 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Form, Row, Col, Button, InputGroup, FormControl, Container} from 'react-bootstrap';
-import Page from '../Page';
+import {Form, Row, Col, Button, InputGroup, FormControl, Card, Container} from 'react-bootstrap';
+
+import { AlertMessage } from '../AlertMessage';
+import { SuccessMessage } from '../SuccessMessage';
 import styled from 'styled-components'
+
+const style={
+	margin: 'auto',
+	width: '80%',
+	height: 'auto',
+	//maxWidth: '1000px',
+	borderRadius: '20px',
+	fontSize: '22px',
+	marginTop: '25px',
+}
+
 
 export class ReportActivityPage extends React.Component {
 
     constructor(props) {
         super(props);
+        
+        this.state = {
+		}
+		
+		this.handleSubmit = this.handleSubmit.bind(this)
+		this.handleChange = this.handleChange.bind(this)
+    }
+    
+    handleSubmit() {
+        event.preventDefault();
+        
+        let reason = this.state.reason
+        let description = this.state.description
+        
+        if(reason && description) this.props.onSubmit(reason, description);
+	}
+	
+    handleChange(event) {
+		let fieldName = event.target.name;
+		let fieldVal = event.target.value;
+        this.setState({[fieldName]: fieldVal});
     }
 
+
     render() {
-        const Styles = styled.div`
-            .btn {
-                margin-top: 20px;
-            }
-            
-            .frm {
-                font-size: 18px;
-                margin: 20px;
-                padding: 15px;
-            }
-           
-            .form-control {
-                padding: 5px;
-                height: 300px;
-            }    
-            
-            .h1 {
-                margin-top: 40px;
-                text-align:center;
-            } 
-            
-            .row {
-                margin-bottom: 30px;
-            }
-        `;
-
+		
         return (
-            <Styles>
-                <h1 className="h1">The activity is ...</h1>
-                <Container>
-                <Form className="frm">
-                    <Row>
-                        <Col>
-                    <Form.Check inline label="Seems untrustworthy" type={"checkbox"}/>
-                        </Col>
-                        <Col>
-                    <Form.Check inline label="is positioned in the wrong category" type={"checkbox"}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                    <Form.Check inline label="is used as advertisement" type={"checkbox"}/>
-                    </Col>
-                    <Col>
-                    <Form.Check inline label="is not available anymore" type={"checkbox"}/>
-                    </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                    <Form.Check inline label="is spam" type={"checkbox"}/>
-                    </Col>
-                    <Col>
-                    <Form.Check inline label="consists of sexual content" type={"checkbox"}/>
-                    </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                    <Form.Check inline label="is forbidden" type={"checkbox"}/>
-                    </Col>
-                    <Col>
-                    <Form.Check inline label="is fraudulent" type={"checkbox"}/>
-                    </Col>
-                    </Row>
-                </Form>
+             <Card style={style}>
+				<Card.Header as="h1">The activity {this.props.name} ...</Card.Header>
+				<Card.Body style={{padding: '20 30'}}>
+				  <Form className="text-left" onSubmit={this.handleSubmit}>
+				  
+					<Form.Row>
+						<Form.Group as={Col}>
+						    <Form.Group onChange={this.handleChange}>
+								<Form.Check required inline name="reason" value='wrong category' label='in the wrong category' type='radio' /> 
+							</Form.Group>
+						</Form.Group>
+						
+						<Form.Group as={Col}>
+						    <Form.Group onChange={this.handleChange}>
+								<Form.Check inline name="reason" value='fraudulent' label='is fraudulent' type='radio' /> 
+							</Form.Group>
+						</Form.Group>
+					</Form.Row>
+					
+					<Form.Row>
+						<Form.Group as={Col}>
+						    <Form.Group onChange={this.handleChange}>
+								<Form.Check inline name="reason" value='advertisement' label='is used as advertisement' type='radio' /> 
+							</Form.Group>
+						</Form.Group>
+						
+						<Form.Group as={Col}>
+						    <Form.Group onChange={this.handleChange}>
+								<Form.Check inline name="reason" value='unavailable' label='is not available anymore' type='radio' /> 
+							</Form.Group>
+						</Form.Group>
+					</Form.Row>
+					
+					<Form.Row>
+						<Form.Group as={Col}>
+						    <Form.Group onChange={this.handleChange}>
+								<Form.Check inline name="reason" value='spam' label='is spam' type='radio' /> 
+							</Form.Group>
+						</Form.Group>
+						
+						<Form.Group as={Col}>
+						    <Form.Group onChange={this.handleChange}>
+								<Form.Check inline name="reason" value='sexual' label='consists of sexual content' type='radio' /> 
+							</Form.Group>
+						</Form.Group>
+					</Form.Row>
+					
+					<Form.Row>
+						<Form.Group as={Col}>
+						    <Form.Group onChange={this.handleChange}>
+								<Form.Check inline name="reason" value='forbidden' label='forbidden' type='radio' /> 
+							</Form.Group>
+						</Form.Group>
+					</Form.Row>
 
-                <InputGroup>
-                    <FormControl as="textarea" aria-label="With textarea" placeholder="Please write a description to Your report..."/>
-                </InputGroup>
-                </Container>
-                <Button variant="primary">Submit</Button>
-            </Styles>
+					
+					<Form.Row>
+						<FormControl required onChange={this.handleChange} style={{height: '300px'}} name="description" as="textarea" aria-label="With textarea" placeholder="Please write a description to your report..."/>
+					</Form.Row>
+					
+					
+					
+					<Form.Row as={Row}>
+						<Form.Group as={Col} style={{ margin: 'auto', marginTop: '20px', fontSize: '18px' }}>
+							<Button variant="primary" type="submit">
+								Submit
+							</Button>
+							<Link to={`/detail/${this.props.id}`} className="md-cell">Back to activity page</Link>
+						</Form.Group>
+					</Form.Row>
+				    
+                    <AlertMessage>{this.props.error ? `${this.props.error}` : ''}</AlertMessage>
+                    <SuccessMessage>{this.props.success ? `${this.props.success}` : ''}</SuccessMessage>
+			      </Form>
+				</Card.Body>
+			</Card>
         );
     }
 }

@@ -2,15 +2,20 @@
 
 import HttpService from './HttpService';
 import TokenService from './TokenService';
+import config from '../config'
 
 export default class AuthService {
 
     constructor() {
     }
 
-    static baseURL() {return 'http://localhost:3000/auth'; }
-    static userURL() {return "http://localhost:3000/users" }
-    static userServicebaseURL() { return 'http://localhost:3000/users' }
+    //static baseURL() {return 'http://localhost:3000/auth'; }
+    //static userURL() {return "http://localhost:3000/users" }
+    //static userServicebaseURL() { return 'http://localhost:3000/users' }
+    static baseURL() {return `${config.backend_address}/auth`; }
+    static userURL() {return `${config.backend_address}/users` }
+    static userServicebaseURL() { return `${config.backend_address}/users` }
+
 
     static register(user) {
         return new Promise((resolve, reject) => {

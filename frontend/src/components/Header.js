@@ -24,7 +24,7 @@ export class Header extends React.Component {
 						<NavDropdown.Item>My profile</NavDropdown.Item>
 					</LinkContainer>
 					{role === 'moderator' ?
-						<LinkContainer to="moderator">
+						<LinkContainer to="/moderator">
 							<NavDropdown.Item href="#/moderator">Moderator console</NavDropdown.Item>
 						</LinkContainer> : null}
 					<NavDropdown.Divider/>

@@ -1,13 +1,15 @@
 "use strict";
 
 import HttpService from './HttpService';
+import config from '../config'
 
 export default class ActivityService {
 
     constructor(){
     }
 
-    static baseURL() {return "http://localhost:3000/activities" }
+    //static baseURL() {return "http://localhost:3000/activities" }
+    static baseURL() {return `${config.backend_address}/activities` }
 
     static getActivities(category){
         console.log("Getting activities for: "+category);

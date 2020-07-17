@@ -1,12 +1,15 @@
 "use strict";
 
 import TokenService from './TokenService';
+import config from '../config'
 
 export default class HttpService {
     constructor() {
     }
 
-    static apiURL() {return 'http://localhost:3000'; }
+    //static apiURL() {return 'http://localhost:3000'; }
+    static apiURL() {return `${config.backend_address}`; }
+    
     
    static async get(url, onSuccess, onError, data) {
         console.log("get")

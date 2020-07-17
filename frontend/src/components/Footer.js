@@ -11,7 +11,7 @@ export class Footer extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <Container fluid style={{backgroundColor:"#333", color:"#fff", fontSize:"30px", marginTop:"10px", marginBottom:"0", padding:"auto", bottom: "0", position: "flexible"}}>
+                <Container fluid style={{backgroundColor:"#333", color:"#fff", fontSize:"30px", marginTop:"0px", marginBottom:"0", padding:"auto", bottom: "0", position: "flexible"}}>
                     <Row className="justify-content-around text-center">
                         <Col>
                             <Ig/>

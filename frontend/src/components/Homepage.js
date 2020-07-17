@@ -34,7 +34,6 @@ const Styles = styled.div`
         
         &:hover {
             color: #f6b6a4;
-            border: 1px #ccc solid;
         } 
     }
     

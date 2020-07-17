@@ -1,13 +1,15 @@
 "use strict";
 
 import HttpService from './HttpService';
+import config from '../config'
+
 
 export default class UserService {
 
     constructor() {
     }
 
-    static baseURL() {return 'http://localhost:3000/users'; }
+    static baseURL() {return `${config.backend_address}/users`; }
     
     static getUserProfile(id) {
         return new Promise((resolve, reject) => {
