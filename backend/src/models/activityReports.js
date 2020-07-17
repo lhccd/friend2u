@@ -11,7 +11,7 @@ const ReportedActivity = ReportModel.discriminator('activity', new mongoose.Sche
 	},
 	reason: {
 		type: String,
-		enum: ["untrustworthy", "advertisement", "spam", "unavailable", "sexual", "fraudulent"],
+		enum: ["advertisement", "spam", "forbidden", "wrong category", "sexual", "fraudulent"],
         required: true
      },
   
