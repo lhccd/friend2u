@@ -44,18 +44,19 @@ export class ReportActivityPage extends React.Component {
         this.setState({[fieldName]: fieldVal});
     }
 
+
     render() {
 		
         return (
              <Card style={style}>
-				<Card.Header as="h1">The user {this.props.username} ...</Card.Header>
+				<Card.Header as="h1">The activity {this.props.name} ...</Card.Header>
 				<Card.Body style={{padding: '20 30'}}>
 				  <Form className="text-left" onSubmit={this.handleSubmit}>
 				  
 					<Form.Row>
 						<Form.Group as={Col}>
 						    <Form.Group onChange={this.handleChange}>
-								<Form.Check required inline name="reason" value='untrustworthy' label='seems untrustworthy' type='radio' /> 
+								<Form.Check required inline name="reason" value='wrong category' label='in the wrong category' type='radio' /> 
 							</Form.Group>
 						</Form.Group>
 						
@@ -93,6 +94,14 @@ export class ReportActivityPage extends React.Component {
 							</Form.Group>
 						</Form.Group>
 					</Form.Row>
+					
+					<Form.Row>
+						<Form.Group as={Col}>
+						    <Form.Group onChange={this.handleChange}>
+								<Form.Check inline name="reason" value='forbidden' label='forbidden' type='radio' /> 
+							</Form.Group>
+						</Form.Group>
+					</Form.Row>
 
 					
 					<Form.Row>
@@ -106,7 +115,7 @@ export class ReportActivityPage extends React.Component {
 							<Button variant="primary" type="submit">
 								Submit
 							</Button>
-							<Link to={`/profile/${this.props.id}`} className="md-cell">Back to user profile</Link>
+							<Link to={`/detail/${this.props.id}`} className="md-cell">Back to activity page</Link>
 						</Form.Group>
 					</Form.Row>
 				    

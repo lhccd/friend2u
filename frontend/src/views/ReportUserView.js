@@ -28,16 +28,25 @@ export class ReportUserView extends React.Component {
     
     async componentWillMount(){
 		let id = this.props.match.params.id
-		let category = this.props.match.params.category
-		this.setState({loading: true})
-		await this.updateReported(id, category)
+		let category = this.props.match.params.category		
+		if(category !== 'user' && category !== 'activity'){
+			this.setState({id: false, serverError: false})
+		}
+		else{
+			this.setState({loading: true})
+			await this.updateReported(id, category)
+		}
 	}
 	
     async componentWillReceiveProps(newProps){
 		let id = newProps.match.params.id
 		let category = newProps.match.params.category
-		this.setState({loading: true})
-		if(this.props.match.params.id !== id || this.props.match.params.category !== category){
+		
+		if(category !== 'user' && category !== 'activity'){
+			this.setState({id: false, serverError: false})
+		}
+		else if(this.props.match.params.id !== id || this.props.match.params.category !== category){
+			this.setState({loading: true})
 			await this.updateReported(id, category)
 		}
 	}
@@ -55,23 +64,24 @@ export class ReportUserView extends React.Component {
 				name = res.activityName
 			}
 			console.log(name,id)
-			this.setState({name: name, loading: false, id: id})
+			this.setState({name: name, loading: false, id: id, category: category})
 		}
 		catch(err){
+			console.log('here')
 			console.log(err)
 			if(err.error === 'Bad Request' || err.error == 'Not Found'){
 				this.setState({id: null, loading: false})
 			}
 			else{
-				this.setState({id: null, serverError: true, loading: false})
+				this.setState({id: null, category: null, serverError: true, loading: false})
 			}
 		}
 	}
 	
 	async createReport(reason, description) {
+		let category = this.state.category
+		let id = this.state.id
 		try{
-			let category = this.props.match.params.category
-			let id = this.state.id
 			console.log(category, id, reason, description)
 			let res = await ReportService.createReport(category, id, reason, description)
 			console.log(res)
@@ -107,10 +117,10 @@ export class ReportUserView extends React.Component {
 
 
     render() {
-		let { loading, name, notFound, serverError, id, success, error } = this.state
+		let { loading, name, notFound, serverError, id, success, error, category } = this.state
 		
-		let category = this.props.match.params.category
-		console.log(category)
+		//let category = this.props.match.params.category
+		//console.log(category)
 		
 		if(serverError) return this.renderServerError()
 		
