@@ -7,6 +7,7 @@ import { FaFutbol, FaPizzaSlice, FaHammer, FaTv, FaTools} from "react-icons/fa";
 import { Button, Card , Row, Col, Container, Dropdown, Navbar, Nav, Form, ListGroup, ListGroupItem, Image } from 'react-bootstrap';
 import LocationShower from './LocationShower';
 import AuthService from '../services/AuthService'
+import ActivityService from '../services/ActivityService'
 import thumbnail from '../media/activity_mock.jpg'
 
 //import Page from './Page';
@@ -31,7 +32,9 @@ export class ActivityDetail extends React.Component {
             CreatorButtonVariant: "primary",
             transPhyCond: "",
             prefGender: "",
-            cGender: ""
+            cGender: "",
+            contact:{"email": "",
+        "mobile":""}
         }
 
         this.handleJoin = this.handleJoin.bind(this);
@@ -43,10 +46,27 @@ export class ActivityDetail extends React.Component {
         this.getPhyConditon = this.getPhyConditon.bind(this)
         this.setPrefGender = this.setPrefGender.bind(this)
         this.deleteActivity = this.deleteActivity.bind(this)
+        this.getContact = this.getContact.bind(this)
 
         this.participantRef = React.createRef()
         this.creatorRef = React.createRef()
         this.creatorButtonRef = React.createRef()
+    }
+
+    async getContact(userID, role) {
+        if (role == "participant") {
+            let creator = await ActivityService.getContact(userID,this.state.userID,this.props.activity._id)
+            var contacts = this.state.contact
+            contacts.email = creator.creator.email
+            contacts.mobile= creator.creator.mobile
+            this.setState({contact: contacts})
+        } else {
+            let contact = await ActivityService.getContact(this.state.userID,userID,this.props.activity._id)
+            var contacts = this.state.contact
+            contacts.email = contact.participant.email
+            contacts.mobile= contact.participant.mobile
+            this.setState({contact: contacts})
+        }
     }
 
     deleteActivity() {
@@ -185,6 +205,12 @@ export class ActivityDetail extends React.Component {
             console.log(this.props.activity.selPerson === AuthService.getCurrentUser().id)
             console.log("Next-Test:")
             console.log((this.props.activity.status == 0))
+            if(this.props.activity.selPerson == this.state.userID && this.props.activity.status ==1){
+                this.getContact(this.props.activity.creator,'creator')
+            }
+            if (this.props.activity.status == 1 && this.props.activity.selPerson != undefined && this.props.activity.creator == this.state.userID){
+                this.getContact(this.props.activity.selPerson,'participant')
+            }
         }
         
 
@@ -230,7 +256,7 @@ export class ActivityDetail extends React.Component {
                                     <br/>
                                     Name: {this.props.user.name} {this.props.user.surname}
                                 </ListGroupItem>
-                                <ListGroupItem>Gender: {this.state.cGender}</ListGroupItem>
+                                <ListGroupItem style={{ display: (this.state.cGender !== "notDeclared") ? "block" : "none" }}>Gender: {this.state.cGender}</ListGroupItem>
                                 <ListGroupItem>Age: {this.getAge(new Date(this.props.user.birthday))}</ListGroupItem>
                                 <ListGroupItem className="list-group-item-secondary">Restricions for this activity (made by the creator)
                                 </ListGroupItem>
@@ -256,20 +282,36 @@ export class ActivityDetail extends React.Component {
                                     </div>
                                     </div>
                                 </ListGroupItem>
-                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status == 1 && this.props.activity.selPerson === AuthService.getCurrentUser().id) ? "block" : "none" }}>
+                                
+                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status ==1 && this.props.activity.creator !== this.state.userID && this.props.activity.selPerson === this.state.userID ) ? "block" : "none" }}>
                                     <ListGroupItem>
                                         YOU HAVE BEEN SELECTED!
                                         <br/>
-                                        Have a look at the creators contact details:
+                                        Have a look at the creator's contact details:
                                     </ListGroupItem>
                                     <ListGroupItem>
-                                        E-Mail: {this.props.user.email}
+                                        E-Mail: {this.state.contact.email}
                                     </ListGroupItem>
                                     <ListGroupItem>
-                                        Phone: {this.props.user.mobile}
+                                        Phone: {this.state.contact.mobile}
+                                    </ListGroupItem>
+                                </ListGroupItem> 
+
+                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status ==1 && this.props.activity.creator == this.state.userID && this.props.activity.selPerson !== this.state.userID ) ? "block" : "none" }}>
+                                    <ListGroupItem>
+                                        YOU HAVE NOW THE PARTICIPANT FOR THIS ACTIVITY!
+                                        <br/>
+                                        Have a look at the participant's contact details:
+                                    </ListGroupItem>
+                                    <ListGroupItem>
+                                        E-Mail: {this.state.contact.email}
+                                    </ListGroupItem>
+                                    <ListGroupItem>
+                                        Phone: {this.state.contact.mobile}
                                     </ListGroupItem>
                                 </ListGroupItem>
-                                <ListGroupItem className="list-group-item-danger" style={{ display: (this.props.activity.status == 1 && this.props.activity.selPerson !== AuthService.getCurrentUser().id) ? "block" : "none" }}>
+                                
+                                <ListGroupItem className="list-group-item-danger" style={{ display: (this.props.activity.status == 1 && this.props.activity.selPerson !== AuthService.getCurrentUser().id && this.props.activity.creator !== this.state.userID) ? "block" : "none" }}>
                                     <ListGroupItem>
                                         You have not been selected.
                                     </ListGroupItem>

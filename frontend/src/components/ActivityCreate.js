@@ -36,6 +36,8 @@ export class ActivityCreate extends React.Component {
         this.handleRBChange = this.handleRBChange.bind(this)
         this.handleMapChange = this.handleMapChange.bind(this)
         this.handleATChange = this.handleATChange.bind(this)
+        this.timeToCurrentTimeZone = this.timeToCurrentTimeZone.bind(this)
+        this.localTimeToUTC = this.localTimeToUTC.bind(this)
 
         // Refs for individual categories.
         this.sportRef = React.createRef()
@@ -116,6 +118,12 @@ export class ActivityCreate extends React.Component {
         this.setState({[event.target.name]: event.target.value});
     }
 
+    localTimeToUTC(oldTime) {
+        var isoDateUTC = new Date(oldTime).toISOString().substring(0, 16)
+        //console.log(isoDateUTC)
+        return isoDateUTC
+    }
+
     handleSubmit(event) {
 
         // Should some fields be wrongly entered, then show now an error.
@@ -162,6 +170,9 @@ export class ActivityCreate extends React.Component {
                 this.state.prefGender = "NotDeclared"
             }
 
+            // Calculate current timezone into UTC.
+            //this.state.dateTime = this.localTimeToUTC(this.state.dateTime)
+
             console.log("Create the activity: ")
             // Delete state-entries, which do not belong into the database.
             delete this.state["first"]
@@ -192,6 +203,12 @@ export class ActivityCreate extends React.Component {
         console.log(this.state.location.coordinates)
     }
 
+    timeToCurrentTimeZone(time) {
+        var currTime = new Date(time)
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        var localISOTime = (new Date(currTime.getTime() - tzoffset)).toISOString().slice(0, -1);
+        return localISOTime.substring(0, 16)
+    }
 
     render() {
         var cT = this.getCurrentTime()
@@ -202,7 +219,7 @@ export class ActivityCreate extends React.Component {
             this.state.price = "p"+this.props.activity.price
             console.log(this.getCurrentTime())
             console.log(this.props.activity.dateTime)
-            this.state.dateTime = this.props.activity.dateTime.substring(0,16)
+            this.state.dateTime = this.timeToCurrentTimeZone(this.props.activity.dateTime)
             // Translate prefGender state.
             if(this.props.activity.prefGender === "NotDeclared") {
                 this.state.prefGender = "Does not matter"
@@ -243,6 +260,15 @@ export class ActivityCreate extends React.Component {
                     <ListGroupItem className="list-group-item-info">
                         General information about your activity:
                     </ListGroupItem>
+
+                    <ListGroupItem className="list-group-item-secondary">
+                        Activityname ({this.state.activityName.length+"/50"})
+                    </ListGroupItem>
+                    <ListGroupItem className={(this.state.activityName == 0 && this.state.submitTry)?"list-group-item-danger":""}>
+                        <Form.Control type="text" name="activityName" placeholder="Sth. meaningful"
+                                    value={this.state.activityName} onChange={this.handleChange}/>
+                    </ListGroupItem>
+
                     <ListGroupItem className="list-group-item-secondary">
                         Select the Category:
                     </ListGroupItem>
@@ -411,14 +437,6 @@ export class ActivityCreate extends React.Component {
                                 />
                                 </ListGroupItem>
                             </div>
-
-                    <ListGroupItem className="list-group-item-secondary">
-                        Activityname ({this.state.activityName.length+"/50"})
-                    </ListGroupItem>
-                    <ListGroupItem className={(this.state.activityName == 0 && this.state.submitTry)?"list-group-item-danger":""}>
-                        <Form.Control type="text" name="activityName" placeholder="Sth. meaningful"
-                                    value={this.state.activityName} onChange={this.handleChange}/>
-                    </ListGroupItem>
 
                     <ListGroupItem className="list-group-item-secondary">
                         <Row>

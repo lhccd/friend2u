@@ -30,7 +30,7 @@ const create = (req, res) => {
 };
 
 // Reading an existing activity.
-const read   = (req, res) => {
+const read = (req, res) => {
 
     ActivityModel.findById(req.params.id).exec()
         .then(activity => {
@@ -291,10 +291,42 @@ const remove = async (req, res) => {
 
 // List all existing activities.
 const list  = (req, res) => {
-    ActivityModel.find({
-        status: 0
-    }).exec()
+    ActivityModel.find({}).exec()
         .then(activities => res.status(200).json(activities))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error - activities_list',
+            message: error.message
+        }));
+};
+
+// List all existing activities for a specific category, while
+// also ensuring, that the user fullfills the creators preferences.
+const getActivitiesByCategory  = async (req, res) => {
+    //console.log("Searching activities in category: "+req.params.category)
+    var propCurrUser = await UserModel.findById(req.id)
+    var ageCurrUser = getAge(propCurrUser["birthday"])
+    //console.log("Properties of current user:")
+    //console.log(propCurrUser)
+    //console.log(ageCurrUser)
+    var catForSearch = req.params.category.charAt(0).toUpperCase() + req.params.category.substring(1)
+    //console.log(catForSearch)
+    ActivityModel.find({
+        status: 0,
+        category: catForSearch,
+        fromAge: { $lte: ageCurrUser},
+        toAge: { $gte: ageCurrUser},
+        creator: { $ne: req.id}
+    }).exec()
+        .then(activities => {
+            var resact = []
+            for(var i=0; i<activities.length; i++) {
+                //console.log("Gendercheck: "+activities[i].prefGender.toLowerCase()+" === "+propCurrUser.gender.toLowerCase())
+                if(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || activities[i].prefGender.toLowerCase() === "notdeclared" || propCurrUser.gender.toLowerCase() === "notdeclared") {
+                    resact.push(activities[i])
+                }
+            }
+            res.status(200).json(activities)
+        })
         .catch(error => res.status(500).json({
             error: 'Internal server error - activities_list',
             message: error.message
@@ -635,6 +667,38 @@ const getVotes  = async (req, res) => {
         downVotes: downVotes,
         notYetDecided: notYetDecided
     })    
+}
+
+const getContact = async (req, res) => {
+    const creator = req.query.creator;
+    const participant = req.query.participant;
+
+    if(creator == participant) {
+		return res.status(400).json({error: 'Bad Request', message: 'You can\'t pair yourself'})
+	}
+
+    var activity = await ActivityModel.findById(req.params.id).exec()
+    if (activity.selPerson == participant && activity.creator == creator){
+        var populateQuery = [{path:'selPerson', select:['email','mobile']}, { path:'creator', select:['email','mobile']}];
+        activity.populate(populateQuery,function (err, contacts) {
+            if (err) return res.status(500).json({
+                error: 'Internal server error - getContact',
+                message: error.message
+            });
+            let contact = {}
+		if(contacts.length !== 0){
+			contact.creator = contacts.creator
+			contact.participant = contacts.selPerson
+		}
+		else{
+            contact.creator = []
+            contact.participant = []
+		}	
+		return res.status(200).json(contact)
+          });
+    } else return res.status(202).json(activity)
+        
+     
 };
 
 
@@ -657,5 +721,7 @@ module.exports = {
     search,
     test,
     getVotes,
-    findActivitiesForUser
+    findActivitiesForUser,
+    getActivitiesByCategory,
+    getContact
 };
