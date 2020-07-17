@@ -315,11 +315,12 @@ const getActivitiesByCategory  = async (req, res) => {
         category: catForSearch,
         fromAge: { $lte: ageCurrUser},
         toAge: { $gte: ageCurrUser},
-        creator: { $ne: req.id}
     }).exec()
         .then(activities => {
             var resact = []
             for(var i=0; i<activities.length; i++) {
+                //console.log("IDCheck - CurrUser: "+req.id+"; ActCreator: "+activities[i].creator)
+                //console.log(req.id.toString() === activities[i].creator.toString())
                 //console.log("Gendercheck: "+activities[i].prefGender.toLowerCase()+" === "+propCurrUser.gender.toLowerCase())
                 if(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || activities[i].prefGender.toLowerCase() === "notdeclared" || propCurrUser.gender.toLowerCase() === "notdeclared") {
                     resact.push(activities[i])
