@@ -37,6 +37,7 @@ export class ActivityHistoryView extends React.Component {
                 var activityDate = new Date(createdactivities[i].dateTime)
                 if ((activityDate - today) < 0) {
                     if (createdactivities[i].selPerson != undefined) {
+                        console.log(createdactivities[i])
                         historyactivities.push(createdactivities[i])
                     } else {
                         continue;

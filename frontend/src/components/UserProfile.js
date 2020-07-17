@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import { FaFlag, FaUserSlash, FaUserShield } from "react-icons/fa";
 import { Button, ButtonGroup, Card , Row, Col, Form, OverlayTrigger, Tooltip, Modal } from 'react-bootstrap';
-import AuthService from '../services/AuthService'
+import ActivityService from '../services/ActivityService'
 import ReportService from '../services/ReportService'
 import { ReportUserModal } from './ReportUserModal';
 
@@ -19,17 +19,21 @@ export class UserProfile extends React.Component {
         super(props);
         this.state = {
 			reports: [],
-			showModal: false
+            showModal: false,
+            likes: '',
+            dislikes: ''
         }
         
         this.id = this.props.id
 		this.banUser = this.banUser.bind(this);
 		this.getReportListById = this.getReportListById.bind(this);
-		this.toggleModal = this.toggleModal.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+        this.getVotes = this.getVotes.bind(this);
 		
 		if(this.props.role === 'moderator'){
 			this.getReportListById(this.id)
-		}
+        }
+        this.getVotes(this.id)
 		
     }
     
@@ -43,6 +47,25 @@ export class UserProfile extends React.Component {
                 error: err
             });
 		}
+    }
+    
+    async getVotes(id){
+		try{
+            let votes = await ActivityService.getVotes(id)
+            this.setState({
+                likes: votes.upVotes
+            });
+            this.setState({
+                dislikes: votes.downVotes
+            });
+
+		}
+		catch(err){
+            console.error(err);
+            this.setState({
+                error: err
+            });
+        }
 	}
 	
 	async getReportListById(id){
@@ -114,7 +137,7 @@ export class UserProfile extends React.Component {
 							</div>
 							<div class="row">
 								<div class="col-sm-12 d-flex align-items-center">
-									<p> like and dislikes from other people</p>
+									<p> You have got {this.state.likes} 👍 and {this.state.dislikes} 👎 from other people.  </p>
 								</div>
 							</div>
 						</div>
