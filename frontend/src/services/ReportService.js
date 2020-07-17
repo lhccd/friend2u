@@ -7,10 +7,12 @@ export default class ReportService {
     constructor() {
     }
 
-    static baseURL() {return 'http://localhost:3000/moderator'; }
+    static baseURLModerator() {return 'http://localhost:3000/moderator'; }
+    
+    static baseURLReport() {return 'http://localhost:3000/reports'; }
 
     static getReportList(category,id,limit,skip) {
-		let url = `${this.baseURL()}/report/${category}`
+		let url = `${this.baseURLModerator()}/report/${category}`
 		if(id) url = url.concat(`/${id}`)
 		
 		if(limit) url = url.concat(`?limit=${limit}`)
@@ -33,7 +35,7 @@ export default class ReportService {
     
     /*
     static getReportListById(category, target, limit=null,id=null) {
-		let url = `${this.baseURL()}/report/${category}/${target}`
+		let url = `${this.baseURLModerator()}/report/${category}/${target}`
 		if(id) url = url.concat(`/${id}`)
 		if(limit) url = url.concat(`?limit=${id}`)
 		
@@ -49,7 +51,7 @@ export default class ReportService {
     */
     
     static banUser(id, time) {
-		let url = `${this.baseURL()}/user/block`
+		let url = `${this.baseURLModerator()}/user/block`
 		
 		const data = {
 			banningUser: id,
@@ -71,10 +73,26 @@ export default class ReportService {
     }
     
     static deleteReportsById(category, id) {
-		let url = `${this.baseURL()}/report/${category}/${id}`
+		let url = `${this.baseURLModerator()}/report/${category}/${id}`
 		
         return new Promise((resolve, reject) => {
             HttpService.remove(url,
+				function(data) {
+					resolve(data);
+				}, function(textStatus) {
+					console.log(textStatus)
+					reject(textStatus);
+            });
+        });
+    }
+    
+    static createReport(category, reported, reason, description) {
+		let url = `${this.baseURLReport()}`
+		
+		let data = { category, reported, reason, description }
+		
+        return new Promise((resolve, reject) => {
+            HttpService.post(url, data,
 				function(data) {
 					resolve(data);
 				}, function(textStatus) {

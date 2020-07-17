@@ -8,11 +8,11 @@ const mongoose = require('mongoose');
 // '-> One Schema and check for data-completeness during storing.
 
 const ReportSchema  = new mongoose.Schema({
-    reason: {
+    /*reason: {
         type: String,
         enum: ["untrustworthy", "advertisement", "spam", "forbidden", "wrong category", "sexual", "fraudulent"],
         required: true
-    },
+    },*/
     description: {
         type: String,
         required: true

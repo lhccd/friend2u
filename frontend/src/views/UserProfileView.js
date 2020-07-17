@@ -30,6 +30,7 @@ export class UserProfileView extends React.Component {
     
     async componentWillMount(){
 		let id = this.props.match.params.id
+		this.setState({loading: true})
 		await this.updateUser(id)
 	}
 	
