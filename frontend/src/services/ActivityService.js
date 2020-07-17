@@ -174,7 +174,6 @@ export default class ActivityService {
     }
 
     static getContact(participantID,creatorID,activityID) {
-        var match = {"creator": creatorID, "participant":participantID}
         return new Promise((resolve, reject) => {
             HttpService.get(`${this.baseURL()}/match/${activityID}?creator=${creatorID}&participant=${participantID}`,function(data) {
                 resolve(data)
@@ -184,4 +183,45 @@ export default class ActivityService {
            
         })
     }
+
+    static getVotes(userID) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${this.baseURL()}/getVotes/${userID}`,function(data) {
+                resolve(data)
+            }, function(textStatus) {
+                reject(textStatus);
+            })
+           
+        })
+    }
+
+    static updateVotes(vote,activityID,role) {
+        if (role == "participant"){
+            var match = {
+                "voteForCreator": vote
+            }
+        return new Promise((resolve, reject) => {
+            HttpService.put(`${this.baseURL()}/participantVoteForCreator/${activityID}`,match,function(data) {
+                resolve(data)
+            }, function(textStatus) {
+                reject(textStatus);
+            })
+           
+        })}
+        else if (role == "creator"){
+            var vote = {
+                "voteForselPerson": vote
+            }
+            return new Promise((resolve, reject) => {
+                HttpService.put(`${this.baseURL()}/creatorVoteForParticipant/${activityID}`,vote,function(data) {
+                    resolve(data)
+                }, function(textStatus) {
+                    reject(textStatus);
+                })
+               
+            })
+
+        }
+    }
+  
 }

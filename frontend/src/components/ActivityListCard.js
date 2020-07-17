@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import thumbnail from '../media/activity_mock.jpg';
 import UserService from '../services/AuthService';
 import ActivityService from '../services/ActivityService';
+import { number } from 'prop-types';
 
 export class ActivityListCard extends React.Component {
 
@@ -50,6 +51,10 @@ export class ActivityListCard extends React.Component {
         this.getLocation = this.getLocation.bind(this);
         this.getUserInfo = this.getUserInfo.bind(this);
         this.getContact = this.getContact.bind(this);
+        this.upVoteParticipant = this.upVoteParticipant.bind(this);
+        this.downVoteParticipant = this.downVoteParticipant.bind(this);
+        this.upVoteCreator = this.upVoteCreator.bind(this);
+        this.downVoteCreator = this.downVoteCreator.bind(this);
     }
 
     handleUNJoin() {
@@ -57,6 +62,38 @@ export class ActivityListCard extends React.Component {
             console.log("User has UNjoined " + this.props.activity._id)
         }).catch((e) => {
             console.log("Sth. went wrong with the UNjoin...")
+            console.log(e)
+        })
+        window.location.reload()
+    }
+
+    upVoteParticipant() {
+        ActivityService.updateVotes(2,this.props.activity._id,"creator").then((message) => {
+        }).catch((e) => {
+            console.log(e)
+        })
+        window.location.reload()
+    }
+
+    downVoteParticipant() {
+        ActivityService.updateVotes(0,this.props.activity._id,"creator").then((message) => {
+        }).catch((e) => {
+            console.log(e)
+        })
+        window.location.reload()
+    }
+
+    upVoteCreator() {
+        ActivityService.updateVotes(2,this.props.activity._id,"participant").then((message) => {
+        }).catch((e) => {
+            console.log(e)
+        })
+        window.location.reload()
+    }
+
+    downVoteCreator() {
+        ActivityService.updateVotes(0,this.props.activity._id,"participant").then((message) => {
+        }).catch((e) => {
             console.log(e)
         })
         window.location.reload()
@@ -138,8 +175,12 @@ export class ActivityListCard extends React.Component {
         const participantsEmpty = this.props.activity.participants.length == 0
         const createdMode = this.props.mode == 'Created'
         const joinedMode = this.props.mode == 'Joined'
+        const hisMode = this.props.mode == 'Histories'
         const hasSelPerson = this.props.activity.selPerson != undefined
         const paired = this.props.activity.selPerson == this.state.userID
+        const my = (this.props.activity.creator == this.state.userID) && hasSelPerson
+        const rateForParticipant = (this.props.activity.voteForselPerson == 1)
+        const rateForCreator = (this.props.activity.voteForCreator == 1)
 
 
         if (this.state.first) {
@@ -154,6 +195,13 @@ export class ActivityListCard extends React.Component {
                     this.getContact(this.props.activity.creator, "creator")
                 }
             }
+            if (hisMode && my) {
+                this.getUserInfo(this.props.activity.selPerson, "participant").then(() => this.getContact(this.props.activity.selPerson, "participant"))
+            }
+            if (hisMode && paired) {
+                this.getUserInfo(this.props.activity.creator, "creator").then(() => this.getContact(this.props.activity.creator, "creator"))
+            }
+
             this.setState({ ["first"]: false })
         }
 
@@ -161,9 +209,10 @@ export class ActivityListCard extends React.Component {
             <Fragment>
                 <Card key={this.props.activity._id} style={{ margin: "10px", padding: "5px" }}>
                     <Row noGutters>
-                        <Col md="auto">
+                        <Col md={3}>
                             <Image className="center" src={thumbnail} fluid style={{ width: "100%" }} />
                         </Col>
+
                         <Col>
                             <div class="card-block px-2">
                                 <Card.Title>{this.props.activity.activityName}</Card.Title>
@@ -210,7 +259,7 @@ export class ActivityListCard extends React.Component {
                                                     <ListGroupItem>E-mail: {this.state.participant.email}</ListGroupItem>
                                                     <ListGroupItem className="list-group-item-success">
                                                         YOU HAVE NOW THE PARTICIPANT FOR THIS ACTIVITY!
-                                                        <br/>
+                                                        <br />
                                                         <Link to={`/detail/${this.props.activity._id}`} >
                                                             <Button variant="primary" > See details</Button>
                                                         </Link>
@@ -234,22 +283,22 @@ export class ActivityListCard extends React.Component {
                                                 <React.Fragment>
                                                     {hasSelPerson ?
 
-                                                        <ListGroupItem className="list-group-item-danger"> You have not been selected. <br/>
-                                         <div className='activity-participateButton' >  
-                                        <Link to={'/activities/create'}>
-                                            <Button>
-                                                Create your own activity
+                                                        <ListGroupItem className="list-group-item-danger"> You have not been selected. <br />
+                                                            <div className='activity-participateButton' >
+                                                                <Link to={'/activities/create'}>
+                                                                    <Button>
+                                                                        Create your own activity
                                             </Button>
-                                        </Link>
-                                        &nbsp;&nbsp;&nbsp;
+                                                                </Link>
+                                                                &nbsp;&nbsp;&nbsp;
                                         <Link to={'/activities/search'}>
-                                            <Button>
-                                                Search for other activities
+                                                                    <Button>
+                                                                        Search for other activities
                                             </Button>
-                                        </Link>
-                                        </div>
-                                        
-                                    </ListGroupItem>
+                                                                </Link>
+                                                            </div>
+
+                                                        </ListGroupItem>
                                                         : <React.Fragment>
                                                             <ListGroupItem className="list-group-item-info">The creator has not yet decided.
                                                     <div className='unjoinButton' >
@@ -272,8 +321,8 @@ export class ActivityListCard extends React.Component {
 
                                                         <ListGroupItem className="list-group-item-success">
                                                             YOU HAVE BEEN SELECTED!
-    <br/>
-                                                        <Link to={`/detail/${this.props.activity._id}`} >
+    <br />
+                                                            <Link to={`/detail/${this.props.activity._id}`} >
                                                                 <Button variant="primary" > See details</Button>
                                                             </Link>
 
@@ -285,6 +334,52 @@ export class ActivityListCard extends React.Component {
                                         </ListGroup>
                                     </React.Fragment>
                                     : null
+                                }
+                                {hisMode ?
+                                    <React.Fragment>
+
+                                        {paired ?
+                                            <React.Fragment>
+                                                <ListGroup className="list-group-flush">
+                                                    <ListGroupItem className="list-group-item-secondary">Information about the creator: </ListGroupItem>
+
+                                                    <ListGroupItem>Name: {this.state.creator.name}</ListGroupItem>
+                                                    <ListGroupItem>Age: {this.state.creator.age} Gender: {this.state.creator.gender}</ListGroupItem>
+                                                    <ListGroupItem className="list-group-item-secondary">Contact details: </ListGroupItem>
+                                                    <ListGroupItem>Mobile: {this.state.creator.mobile}</ListGroupItem>
+                                                    <ListGroupItem>E-mail: {this.state.creator.email}</ListGroupItem>
+                                                    {rateForCreator?
+                                                 <ListGroupItem className="list-group-item-info"> Please rate for the creator:<br/>
+                                                 <Button variant="primary" onClick = {this.upVoteCreator}> 👍 </Button>
+                                                 &nbsp;&nbsp;&nbsp;&nbsp;
+                                                 <Button variant="primary" onClick = {this.upVoteCreator}> 👎 </Button>
+                                                 </ListGroupItem>  
+                                                    :null}    
+                                                </ListGroup>
+                                            </React.Fragment> : null
+                                        }
+                                        {my ?
+                                            <React.Fragment>
+                                                <ListGroup className="list-group-flush">
+                                                    <ListGroupItem className="list-group-item-secondary"> Information about the participant: </ListGroupItem>
+                                                    <ListGroupItem>Name: {this.state.participant.name}</ListGroupItem>
+                                                    <ListGroupItem>Age: {this.state.participant.age} Gender: {this.state.participant.gender}</ListGroupItem>
+                                                    <ListGroupItem className="list-group-item-secondary">Contact details: </ListGroupItem>
+                                                    <ListGroupItem>Mobile: {this.state.participant.mobile}</ListGroupItem>
+                                                    <ListGroupItem>E-mail: {this.state.participant.email}</ListGroupItem>  
+                                                {rateForParticipant?
+                                                 <ListGroupItem className="list-group-item-info"> Please rate for the participant:<br/>
+                                                 <Button variant="primary" onClick = {this.upVoteParticipant}> 👍 </Button>
+                                                 &nbsp;&nbsp;&nbsp;&nbsp;
+                                                 <Button variant="primary" onClick = {this.downVoteParticipant}> 👎 </Button>
+                                                 </ListGroupItem>  
+                                                    :null}</ListGroup>
+                                            </React.Fragment> : null
+                                        }
+
+                                        <React.Fragment> </React.Fragment>
+                                    </React.Fragment> : null
+
                                 }
                             </div>
                         </Col>

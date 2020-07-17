@@ -640,7 +640,7 @@ const getVotes  = async (req, res) => {
     // Counting the votes for user as creator.
     var userActivities = await ActivityModel
     .find({
-        $or:[ {creator: req.body.id}, {selPerson: req.body.id} ]
+        $or:[ {creator: req.params.id}, {selPerson: req.params.id} ]
         
     })
 
@@ -655,6 +655,20 @@ const getVotes  = async (req, res) => {
             upVotes++;
         }
         else {
+            return res.status(500).json({
+                error: 'Internal Server Error - activities_get_Votes_wrong_Votenumber',
+            });
+        }
+
+        if(userActivities[i].voteForselPerson == 0) {
+            downVotes++;
+        }
+        else if(userActivities[i].voteForselPerson == 1) {
+            notYetDecided++;
+        }
+        else if(userActivities[i].voteForselPerson == 2) {
+            upVotes++;
+        } else {
             return res.status(500).json({
                 error: 'Internal Server Error - activities_get_Votes_wrong_Votenumber',
             });
