@@ -195,7 +195,7 @@ export class LandingPage extends React.Component {
                         <div className="overlay"></div>
                     </Jumbo>
                     <Tabs activeKey={this.state.activeTab} onSelect={this.handleSelect}
-                          className="bg-dark justify-content-around" style={{color: "white", background: "grey", fontSize: "20px"}}>
+                          className="bg-dark justify-content-around" style={{color: "white", background: "grey", fontSize: "20px", marginBottom: "10px"}}>
                         <Tab eventKey={1} title="Find a friend for sports">
                             <h1>Find a companion to...</h1>
                             <Container fluid style={{marginTop: "20px"}}>
@@ -490,11 +490,11 @@ export class LandingPage extends React.Component {
                         </Tab>
 
                     </Tabs>
-                    <Jumbo fluid className="jumbo">
+                    <Jumbo fluid className="jumbo" style={{marginTop:"10px"}}>
                         <Container fluid className="jumbo__text">
                             <h1 style={{color: "white", fontSize: "40px", paddingTop: "100px", paddingBottom: "100px"}}>If you are interested, please sign up or log in! <Link to="/login">Sign Up / Log In</Link></h1>
-                        <div className="overlay"></div>
                         </Container>
+                        <div className="overlay"></div>
                     </Jumbo>
 
                     {/*<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
