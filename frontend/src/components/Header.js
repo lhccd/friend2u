@@ -83,7 +83,7 @@ export class Header extends React.Component {
                     <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                     <Nav>
                         <Nav.Item>
-                            <Nav.Link href="#/activities/search">Search</Nav.Link>
+                            <Nav.Link href="#/activities/sport">Search</Nav.Link>
                         </Nav.Item>
                     </Nav>
                     <Nav>

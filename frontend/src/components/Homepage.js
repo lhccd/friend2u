@@ -107,42 +107,47 @@ export const Homepage = () => (
             <Container fluid>
                 <Row>
                     <Col>
-                        <Container fluid className="container">
-                            <img src={HikeLogo} rounded="true" className="image" alt="Responsive image"/>
-                            <div className="middle">
-                                <div className="text">Sports</div>
-                            </div>
-                        </Container>
-
+                        <Nav.Link href="#/activities/sport">
+                            <Container fluid className="container">
+                                <img src={HikeLogo} rounded="true" className="image" alt="Responsive image"/>
+                                <div className="middle">
+                                    <div className="text">Sports</div>
+                                </div>
+                            </Container>
+                        </Nav.Link>
                     </Col>
                     <Col>
-                        <Container fluid className="container">
-                            <img src={FoodLogo} rounded="true" className="image" alt="Responsive image"/>
-                            <div className="middle">
-                                <div className="text">Food</div>
-                            </div>
-                        </Container>
-
+                        <Nav.Link href="#/activities/food">
+                            <Container fluid className="container" href="/#/activities/food">
+                                <img src={FoodLogo} rounded="true" className="image" alt="Responsive image"/>
+                                <div className="middle">
+                                    <div className="text">Food</div>
+                                </div>
+                            </Container>
+                        </Nav.Link>
                     </Col>
                 </Row>
                 <br/>
                 <Row>
                     <Col>
-                        <Container fluid className="container">
-                            <img src={EntertainmentLogo} rounded="true" className="image" alt="Responsive image"/>
-                            <div className="middle">
-                                <div className="text">Entertainment</div>
-                            </div>
-                        </Container>
-
+                        <Nav.Link href="#/activities/entertainment">
+                            <Container fluid className="container">
+                                <img src={EntertainmentLogo} rounded="true" className="image" alt="Responsive image"/>
+                                <div className="middle">
+                                    <div className="text">Entertainment</div>
+                                </div>
+                            </Container>
+                        </Nav.Link>
                     </Col>
                     <Col>
-                        <Container fluid className="container">
-                            <img src={OtherLogo} rounded="true" className="image" alt="Responsive image"/>
-                            <div className="middle">
-                                <div className="text">Other</div>
-                            </div>
-                        </Container>
+                        <Nav.Link href="#/activities/other">
+                            <Container fluid className="container">
+                                <img src={OtherLogo} rounded="true" className="image" alt="Responsive image"/>
+                                <div className="middle">
+                                    <div className="text">Other</div>
+                                </div>
+                            </Container>
+                        </Nav.Link>
                     </Col>
                 </Row>
             </Container>
