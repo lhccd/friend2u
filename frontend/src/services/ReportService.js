@@ -91,6 +91,7 @@ export default class ReportService {
 		
 		let data = { category, reported, reason, description }
 		
+		console.log(data)
         return new Promise((resolve, reject) => {
             HttpService.post(url, data,
 				function(data) {
