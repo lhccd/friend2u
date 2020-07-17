@@ -1,12 +1,13 @@
 "use strict";
 
 import jwt from 'jwt-decode';
+import config from '../config'
 
 export default class TokenService {
     constructor() {
     }
 
-    static apiURL() {return 'http://localhost:3000'; }
+    static apiURL() {return `${config.backend_address}`; }
     
     static setAccessToken(token) {
 		window.localStorage['accessToken'] = token;

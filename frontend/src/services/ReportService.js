@@ -1,15 +1,18 @@
 "use strict";
 
 import HttpService from './HttpService';
+import config from '../config'
 
 export default class ReportService {
 
     constructor() {
     }
 
-    static baseURLModerator() {return 'http://localhost:3000/moderator'; }
+    //static baseURLModerator() {return 'http://localhost:3000/moderator'; }
+    static baseURLModerator() {return `${config.backend_address}/moderator`; }
     
-    static baseURLReport() {return 'http://localhost:3000/reports'; }
+    //static baseURLReport() {return 'http://localhost:3000/reports'; }
+    static baseURLReport() {return `${config.backend_address}/reports`; }
 
     static getReportList(category,id,limit,skip) {
 		let url = `${this.baseURLModerator()}/report/${category}`
