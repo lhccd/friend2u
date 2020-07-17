@@ -16,6 +16,7 @@ import Page from './components/Page'
 
 
 import styled from "styled-components";
+import {LandingPage} from "./components/LandingPage";
 
 
 
@@ -91,6 +92,9 @@ export default function authSplashScreen(WrappedComponent) {
       // while checking user session, show "loading" message
       if (this.state.loading) return <LoadingScreen />;
 
+      if(WrappedComponent.name === 'HomepageView' && !this.state.authenticated){
+          return <LandingPage {...this.props} />
+      }
       // otherwise, show the desired route
       if(unauthenticatedRoutes.includes(WrappedComponent.name)) {
 		  if(this.state.authenticated) return <Redirect to={{pathname: '/'}}/>

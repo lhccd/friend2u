@@ -26,13 +26,13 @@ export default class Page extends React.Component {
                 <React.Fragment>
                     <Header role={this.props.role}/>
                        <div
-                          /* style={{
+                          style={{
 								minHeight: '90vh',
-								height: '90vh',
+								height: '100%',
 								display: 'flex',
 								flexDirection: 'column',
                                 position: 'flexible'
-						   }}*/
+						   }}
 						>
 							{this.props.children}
 						</div>
