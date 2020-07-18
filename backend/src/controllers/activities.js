@@ -49,7 +49,11 @@ const create = (req, res) => {
     // Try to crate an activity.
     
     ActivityModel.create(req.body)
-        .then(activity => res.status(201).json(activity))
+        .then(activity => {
+            console.log("The following activity was created:")
+            console.log(activity)
+            res.status(201).json(activity)
+        })
         .catch(error => res.status(500).json({
             error: 'Internal server error - activities_create',
             message: error.message
@@ -309,7 +313,7 @@ const remove = async (req, res) => {
     // Check wheter the user who wants to delete an activity is also the creator;
     // Special check for moderators might still be required.
     if(req.id.toString() !== delAct.creator.toString()) {
-        res.status(500).json({
+        res.status(400).json({
             error: 'You are not the creator of the activity!',
             message: error.message
         })
@@ -317,21 +321,20 @@ const remove = async (req, res) => {
 
     // Remove the activity from the ActivityModel.
     ActivityModel.findByIdAndRemove(req.params.id).exec()
-        .then(() => res.status(200).json({message: `Activity with id${req.params.id} was deleted`}))
-        .catch(error => res.status(500).json({
-            error: 'Internal server error - activities_remove',
-            message: error.message
-        }));
-
-    
-    // As the activity does not longer exist, all the reports for this
-    // specific category can be deleted.
-    ActivityReportModel.deleteMany({activityID: req.params.id })
-        .then(activity => {
-            res.status(200).json({message: `ActivityReports for id${req.params.id} were deleted`})
+        .then(() => {
+            // As the activity does not longer exist, all the reports for this
+            // specific category can be deleted.
+            ActivityReportModel.deleteMany({activityID: req.params.id })
+                .then(activity => {
+                    res.status(200).json({message: `Activity and its corresponding ActivityReports for id${req.params.id} were deleted`})
+                })
+                .catch(error => res.status(500).json({
+                    error: 'Internal server error - activities_deleteManyReports',
+                    message: error.message
+                }));
         })
         .catch(error => res.status(500).json({
-            error: 'Internal server error - activities_deleteManyReports',
+            error: 'Internal server error - activities_remove',
             message: error.message
         }));
         
@@ -377,12 +380,12 @@ const getActivitiesByCategory  = async (req, res) => {
                 */
                 //console.log("IDCheck - CurrUser: "+req.id+"; ActCreator: "+activities[i].creator)
                 //console.log(req.id.toString() === activities[i].creator.toString())
-                //console.log("Gendercheck: "+activities[i].prefGender.toLowerCase()+" === "+propCurrUser.gender.toLowerCase())
+                console.log("Gendercheck: "+activities[i].prefGender.toLowerCase()+" === "+propCurrUser.gender.toLowerCase()+"; results in: "+(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || activities[i].prefGender.toLowerCase() === "notdeclared" || propCurrUser.gender.toLowerCase() === "notdeclared"))
                 if(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || activities[i].prefGender.toLowerCase() === "notdeclared" || propCurrUser.gender.toLowerCase() === "notdeclared") {
                     resact.push(activities[i])
                 }
             }
-            res.status(200).json(activities)
+            res.status(200).json(resact)
         })
         .catch(error => res.status(500).json({
             error: 'Internal server error - activities_list',

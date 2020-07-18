@@ -34,7 +34,7 @@ export class ActivityListView extends React.Component {
 
         console.log("Let's try to get activites, for: "+category)
 
-        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "other") {
+        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "others") {
             window.location = '/#/notFound'
         }
         
@@ -58,7 +58,7 @@ export class ActivityListView extends React.Component {
 
     onCategoryChange(category) {
 
-        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "other") {
+        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "others") {
             window.location = '/#/notFound'
         }
 

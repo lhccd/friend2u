@@ -65,7 +65,8 @@ export class ActivitySearch extends React.Component {
     }
 
     handleResetFilters() {
-        window.location.reload()
+        console.log("Reset was clicked in category: "+this.state.category)
+        this.props.onCategoryChange(this.state.category)
     }
 
     handleDistChange(newDist) {
@@ -197,8 +198,8 @@ export class ActivitySearch extends React.Component {
                             </Button>
                         </Nav>
                         <Nav>
-                            <Button href="#/activities/other" name="other" onClick={this.categoryClick} className={(this.state.category === "other")? "btn-primary btn-lg":"btn-outline-primary btn-light btn-lg"}>
-                                Other
+                            <Button href="#/activities/others" name="others" onClick={this.categoryClick} className={(this.state.category === "others")? "btn-primary btn-lg":"btn-outline-primary btn-light btn-lg"}>
+                                Others
                             </Button>
                         </Nav>
                     </Navbar>
