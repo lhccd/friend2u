@@ -14,13 +14,15 @@ export class UserLoginView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        
+        console.log(this.context)
     }
 
     async login(user) {
         try {
             let tokens = await AuthService.login(user.username, user.password);
-            if(tokens.hasOwnProperty('accessToken') && tokens.hasOwnProperty('refreshToken')){
-				TokenService.setTokens(tokens.accessToken,tokens.refreshToken);
+            if(tokens.hasOwnProperty('accessToken')){
+				TokenService.setTokens(tokens.accessToken);
 				
 				this.props.setRole(AuthService.getUserRole(tokens.accessToken))
 			
@@ -50,6 +52,8 @@ export class UserLoginView extends React.Component {
     }
 
     render() {
+		
+		
         return (
           <UserLogin onSubmit={(user) => this.login(user)} error={this.state.error} />
         );

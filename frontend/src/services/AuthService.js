@@ -79,14 +79,14 @@ export default class AuthService {
     static logout(){  
 		HttpService.post(`${AuthService.baseURL()}/logout`, {}, function(data) {
 			window.localStorage.removeItem('accessToken');
-			window.localStorage.removeItem('refreshToken');
+			//window.localStorage.removeItem('refreshToken');
 			window.location = "/#login"
 		}, function(textStatus) {
 			console.log(textStatus);
 			
 			//There shouldn't be any error so this should vener been executed anyway
 			window.localStorage.removeItem('accessToken');
-			window.localStorage.removeItem('refreshToken');
+			//window.localStorage.removeItem('refreshToken');
 			window.location = "/#login"	
 		});
     }

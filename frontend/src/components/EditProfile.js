@@ -12,7 +12,7 @@ import { ChangePasswordModal } from './ChangePasswordModal';
 
 //import UserService from '../services/UserService';
 
-const style = { maxWidth: 500 };
+//const style = { maxWidth: 500 };
 
 export class EditProfile extends React.Component {
 
@@ -112,7 +112,7 @@ export class EditProfile extends React.Component {
 		console.log(profilePicture)
         
         return (
-			<Card>
+			<Card style={{border: 'none', height: '100%'}}>
 				<Card.Header className="display-3">
 					<div class="row">
 						<div class="col-sm-" style={{"margin-left": "15px"}}>
@@ -244,9 +244,6 @@ export class EditProfile extends React.Component {
 					</div>
 					</Form>
 				</Card.Body>
-				<Card.Footer>
-					<small className="text-muted">Friend2U loves U</small>
-				</Card.Footer>
 				<ChangePasswordModal
 					show={changingPassword}
 					toggleModal={this.toggleModal}

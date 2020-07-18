@@ -80,6 +80,8 @@ export class EditProfileView extends React.Component {
 			let res = await AuthService.changePassword(oldPassword,newPassword)
 			console.log(res)
 			this.setState({passwordSuccess: 'The password has been updated successfully'})
+			
+			AuthService.logout()
 			//this.props.history.push(`/profile/${this.id}`);
 			//window.location = `/#profile/${this.id}`;
 		}

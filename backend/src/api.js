@@ -1,8 +1,11 @@
 "use strict";
 
-const express    = require('express');
-const bodyParser = require('body-parser');
-const helmet     = require('helmet');
+const express      = require('express');
+const bodyParser   = require('body-parser');
+const helmet       = require('helmet');
+const cookieParser = require('cookie-parser');
+const cors         = require('cors');
+
 
 const middlewares = require('./middleware/middlewares');
 
@@ -25,6 +28,11 @@ api.use(bodyParser.json());
 api.use(bodyParser.urlencoded({ extended: false }));
 api.use(middlewares.allowCrossDomain);
 api.use('/static', express.static(__dirname + '/public'));
+api.use(cookieParser());
+api.use(cors({
+	origin: 'http://127.0.0.1:8000',
+	credentials: true
+}));
 
 
 // Basic route

@@ -2,7 +2,7 @@ import { HomepageView } from "../views/HomepageView";
 import { UserLoginView } from "../views/UserLoginView";
 import { UserSignupView } from "../views/UserSignupView";
 import { ModeratorView } from "../views/ModeratorView";
-import authSplashScreen from '../authSplashScreen';
+import AuthSplashScreen from '../AuthSplashScreen';
 import { ReportUserView } from "../views/ReportUserView";
 import { ReportActivityView } from "../views/ReportActivityView"
 import {ActivityListView} from "../views/ActivityListView";
@@ -22,26 +22,26 @@ import { NotFound } from "../components/NotFound"
 import { ReportUserPageOld } from "../components/reports/ReportUserPageOld" 
 
 export const routes = [
-    {component: authSplashScreen(UserLoginView), path: '/login'},
-    {component: authSplashScreen(ReportUserView), path: '/report/:category/:id'},
-    {component: authSplashScreen(ReportUserPageOld), path: '/report_user'},
-    {component: authSplashScreen(ReportActivityView), path: '/report_activity/:id'},
-    {component: authSplashScreen(UserLoginView), path: '/login', exact: true},
-    {component: authSplashScreen(UserSignupView), path: '/register', exact: true},
-    {component: authSplashScreen(HomepageView), path: '/', exact: true},
-    {component: authSplashScreen(ModeratorView), path: '/moderator'},
-    {component: authSplashScreen(HomepageView), path:'/', exact: true},
-    {component: authSplashScreen(ActivityCreateView), path: '/activities/create'},
-    {component: authSplashScreen(ActivityListView), path: '/activities/:category'},
-    {component: authSplashScreen(ActivityDetailedView), path: '/detail/:id'},
-    {component: authSplashScreen(ActivityHistoryView), path: '/activityhistory'},
-    {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' },
-    {component: authSplashScreen(CompanionView), path: '/chooseCompanion/:id' },
-    {component: authSplashScreen(UserProfileView), path: '/profile/:id' },
-    {component: authSplashScreen(EditProfileView), path: '/editProfile' },
-    {component: authSplashScreen(ResetPasswordAskView), path: '/password/reset', exact: true},
-    {component: authSplashScreen(ResetPasswordView), path: '/password/reset/:id/:token' },
+    {component: AuthSplashScreen(UserLoginView), path: '/login'},
+    {component: AuthSplashScreen(ReportUserView), path: '/report/:category/:id'},
+    {component: AuthSplashScreen(ReportUserPageOld), path: '/report_user'},
+    {component: AuthSplashScreen(ReportActivityView), path: '/report_activity/:id'},
+    {component: AuthSplashScreen(UserLoginView), path: '/login', exact: true},
+    {component: AuthSplashScreen(UserSignupView), path: '/register', exact: true},
+    {component: AuthSplashScreen(HomepageView), path: '/', exact: true},
+    {component: AuthSplashScreen(ModeratorView), path: '/moderator'},
+    {component: AuthSplashScreen(HomepageView), path:'/', exact: true},
+    {component: AuthSplashScreen(ActivityCreateView), path: '/activities/create'},
+    {component: AuthSplashScreen(ActivityListView), path: '/activities/:category'},
+    {component: AuthSplashScreen(ActivityDetailedView), path: '/detail/:id'},
+    {component: AuthSplashScreen(ActivityHistoryView), path: '/activityhistory'},
+    {component: AuthSplashScreen(ActivityEditView), path: '/activities/edit/:id' },
+    {component: AuthSplashScreen(CompanionView), path: '/chooseCompanion/:id' },
+    {component: AuthSplashScreen(UserProfileView), path: '/profile/:id' },
+    {component: AuthSplashScreen(EditProfileView), path: '/editProfile' },
+    {component: AuthSplashScreen(ResetPasswordAskView), path: '/password/reset', exact: true},
+    {component: AuthSplashScreen(ResetPasswordView), path: '/password/reset/:id/:token' },
     
     //Not found route
-    {component: authSplashScreen(NotFound), path: '*', exact: true },
+    {component: AuthSplashScreen(NotFound), path: '*', exact: true },
 ];

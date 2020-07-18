@@ -103,7 +103,7 @@ export class UserProfile extends React.Component {
 		let wholeName = `${name} ${surname}`
 		
         return (
-			<Card>
+			<Card style={{border: 'none', height: '100%'}}>
 				<Card.Header className="display-3">
 					<div class="row">
 						<div class="col-sm-" style={{"margin-left": "15px"}}>
