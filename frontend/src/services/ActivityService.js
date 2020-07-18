@@ -91,7 +91,7 @@ export default class ActivityService {
     }
     
     static deleteActivity(id) {
-        console.log("Activity wiht ID: "+id+" will be deleted!")
+        console.log("Activity with ID: "+id+" will be deleted!")
         return new Promise((resolve, reject) => {
             HttpService.remove(`${ActivityService.baseURL()}/${id}`, function(data) {
                 if(data.message != undefined) {

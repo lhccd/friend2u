@@ -10,6 +10,7 @@ import {Jumbotron} from './Jumbotron';
 import styled from 'styled-components';
 
 import AuthService from '../services/AuthService';
+import { FaWindows } from 'react-icons/fa';
 
 export class Header extends React.Component {
     constructor(props) {
@@ -33,7 +34,7 @@ export class Header extends React.Component {
 					
 				</NavDropdown>
 		)
-	}
+    }
 
     render() {
         const Styles = styled.div`
@@ -83,7 +84,7 @@ export class Header extends React.Component {
                     <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                     <Nav>
                         <Nav.Item>
-                            <Nav.Link href="#/activities/sport">Search</Nav.Link>
+                            <Nav.Link href={(window.location.hash.includes("sport") || window.location.hash.includes("food") || window.location.hash.includes("entertainment") || window.location.hash.includes("other"))?"#":"#/activities/sport"}>Search</Nav.Link>
                         </Nav.Item>
                     </Nav>
                     <Nav>

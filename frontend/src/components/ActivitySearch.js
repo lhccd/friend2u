@@ -261,7 +261,7 @@ export class ActivitySearch extends React.Component {
                                               min={this.state.minPrice} max="5" onChange={this.handleChange}/>
                             </Form.Group>
                             <Form.Group as={Col}>
-                                <div ref={this.sportRef} style={{display: "none"}}>
+                                <div ref={this.sportRef} style={{display: (this.state.category === "sport")?"block":"none"}}>
                                     <Form.Label>Select the physical condition of your companion:</Form.Label>
                                     <Form.Label>Min physical condition</Form.Label>
                                     <Form.Control type="number" name="minPhyCondition"
@@ -276,14 +276,14 @@ export class ActivitySearch extends React.Component {
                                                   onChange={this.handleChange}/>
                                 </div>
 
-                                <div ref={this.entertainmentRef} style={{display: "none"}}>
+                                <div ref={this.entertainmentRef} style={{display: (this.state.category === "entertainment")?"block":"none"}}>
                                     <Form.Label>Title of the movie/concert/opera, which your desired activity should
                                         have</Form.Label>
                                     <Form.Control type="text" name="title" placeholder="E.g TopGun II"
                                                   value={this.state.title} onChange={this.handleChange}/>
                                 </div>
 
-                                <div ref={this.foodRef} style={{display: "none"}}>
+                                <div ref={this.foodRef} style={{display: (this.state.category === "food")?"block":"none"}}>
                                     <Form.Label>Select the physical condition of your companion:</Form.Label>
                                     <Form.Check
                                         inline

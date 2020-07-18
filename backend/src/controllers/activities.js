@@ -3,6 +3,7 @@
 const ActivityModel = require('../models/activities');
 const UserModel = require('../models/user');
 const stringSimilarity = require('string-similarity');
+const ActivityReportModel = require('../models/activityReports');
 
 // Creating a new DB-Entrie for a new activity.
 const create = (req, res) => {
@@ -10,7 +11,34 @@ const create = (req, res) => {
     if (Object.keys(req.body).length === 0) return res.status(400).json({
         error: 'Bad Request',
         message: 'The request body is empty'
-    });
+    });	
+
+    // Check, whether all category-specific data is present.
+    if(req.category === "sport") {
+        if (!Object.prototype.hasOwnProperty.call(req.body, 'phyCondition')) {
+            return res.status(400).json({
+            error: 'Bad Request',
+            message: `The request body must contain a PHYSICAL CONDITION property`
+            });
+        }
+    }
+    if(req.category === "entertainment") {
+        if (!Object.prototype.hasOwnProperty.call(req.body, 'title')) {
+            return res.status(400).json({
+            error: 'Bad Request',
+            message: `The request body must contain a TITEL property`
+            });
+        }
+    }
+    if(req.category === "food") {
+        if (!Object.prototype.hasOwnProperty.call(req.body, 'kitchen')) {
+            return res.status(400).json({
+            error: 'Bad Request',
+            message: `The request body must contain a KITCHEN TYPE property`
+            });
+        }
+    }
+    
 
     console.log("create the following: ")
     req.body.creator = req.id
@@ -267,26 +295,46 @@ const setSelectedPerson = (req, res) => {
 // Remove an existing activity.
 const remove = async (req, res) => {
 
+    //console.log("Trying to remove: "+req.params.id)
+
+    //console.log("Trying to delete activity: "+req.params.id+" from: "+delAct.creator+"="+req.id+"; Are the ID's equal?: "+delAct.creator === req.id)
+
     var delAct = await ActivityModel.findById(req.params.id)
 
-    //console.log("Trying to delete activity: "+req.params.id+" from: "+delAct.creator+"="+req.id)
+    //console.log(delAct)
 
-    
+    //console.log("Trying to delete activity: "+req.params.id+" from: "+delAct.creator+"="+req.id)
+    //console.log("Are the ID's equal?: "+(delAct.creator.toString() === req.id.toString()))
+
     // Check wheter the user who wants to delete an activity is also the creator;
     // Special check for moderators might still be required.
-    if(!(req.id === delAct.creator)) {
+    if(req.id.toString() !== delAct.creator.toString()) {
         res.status(500).json({
             error: 'You are not the creator of the activity!',
             message: error.message
         })
     }
 
+    // Remove the activity from the ActivityModel.
     ActivityModel.findByIdAndRemove(req.params.id).exec()
         .then(() => res.status(200).json({message: `Activity with id${req.params.id} was deleted`}))
         .catch(error => res.status(500).json({
             error: 'Internal server error - activities_remove',
             message: error.message
         }));
+
+    
+    // As the activity does not longer exist, all the reports for this
+    // specific category can be deleted.
+    ActivityReportModel.deleteMany({activityID: req.params.id })
+        .then(activity => {
+            res.status(200).json({message: `ActivityReports for id${req.params.id} were deleted`})
+        })
+        .catch(error => res.status(500).json({
+            error: 'Internal server error - activities_deleteManyReports',
+            message: error.message
+        }));
+        
 };
 
 // List all existing activities.
@@ -315,10 +363,18 @@ const getActivitiesByCategory  = async (req, res) => {
         category: catForSearch,
         fromAge: { $lte: ageCurrUser},
         toAge: { $gte: ageCurrUser},
+        dateTime: { $gte: new Date()}
     }).exec()
         .then(activities => {
             var resact = []
             for(var i=0; i<activities.length; i++) {
+                /*
+                var activityTime = new Date(activities[i].dateTime)
+                var currTime = new Date()
+                console.log("ActTime: "+activityTime)
+                console.log("CurrTime: "+currTime)
+                console.log(activityTime<=currTime)
+                */
                 //console.log("IDCheck - CurrUser: "+req.id+"; ActCreator: "+activities[i].creator)
                 //console.log(req.id.toString() === activities[i].creator.toString())
                 //console.log("Gendercheck: "+activities[i].prefGender.toLowerCase()+" === "+propCurrUser.gender.toLowerCase())

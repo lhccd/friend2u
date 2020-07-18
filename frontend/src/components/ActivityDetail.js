@@ -47,6 +47,9 @@ export class ActivityDetail extends React.Component {
         this.setPrefGender = this.setPrefGender.bind(this)
         this.deleteActivity = this.deleteActivity.bind(this)
         this.getContact = this.getContact.bind(this)
+        this.reportActivity = this.reportActivity.bind(this)
+        this.reportUser = this.reportUser.bind(this)
+        this.toUserPage = this.toUserPage.bind(this)
 
         this.participantRef = React.createRef()
         this.creatorRef = React.createRef()
@@ -69,9 +72,22 @@ export class ActivityDetail extends React.Component {
         }
     }
 
+    reportActivity() {
+        window.location = `#/report/activity/${this.props.activity._id}`
+    }
+
+    reportUser() {
+        window.location = `#/report/user/${this.props.activity.creator}`
+    }
+
+    toUserPage() {
+        window.location = `#/profile/${this.props.activity.creator}`
+    }
+
     deleteActivity() {
+        console.log("Deleting activity: "+this.props.activity._id)
         this.props.onDelete(this.props.activity._id)
-        window.location = "/#/activities/search"
+        window.location = `/#/activities/${this.props.activity.category.charAt(0).toLowerCase() + this.props.activity.category.substring(1)}`
     }
 
     setPrefGender() {
@@ -163,7 +179,7 @@ export class ActivityDetail extends React.Component {
         this.props.onJoin(this.props.activity._id)
 
 
-        window.location = '/#/activities/search'
+        window.location = `/#/activities/${this.props.activity.category.charAt(0).toLowerCase() + this.props.activity.category.substring(1)}`
     }
 
     handleUNJoin() {
@@ -171,7 +187,7 @@ export class ActivityDetail extends React.Component {
         this.setState({alreadyJoined: false})
         this.props.onUNJoin(this.props.activity._id)
 
-        window.location = '/#/activities/search'
+        window.location = `/#/activities/${this.props.activity.category.charAt(0).toLowerCase() + this.props.activity.category.substring(1)}`
     }
 
     test() {
@@ -223,7 +239,7 @@ export class ActivityDetail extends React.Component {
                     </Col>
                     <Col>
                         <div style={{float: "left"}}>
-                            <Link to={'/activities/search'}>
+                            <Link to={`/activities/${this.props.activity.category.charAt(0).toLowerCase() + this.props.activity.category.substring(1)}`}>
                                 <Button>
                                     Return to search
                                 </Button>
@@ -252,9 +268,11 @@ export class ActivityDetail extends React.Component {
                                 <ListGroupItem style={{ height: "35rem"}}><LocationShower coords={this.props.activity.location.coordinates} withoutButton={true}/></ListGroupItem>
                                 <ListGroupItem className="list-group-item-secondary">Information about the creator</ListGroupItem>
                                 <ListGroupItem>
-                                    <Image src={this.props.user.profilePicture} className="img-thumbnail"></Image>
-                                    <br/>
-                                    Name: {this.props.user.name} {this.props.user.surname}
+                                    <div onClick={this.toUserPage} style={{cursor: "pointer"}}>
+                                        <Image src={this.props.user.profilePicture} className="img-thumbnail"></Image>
+                                        <br/>
+                                        Name: {this.props.user.name} {this.props.user.surname}
+                                    </div>
                                 </ListGroupItem>
                                 <ListGroupItem style={{ display: (this.state.cGender !== "notDeclared") ? "block" : "none" }}>Gender: {this.state.cGender}</ListGroupItem>
                                 <ListGroupItem>Age: {this.getAge(new Date(this.props.user.birthday))}</ListGroupItem>
@@ -297,7 +315,7 @@ export class ActivityDetail extends React.Component {
                                     </ListGroupItem>
                                 </ListGroupItem> 
 
-                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status ==1 && this.props.activity.creator == this.state.userID && this.props.activity.selPerson !== this.state.userID ) ? "block" : "none" }}>
+                                <ListGroupItem className="list-group-item-success" style={{ display: (this.props.activity.status == 1 && this.props.activity.creator == this.state.userID && this.props.activity.selPerson !== this.state.userID ) ? "block" : "none" }}>
                                     <ListGroupItem>
                                         YOU HAVE NOW THE PARTICIPANT FOR THIS ACTIVITY!
                                         <br/>
@@ -332,17 +350,13 @@ export class ActivityDetail extends React.Component {
                                 <ListGroupItem className="list-group-item-warning" style={{ display: (this.props.activity.creator !== AuthService.getCurrentUser().id) ? "block" : "none" }}>
                                     Is there something wrong with the creator and/or the activity?
                                     <br/>
-                                    <Link to={'/report_activity'}>
-                                    <Button>
+                                    <Button onClick={this.reportActivity}>
                                         Report Activity
                                     </Button>
-                                    </Link>
-                                         
-                                    <Link to={'/report_user'}>
-                                    <Button>
+
+                                    <Button onClick={this.reportUser}>
                                         Report User
                                     </Button>
-                                    </Link>
                                 </ListGroupItem>
                             </ListGroup>
                         </Card.Body>

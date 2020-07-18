@@ -31,11 +31,11 @@ export const routes = [
     {component: authSplashScreen(HomepageView), path: '/', exact: true},
     {component: authSplashScreen(ModeratorView), path: '/moderator'},
     {component: authSplashScreen(HomepageView), path:'/', exact: true},
+    {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id'},
     {component: authSplashScreen(ActivityCreateView), path: '/activities/create'},
     {component: authSplashScreen(ActivityListView), path: '/activities/:category'},
     {component: authSplashScreen(ActivityDetailedView), path: '/detail/:id'},
     {component: authSplashScreen(ActivityHistoryView), path: '/activityhistory'},
-    {component: authSplashScreen(ActivityEditView), path: '/activities/edit/:id' },
     {component: authSplashScreen(CompanionView), path: '/chooseCompanion/:id' },
     {component: authSplashScreen(UserProfileView), path: '/profile/:id' },
     {component: authSplashScreen(EditProfileView), path: '/editProfile' },
@@ -43,5 +43,5 @@ export const routes = [
     {component: authSplashScreen(ResetPasswordView), path: '/password/reset/:id/:token' },
     
     //Not found route
-    {component: authSplashScreen(NotFound), path: '*', exact: true },
+    {component: authSplashScreen(NotFound), path: '*', exact: true},
 ];

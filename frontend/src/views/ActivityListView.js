@@ -7,6 +7,7 @@ import { ActivitySearch } from '../components/ActivitySearch';
 import { ActivityListNothing } from '../components/ActivityListNothing'
 
 import ActivityService from '../services/ActivityService';
+import { FaWindows } from 'react-icons/fa';
 
 
 export class ActivityListView extends React.Component {
@@ -34,7 +35,7 @@ export class ActivityListView extends React.Component {
         console.log("Let's try to get activites, for: "+category)
 
         if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "other") {
-            // Go to error-page!
+            window.location = '/#/notFound'
         }
         
         ActivityService.getActivities(category).then((data) => {
@@ -56,6 +57,11 @@ export class ActivityListView extends React.Component {
     }
 
     onCategoryChange(category) {
+
+        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "other") {
+            window.location = '/#/notFound'
+        }
+
         ActivityService.getActivities(category).then((data) => {
             console.log('Categorychange to: '+category)
             this.setState({
