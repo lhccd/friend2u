@@ -13,7 +13,7 @@ const checkIfValidId = (req,res,next) => {
 	if(objectID.isValid(id)) return next()
 	return res.status(400).json({
 			error: 'Bad Request',
-			message: `The id is not correct`
+			message: 'The id is not correct'
 	});
 }
 
@@ -111,6 +111,11 @@ const isUserModerator = (req,res,next) => {
 	else return res.status(403).json({message: "You don't have the permission to access this content"})
 }
 
+const isUserAdmin = (req,res,next) => {
+	if(req.role === 'admin') next();
+	else return res.status(403).json({message: "You don't have the permission to access this content"})
+}
+
 const errorHandler = (err, req, res, next) => {
     if (res.headersSent) {
         return next(err)
@@ -124,6 +129,7 @@ module.exports = {
     allowCrossDomain,
     checkAuthentication,
     isUserModerator,
+    isUserAdmin,
     errorHandler,
     checkBody,
     checkIfValidId	

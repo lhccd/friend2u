@@ -2,13 +2,16 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom'
-import { FaFlag, FaUserSlash, FaUserShield } from "react-icons/fa";
+import { FaFlag, FaUserSlash, FaUserShield, FaCrown, FaShieldAlt } from "react-icons/fa";
 import { Button, ButtonGroup, Card , Row, Col, Form, OverlayTrigger, Tooltip, Modal } from 'react-bootstrap';
 import ActivityService from '../services/ActivityService'
 import ReportService from '../services/ReportService'
+import AdminService from '../services/AdminService'
 import { ReportUserModal } from './ReportUserModal';
 
 import { ServerError } from './ServerError';
+import { AlertMessage } from './AlertMessage';
+import { SuccessMessage } from './SuccessMessage';
 
 
 const style = { maxWidth: 500 };
@@ -29,6 +32,8 @@ export class UserProfile extends React.Component {
 		this.getReportListById = this.getReportListById.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.getVotes = this.getVotes.bind(this);
+        this.makeModerator = this.makeModerator.bind(this);
+        this.revokeModerator = this.revokeModerator.bind(this);
 		
 		if(this.props.role === 'moderator'){
 			this.getReportListById(this.id)
@@ -71,10 +76,7 @@ export class UserProfile extends React.Component {
 	async getReportListById(id){
 		try{
 			let reports = await ReportService.getReportList('users',id,null,null)
-			console.log("aaa")
 			this.setState({reports: reports.reports})
-			//console.log(reports[0].reports[0]._id)
-			//this.setState({reports: reports[0].reports})
 		}
 		catch(err){
             console.error(err);
@@ -91,16 +93,47 @@ export class UserProfile extends React.Component {
 		}
 		else this.setState({reports: [], showModal: false})
 	}
+	
+	async makeModerator(){
+		try{
+			let ret = await AdminService.makeModerator(this.props.id)
+			console.log(ret)
+			//this.setState({success: 'The user is now a moderator'})
+			this.props.updateUser(this.props.id)
+		}
+		catch(err){
+            console.error(err);
+            this.setState({
+                error: err
+            });
+		}
+	}
+	
+	async revokeModerator(){
+		try{
+			let ret = await AdminService.revokeModerator(this.props.id)
+			console.log(ret)
+			//this.setState({success: 'The user is no longer a moderator'})
+			this.props.updateUser(this.props.id)
+		}
+		catch(err){
+            console.error(err);
+            this.setState({
+                error: err
+            });
+		}
+	}
 
 
     render() {
 		let user = this.props.user
 		if(!user) {
-			console.log('user is undefined')
 			return <ServerError />
 		}
 		let { username, name, surname, age, gender, bio, profilePicture, role } = user
 		let wholeName = `${name} ${surname}`
+		
+		console.log(role)
 		
         return (
 			<Card style={{border: 'none', height: '100%'}}>
@@ -113,15 +146,32 @@ export class UserProfile extends React.Component {
 							{role === 'moderator'?<OverlayTrigger placement='top' overlay={<Tooltip>This user is a moderator</Tooltip>}>
 													<FaUserShield color={'#37cf23'} size={40}/>
 												</OverlayTrigger>:null}
-							{!this.props.editable?<OverlayTrigger placement='top' overlay={<Tooltip>Report this user</Tooltip>}>
-													<Link to={`/report/user/${this.props.id}`} style={{color: 'grey'}} className="md-cell">
-														<FaFlag size={30}/>
-													</Link>
+							{role === 'admin'?<OverlayTrigger placement='top' overlay={<Tooltip>This user is an admin</Tooltip>}>
+													<FaCrown color={'#37cf23'} size={40}/>
+												</OverlayTrigger>:null}
+							{!this.props.editable && role !== 'admin'?<OverlayTrigger placement='top' overlay={<Tooltip>Report this user</Tooltip>}>
+													<Button style={{color: 'grey'}} variant="link">
+														<Link to={`/report/user/${this.props.id}`} style={{color: 'grey'}} className="md-cell">
+															<FaFlag size={30}/>
+														</Link>
+													</Button>
 												</OverlayTrigger>:null}
 							{!this.props.editable && this.props.role === 'moderator'?
 													<OverlayTrigger placement='top' overlay={<Tooltip>See the reports of this user</Tooltip>}>
 														<Button style={{color: 'grey'}} variant="link" onClick={() => {this.toggleModal(true)}}>
 															<FaUserSlash size={40}/>
+														</Button>
+													</OverlayTrigger>:null}
+							{!this.props.editable && this.props.role === 'admin' && role === 'user'?
+													<OverlayTrigger placement='top' overlay={<Tooltip>Promote to moderator</Tooltip>}>
+														<Button variant="link" onClick={() => {this.makeModerator(true)}}>
+															<FaShieldAlt color={"green"} size={40}/>
+														</Button>
+													</OverlayTrigger>:null}
+							{!this.props.editable && this.props.role === 'admin' && role === 'moderator'?
+													<OverlayTrigger placement='top' overlay={<Tooltip>Demote to user</Tooltip>}>
+														<Button variant="link" onClick={() => {this.revokeModerator(true)}}>
+															<FaShieldAlt color={"#85241d"} size={40}/>
 														</Button>
 													</OverlayTrigger>:null}
 						</div>
@@ -190,6 +240,8 @@ export class UserProfile extends React.Component {
 
 						</div>
 					</div>
+					<AlertMessage>{this.state.error ? `${this.state.error}` : ''}</AlertMessage>
+					<SuccessMessage>{this.state.error ? `${this.state.success}` : ''}</SuccessMessage>
 				</Card.Body>
 				<Card.Footer>
 					<small className="text-muted">Friend2U loves U</small>

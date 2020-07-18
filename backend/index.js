@@ -16,6 +16,8 @@ const server = http.createServer(api);
 
 
 //Connect to the MongoDB database; then start the server
+mongoose.set('useFindAndModify', false);
+
 mongoose
     .connect(config.mongoURI)
     .then(() => server.listen(config.port))

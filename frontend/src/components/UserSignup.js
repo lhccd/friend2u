@@ -29,6 +29,9 @@ class UserSignup extends React.Component {
     constructor(props) {
         super(props);
 
+		var eighteenYearsAgo = new Date();
+		eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+		
         this.state = {
             username: '',
             password: '',
@@ -36,7 +39,7 @@ class UserSignup extends React.Component {
             email: '',
             name: '',
             surname: '',
-            birthday: '',
+            birthday: eighteenYearsAgo,
             gender: '',
             mobile: '',
             isOver18: true,
