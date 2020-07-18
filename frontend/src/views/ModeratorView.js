@@ -64,7 +64,7 @@ export class ModeratorView extends React.Component {
 		try{
 			let { reports } = this.state
 			let currReports = Object.assign({}, reports[category])
-			let limit = 1
+			let limit = 10
 			let skip = currReports.list.length - currReports.deleted
 			let newReports = await ReportService.getReportList(category,null,limit,skip)
 			

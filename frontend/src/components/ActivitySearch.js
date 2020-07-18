@@ -5,14 +5,16 @@ import {Button, Card, Container, Row, Col, Form, Control, Dropdown, Navbar, Nav,
 import logo from "../media/f2uLogo.svg";
 import AuthService from "../services/AuthService";
 
+import DatePicker from "react-datepicker";
+
 export class ActivitySearch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             category: this.props.category,
             activityName: "",
-            fromTime: this.getCurrentTime(false),
-            toTime: this.getCurrentTime(true),
+            fromTime: new Date(), //this.getCurrentTime(false),
+            toTime: new Date(),
             fromAge: "18",
             toAge: "150",
             prefGender: "Female",
@@ -35,12 +37,39 @@ export class ActivitySearch extends React.Component {
         this.handleResetFilters = this.handleResetFilters.bind(this)
         this.localTimeToUTC = this.localTimeToUTC.bind(this)
         this.categoryClick = this.categoryClick.bind(this)
+        
+        this.showDatePicker = this.showDatePicker.bind(this)
+        this.handleChangeDate = this.handleChangeDate.bind(this)
 
         // Creating Refs, to show the category-specific filters.
         this.sportRef = React.createRef()
         this.entertainmentRef = React.createRef()
         this.foodRef = React.createRef()
     }
+    
+    handleChangeDate(date,t) {
+        if(t === 'from') this.setState(Object.assign({}, this.state, {fromTime: date}));
+        else this.setState(Object.assign({}, this.state, {toTime: date}));
+    }
+    
+    showDatePicker(t){
+		const ExampleCustomTimeInput = ({ value, onChange }) => (
+				<input
+				  value={value}
+				  onChange={e => onChange(e.target.value)}
+				  style={{ border: "solid 1px pink" }}
+				/>
+			  );
+		  return (
+			<DatePicker
+			  selected={t === 'from'?this.state.fromTime:this.state.toTime}
+			  onChange={date => this.handleChangeDate(date,t)}
+			  showTimeInput
+			  customTimeInput={<ExampleCustomTimeInput />}
+			/>
+		  );
+	}
+
 
     getCurrentTime(plusZwei) {
         // ToTime should be one day in the future;
@@ -221,14 +250,15 @@ export class ActivitySearch extends React.Component {
                             </Form.Group>
                             <Form.Group as={Col} md={{ span: "auto", offset: "auto" }}>
                                 <Form.Label>From Time</Form.Label>
-                                <Form.Control type="datetime-local" name="fromTime" value={this.state.fromTime} min={cT}
-                                              onChange={this.handleChange}/>
+								{
+									this.showDatePicker('from')
+								}
                             </Form.Group>
                             <Form.Group as={Col} md={{ span: "auto", offset: "auto" }}>
                                 <Form.Label>To Time</Form.Label>
-                                <Form.Control type="datetime-local" name="toTime" value={this.state.toTime}
-                                              min={this.state.fromTime} onChange={this.handleChange}/>
-                                <br/>
+								{
+									this.showDatePicker('to')
+								}
                             </Form.Group>
                             <Form.Group as={Col}>
                                 <Form.Label>From Age</Form.Label>

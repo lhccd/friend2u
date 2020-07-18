@@ -3,6 +3,9 @@ import LocationPicker from './LocationPicker';
 import {Button, Card, Row, Container, Col, Form, Alert, Dropdown, ListGroup, ListGroupItem, TextArea} from 'react-bootstrap';
 import AuthService from '../services/AuthService';
 
+import DatePicker from "react-datepicker";
+
+
 export class ActivityCreate extends React.Component {
     constructor(props) {
         super(props);
@@ -11,7 +14,7 @@ export class ActivityCreate extends React.Component {
             toAge: 150,
             category: "Others",
             activityName: "",
-            dateTime: this.timeToCurrentTimeZone(this.getCurrentTime()),
+            dateTime: new Date(), //this.timeToCurrentTimeZone(this.getCurrentTime()),
             approxTime: false,
             duration: 0,
             prefGender: "Female",
@@ -39,6 +42,10 @@ export class ActivityCreate extends React.Component {
         this.timeToCurrentTimeZone = this.timeToCurrentTimeZone.bind(this)
         this.localTimeToUTC = this.localTimeToUTC.bind(this)
         this.timeToISOStringWithTimezone = this.timeToISOStringWithTimezone.bind(this)
+        
+        this.showDatePicker = this.showDatePicker.bind(this)
+        this.handleChangeDate = this.handleChangeDate.bind(this)
+        
 
         // Refs for individual categories.
         this.sportRef = React.createRef()
@@ -46,6 +53,29 @@ export class ActivityCreate extends React.Component {
         this.foodRef = React.createRef()
         this.submitAlertRef = React.createRef()
     }
+    
+    handleChangeDate(date) {
+        this.setState(Object.assign({}, this.state, {dateTime: date}));
+    }
+    
+    showDatePicker(){
+		const startDate = new Date();
+		const ExampleCustomTimeInput = ({ value, onChange }) => (
+				<input
+				  value={value}
+				  onChange={e => onChange(e.target.value)}
+				  style={{ border: "solid 1px pink" }}
+				/>
+			  );
+		  return (
+			<DatePicker
+			  selected={this.state.dateTime}
+			  onChange={date => this.handleChangeDate(date)}
+			  showTimeInput
+			  customTimeInput={<ExampleCustomTimeInput />}
+			/>
+		  );
+	}
 
     getCurrentTime() {
         var currTime = new Date().toISOString().substring(0, 16) // Cut the time before the sec.
@@ -471,8 +501,9 @@ export class ActivityCreate extends React.Component {
                     <ListGroupItem>
                         <Row>
                             <Col>
-                                <Form.Control type="datetime-local" name="dateTime" value={this.state.dateTime} min={cT}
-                                          onChange={this.handleChange}/>
+								{
+									this.showDatePicker()
+								}
                             </Col>
                             <Col>
                                 <Form.Control type="number" name="duration" value={this.state.duration} min="1"
