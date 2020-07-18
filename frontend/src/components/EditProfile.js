@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { FaFlag, FaImage } from "react-icons/fa";
 import { Button, ButtonGroup, Card , Row, Col, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import UserService from '../services/AuthService'
+import ActivityService from '../services/ActivityService'
 
 import { ServerError } from './ServerError';
 
@@ -39,7 +40,7 @@ export class EditProfile extends React.Component {
 				serverError: false,
 				imagePreviewUrl: null,
 				file: null,
-				changingPassword: false,
+                changingPassword: false,
 			}
 		}
 		        
@@ -50,6 +51,8 @@ export class EditProfile extends React.Component {
         this.handleChangeFile = this.handleChangeFile.bind(this);
         this.areParametersNotOk = this.areParametersNotOk.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
+
+	
     }
     
     toggleModal(changingPassword) {
@@ -109,7 +112,7 @@ export class EditProfile extends React.Component {
 		let { username, name, surname, age, gender, bio, id, profilePicture, file, imagePreviewUrl, changingPassword} = this.state
 		let wholeName = `${name} ${surname}`
 		
-		console.log(profilePicture)
+        console.log(profilePicture)
         
         return (
 			<Card style={{border: 'none', height: '100%'}}>
@@ -154,7 +157,7 @@ export class EditProfile extends React.Component {
 							</div>
 							<div class="row">
 								<div class="col-sm-12 d-flex align-items-center">
-									<p> like and dislikes from other people</p>
+									
 								</div>
 							</div>
 						</div>
