@@ -12,6 +12,8 @@ const create = (req, res) => {
     if(category === 'user' && issuer === reported) {
 		return res.status(400).json({error: 'Bad Request', message: 'You can\'t report yourself. Why would you do that? :('})
 	}
+	
+	console.log(reported)
 
     const newReport = (category === 'user')?new UserReportModel({reason, description, issuer, reported}):ActivityReportModel({reason, description, issuer, reported});
     const projection = (category === 'user')?'username':'';
@@ -33,6 +35,7 @@ const create = (req, res) => {
 			
 			})
         .catch((err) => {
+			console.log(err)
 			if(err.code === 11000) return res.status(400).json({error: 'Duplicate key', message: `The user has already reported this ${category}`})
 			else if(err.errors && err.errors.reason && err.errors.reason.kind === 'enum') return res.status(400).json({error: 'Enum error', message: `The ${err.errors.reason.path} has not a valid value`})
 			else return res.status(500).json({error: 'Internal error', message: 'It was not possible to create a new report'})

@@ -14,7 +14,7 @@ const ReportSchema  = new mongoose.Schema({
     },
     issuer: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User.username',
-        unique: true,
+        required: true,
     }
 },
 {
