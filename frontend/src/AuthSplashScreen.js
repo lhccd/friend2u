@@ -3,7 +3,8 @@ import {Fragment} from 'react';
 
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { Banned } from './components/Banned'
+import { Banned } from './components/Banned';
+import { ServerError } from './components/ServerError';
 import { LoadingScreen } from './components/LoadingScreen'
 
 import AuthService from './services/AuthService';
@@ -19,8 +20,7 @@ import styled from "styled-components";
 import {LandingPage} from "./components/LandingPage";
 
 
-
-export default function authSplashScreen(WrappedComponent) {
+export default function AuthSplashScreen(WrappedComponent) {
   return class extends React.Component {
     constructor(props) {
       super(props);
@@ -36,61 +36,45 @@ export default function authSplashScreen(WrappedComponent) {
     }
 
     async componentDidMount() {
-      try {
-        let token = await AuthService.isUserAuthenticated();
-        if(token){
-			let banDate = AuthService.getUserBanDate(token);
-			console.log("banDate: " + banDate)
-			if(banDate) this.setState({authenticated: true, role: AuthService.getUserRole(token), banDate: banDate});
-			else this.setState({authenticated: true, role: AuthService.getUserRole(token)});
+		try {
+			let token = await AuthService.isUserAuthenticated();
+			if(token){
+				let banDate = AuthService.getUserBanDate(token);
+				console.log("banDate: " + banDate)
+				if(banDate) this.setState({authenticated: true, role: AuthService.getUserRole(token), banDate: banDate});
+				else this.setState({authenticated: true, role: AuthService.getUserRole(token)});
+			}
+			
+			this.setState({ loading: false });
+			
+		  } catch (err) {
+			console.log(err);
+			this.setState({ loading: false, serverError: true });
 		}
-        
-        //Just to simulate the loading screen
-        setTimeout(() => {
-          this.setState({
-            loading: false,
-          });
-        }, 10)
-        
-      } catch (err) {
-        console.log(err);
-        setTimeout(() => {
-          this.setState({
-            loading: true,
-          });
-        }, 1500)
-      }
     }
     
     setRole(role) {
 		this.setState({role: role})
 	}
-    
-    renderAuthenticated() {
-        //Trying something else
-        // <Page role={this.state.role}>
-        //                     <WrappedComponent {...this.props} role={this.state.role} />
-        //                 </Page>
-        
-        console.log(this.state.role)
-        
+	
+	
+	renderAuthenticated() {        
 		return (
            <Page role={this.state.role}>
                <WrappedComponent {...this.props} role={this.state.role} />
            </Page>
         )
 	}
-	
+
     renderBanned(date) {
-		return (
-			   <Fragment>
-                   <Banned {...this.props} date={date} />
-			   </Fragment>)
+		return <Banned {...this.props} date={date} />
 	}
 
     render() {
       // while checking user session, show "loading" message
       if (this.state.loading) return <LoadingScreen />;
+      
+      if(this.state.serverError) return <ServerError />;
 
       if(WrappedComponent.name === 'HomepageView' && !this.state.authenticated){
           return <LandingPage {...this.props} />

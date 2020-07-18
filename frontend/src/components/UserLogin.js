@@ -5,6 +5,7 @@ import { Form, Button, Card, Col } from 'react-bootstrap';
 import { withRouter, Link } from 'react-router-dom';
 
 import { AlertMessage } from './AlertMessage';
+import { SuccessMessage } from './SuccessMessage';
 import Page from './Page';
 
 const style={
@@ -96,6 +97,7 @@ class UserLogin extends React.Component {
 						<Link to={'/register'} className="md-cell">Not registered yet?</Link>
 						<Link to={'/password/reset'} className="md-cell">Did you forget your password?</Link>
 						<AlertMessage>{this.props.error ? `${this.props.error}` : ''}</AlertMessage>
+						<SuccessMessage>{this.props.success ? `${this.props.error}` : ''}</SuccessMessage>
 					  </Form>
 					</Card.Body>
 				</Card>

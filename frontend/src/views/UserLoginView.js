@@ -14,6 +14,8 @@ export class UserLoginView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        
+        console.log(this.context)
     }
 
     async login(user) {
@@ -50,6 +52,8 @@ export class UserLoginView extends React.Component {
     }
 
     render() {
+		
+		
         return (
           <UserLogin onSubmit={(user) => this.login(user)} error={this.state.error} />
         );

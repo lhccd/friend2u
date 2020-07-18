@@ -25,12 +25,16 @@ const transporter = nodemailer.createTransport({
 
 
 
-const authenticationFailedCB = (res,err) => {
+const authenticationFailedCB = (res,err,message) => {
+	if(!message) message = "It was not possible to handle your request";
 	if(err === 404){
 		return res.status(404).json({"error": "Not found", "message":"Authentication failed"});
 	}
+	else if(err === 400){
+		return res.status(400).json({"error": "Bad Request", "message": message});
+	}
 	console.log(err)
-	return res.status(500).json(err);
+	return res.status(500).json({"error": "Internal Server Error", "message": message});
 }
 
 const login = async (req,res) => {
@@ -227,7 +231,7 @@ const register = async (req,res) => {
 
 };
 
-
+/*
 const me = async (req, res) => {
     return res.status(200).json({id:req.id, username: req.username, role: req.role})
 }
@@ -235,6 +239,7 @@ const me = async (req, res) => {
 const moderator = (req,res) => {
 	return res.status(200).json({message: 'Hello moderator ' + req.username})
 }
+*/
 
 const changePassword = (req,res) => {
 	
@@ -254,7 +259,7 @@ const changePassword = (req,res) => {
 		if(err) return authenticationFailedCB(res,err);
 		if(!user) return authenticationFailedCB(res,404);
 		
-		user.updatePassword(req.body.oldPassword, req.body.newPassword, (err) => {
+		user.updatePassword(req.body.oldPassword, req.body.newPassword, (err, message) => {
 			//If an error occured or if the passwords didn't match we throw an error
 			if(err) return authenticationFailedCB(res,err);
 			
@@ -263,7 +268,29 @@ const changePassword = (req,res) => {
 				"message": "Password changed succesfully!",
 			}
 			
-			return res.status(200).json(response);		
+			return res.status(200).json(response);
+			
+			//For security reasons, we remove all the active sessions.
+			const query = {
+				user: id
+			};
+			
+			var update = {
+				$unset: {
+					refreshToken: 1,
+				}
+			}
+
+			const options = {
+				new: true,
+				setDefaultsOnInsert: true
+			};
+	
+			AuthSchema.findOneAndUpdate(query, update, options, (err,auth) => {
+				if(err) console.log(err)
+				console.log(auth)
+				
+			});
 			
 		})
 	})
@@ -437,8 +464,6 @@ module.exports = {
     register,
     refresh_token,
     logout,
-    me,
-    moderator,
     changePassword,
     sendPasswordResetEmail,
     resetPassword
