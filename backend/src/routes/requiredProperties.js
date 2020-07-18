@@ -13,7 +13,7 @@ const reportProperties = [
 
 // ACTIVITY MODEL
 
-const activityProperties = [
+const activityPropertiesBasic = [
 	'category',
 	'activityName',
 	'dateTime',
@@ -23,10 +23,8 @@ const activityProperties = [
 	'fromAge',
 	'toAge',
 	'price',
-	'phyCondition',
-	'kitchen',
-	'title',
 	'location',
+	'description'
 ]
 
 //---------------------------------------------------
@@ -39,5 +37,5 @@ const activityProperties = [
 
 module.exports = {
     reportProperties,
-	activityProperties
+	activityPropertiesBasic
 };

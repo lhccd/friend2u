@@ -11,7 +11,7 @@ export class ActivityCreate extends React.Component {
             toAge: 150,
             category: "Others",
             activityName: "",
-            dateTime: this.getCurrentTime(),
+            dateTime: this.timeToCurrentTimeZone(this.getCurrentTime()),
             approxTime: false,
             duration: 0,
             prefGender: "Female",
@@ -38,6 +38,7 @@ export class ActivityCreate extends React.Component {
         this.handleATChange = this.handleATChange.bind(this)
         this.timeToCurrentTimeZone = this.timeToCurrentTimeZone.bind(this)
         this.localTimeToUTC = this.localTimeToUTC.bind(this)
+        this.timeToISOStringWithTimezone = this.timeToISOStringWithTimezone.bind(this)
 
         // Refs for individual categories.
         this.sportRef = React.createRef()
@@ -112,10 +113,16 @@ export class ActivityCreate extends React.Component {
         console.log(event.target.name)
         console.log(event.target.value)
         console.log(event.target)
-        if(event.target.name==="description" && this.state.description.length==500) return
-        if(event.target.name==="activityName" && this.state.activityName.length==50) return
-        if(event.target.name==="title" && this.state.title.length==50) return
-        this.setState({[event.target.name]: event.target.value});
+        if(event.target.name==="description" && event.target.value.length>500) {
+            return
+        } else if(event.target.name==="activityName" && event.target.value.length>50) {
+            console.log(this.state.activityName.length)
+            return
+        } else if(event.target.name==="title" && event.target.value.length>50) {
+            return
+        } else {
+            this.setState({[event.target.name]: event.target.value});
+        }
     }
 
     localTimeToUTC(oldTime) {
@@ -183,7 +190,7 @@ export class ActivityCreate extends React.Component {
             
             this.props.onCreate(this.state)
 
-            window.location = '/#/activities/search'
+            window.location = `/#/activities/${this.state.category.charAt(0).toLowerCase() + this.state.category.substring(1)}`
 
             //alert('A name was submitted: ' + this.state.price);
 
@@ -205,13 +212,26 @@ export class ActivityCreate extends React.Component {
 
     timeToCurrentTimeZone(time) {
         var currTime = new Date(time)
+        //console.log(currTime)
         var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        //console.log(tzoffset)
+        var localISOTime = (new Date(currTime.getTime() - (2*tzoffset))).toISOString().slice(0, -1);
+        //console.log(new Date(currTime.getTime()-tzoffset))
+        return localISOTime.substring(0, 16)
+    }
+
+    timeToISOStringWithTimezone(time) {
+        var currTime = new Date(time)
+        //console.log(currTime)
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        //console.log(tzoffset)
         var localISOTime = (new Date(currTime.getTime() - tzoffset)).toISOString().slice(0, -1);
+        //console.log(new Date(currTime.getTime()-tzoffset))
         return localISOTime.substring(0, 16)
     }
 
     render() {
-        var cT = this.getCurrentTime()
+        var cT = this.timeToCurrentTimeZone(this.getCurrentTime())
         if(this.props.activity && this.state.first) {
             console.log("True or false, that is the question!")
             console.log(this.props.activity)
@@ -219,7 +239,7 @@ export class ActivityCreate extends React.Component {
             this.state.price = "p"+this.props.activity.price
             console.log(this.getCurrentTime())
             console.log(this.props.activity.dateTime)
-            this.state.dateTime = this.timeToCurrentTimeZone(this.props.activity.dateTime)
+            this.state.dateTime = this.timeToISOStringWithTimezone(this.props.activity.dateTime)
             // Translate prefGender state.
             if(this.props.activity.prefGender === "NotDeclared") {
                 this.state.prefGender = "Does not matter"

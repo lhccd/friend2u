@@ -17,11 +17,27 @@ const checkIfValidId = (req,res,next) => {
 	});
 }
 
+// Check if the provided category is really one, or if
+// something went wrong in our website.
+const checkIfValidCategory = (req, res, next) => {
+	let category = req.params.category
+
+	if(category !== "sport" || category !== "entertainment" || category !== "food" || category !== "other") {
+		console.log(category)
+		return next()
+	} else {
+		return res.status(400).json({
+			error: 'Bad Request',
+			message: `The category: ${category} is not correct`
+		});
+	}
+}
+
 
 const checkBody = (req,res,next,requiredProperties) => {
 	console.log(req.body)
 	for(var prop of requiredProperties){
-		console.log("Curr prop: "+prop+", hasWP: "+Object.prototype.hasOwnProperty.call(req.body, prop))
+		//console.log("Curr prop: "+prop+", hasWP: "+Object.prototype.hasOwnProperty.call(req.body, prop))
 		if (!Object.prototype.hasOwnProperty.call(req.body, prop)) return res.status(400).json({
 			error: 'Bad Request',
 			message: `The request body must contain a ${prop} property`
@@ -126,5 +142,6 @@ module.exports = {
     isUserModerator,
     errorHandler,
     checkBody,
-    checkIfValidId	
+	checkIfValidId,
+	checkIfValidCategory	
 };
