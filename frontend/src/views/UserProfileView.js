@@ -25,6 +25,8 @@ export class UserProfileView extends React.Component {
 			id: null,
 		}
 		
+		this.updateUser = this.updateUser.bind(this)
+		
     }
     
     
@@ -60,7 +62,7 @@ export class UserProfileView extends React.Component {
 
 	
 	renderOtherProfile(user,editable,id) {
-		return <UserProfile user={user} id={id} role={this.props.role} editable={editable}/>
+		return <UserProfile updateUser={this.updateUser} user={user} id={id} role={this.props.role} editable={editable}/>
 	}
 
 	
