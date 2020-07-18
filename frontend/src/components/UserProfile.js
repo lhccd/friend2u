@@ -243,9 +243,6 @@ export class UserProfile extends React.Component {
 					<AlertMessage>{this.state.error ? `${this.state.error}` : ''}</AlertMessage>
 					<SuccessMessage>{this.state.error ? `${this.state.success}` : ''}</SuccessMessage>
 				</Card.Body>
-				<Card.Footer>
-					<small className="text-muted">Friend2U loves U</small>
-				</Card.Footer>
 				{this.props.role === 'moderator'?<ReportUserModal
 									banUser={this.banUser}
 									modalReported={{id: this.id, name: username}}
