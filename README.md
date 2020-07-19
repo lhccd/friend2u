@@ -16,14 +16,6 @@ MongoDB [official installation guide](https://docs.mongodb.com/manual/administra
 
 ## Start the project
 
-**Set up the database**
-
-1. Create a new directory where your database will be store
-2. Start the database server
-
-```
-mongod --dbpath relative/path/to/database
-```
 
 **For Backend:**
 1. install the node modules needed for backend:
