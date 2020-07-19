@@ -36,12 +36,12 @@ export class NotFound extends React.Component{
 			Page not found
         </Card.Header>
 		<Card.Body>
-           <div class="row h-100 container-fluid">
-            <div class="col-ms-10 col-sm-4 d-flex align-items-center">
+           <div className="row h-100 container-fluid">
+            <div className="col-ms-10 col-sm-4 d-flex align-items-center">
                 <FaSurprise color={'#c9be3a'} size={300} style={{"margin": "auto"}}/>
             </div>
-            <div class="col-ms-10 col-sm-8 d-flex align-items-center">
-                <Card.Text className="h1">
+            <div className="col-ms-10 col-sm-8 d-flex align-items-center">
+                <Card.Text as={'div'} className="h1">
 					<div>{this.renderMessage(this.props.date)}</div>
                 </Card.Text>
             </div>

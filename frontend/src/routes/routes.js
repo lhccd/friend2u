@@ -19,12 +19,10 @@ import {ResetPasswordAskView} from "../views/ResetPasswordAskView";
 import {ResetPasswordView} from "../views/ResetPasswordView";
 
 import { NotFound } from "../components/NotFound" 
-import { ReportUserPageOld } from "../components/reports/ReportUserPageOld" 
 
 export const routes = [
     {component: AuthSplashScreen(UserLoginView), path: '/login'},
     {component: AuthSplashScreen(ReportUserView), path: '/report/:category/:id'},
-    {component: AuthSplashScreen(ReportUserPageOld), path: '/report_user'},
     {component: AuthSplashScreen(ReportActivityView), path: '/report_activity/:id'},
     {component: AuthSplashScreen(UserLoginView), path: '/login', exact: true},
     {component: AuthSplashScreen(UserSignupView), path: '/register', exact: true},

@@ -75,6 +75,7 @@ export default class TokenService {
 			return Promise.all([res.status, res.json()])
 		})
 		.then(([status,data]) => {
+			console.log(data)
 			if(status === 200 && data.hasOwnProperty('accessToken')){
 				this.setAccessToken(data.accessToken);
 				return data.accessToken

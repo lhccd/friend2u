@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
-//import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
 
-import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
-import { UserLoginView } from "./views/UserLoginView";
-import { HomepageView } from "./views/HomepageView";
 import { routes } from "./routes/routes";
-import { ActivityListView } from "./views/ActivityListView";
-import { ActivityDetailedView } from './views/ActivityDetailedView';
-import { ActivityCreateView } from './views/ActivityCreateView'
-import {Footer} from "./components/Footer";
 
 
 

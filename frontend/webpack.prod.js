@@ -12,6 +12,13 @@ module.exports = merge(common, {
             output: {
                 comments: false,
             },
+            compress: {
+				// remove warnings
+				warnings: false,
+				
+				// Drop console statements
+				drop_console: true
+			},
         }),
         new webpack.DefinePlugin({
             'process.env': {

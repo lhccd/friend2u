@@ -7,15 +7,12 @@ import UserLogin from '../components/UserLogin';
 import AuthService from '../services/AuthService';
 import TokenService from '../services/TokenService';
 
-import { withRouter } from 'react-router-dom';
 
 export class UserLoginView extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {};
-        
-        console.log(this.context)
     }
 
     async login(user) {
@@ -41,7 +38,6 @@ export class UserLoginView extends React.Component {
 				});
 			}
         } catch(err) {
-			console.log("Error");
             console.error(err);
             let error = 'It was not possible to login'
             if(err === 'Not found'){

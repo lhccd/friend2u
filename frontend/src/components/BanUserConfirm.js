@@ -80,9 +80,9 @@ export class BanUserConfirm extends React.Component{
 		
 		return <div style={{paddingTop: '20px'}}>
 
-				  <Form.Row>
+				  <Form.Row style={{fontSize: '15px'}}>
 					<Form.Group as={Col} sm={4} >
-					  <Form.Label>Insert the number of day you want to ban this user for </Form.Label>
+					  <Form.Label>Insert the number of day you want to ban this user for: </Form.Label>
 					  <Form.Control
 							type='number'
 							value={this.state.nDays}
@@ -98,7 +98,7 @@ export class BanUserConfirm extends React.Component{
 					</Form.Group>
 
 					<Form.Group as={Col} sm={3} >
-					  <Form.Label>Repeat name of user</Form.Label>
+					  <Form.Label>Repeat name of user:</Form.Label>
 					  <Form.Control
 							type="text"
 							onChange={this.handleChangeName}

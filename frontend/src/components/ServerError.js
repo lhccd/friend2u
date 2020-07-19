@@ -39,7 +39,7 @@ export class ServerError extends React.Component{
                 <FaDizzy color={'#660a1a'} size={300} style={{"margin": "auto"}}/>
             </div>
             <div className="col-ms-10 col-sm-8 d-flex align-items-center">
-                <Card.Text className="h1">
+                <Card.Text as={'div'} className="h1">
 					<div>{this.renderMessage(this.props.date)}</div>
                 </Card.Text>
             </div>
