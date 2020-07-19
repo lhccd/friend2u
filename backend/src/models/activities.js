@@ -175,7 +175,7 @@ const ActivitySchema  = new mongoose.Schema({
 });
 
 
-//ActivitySchema.index({ location: '2dsphere'});
+ActivitySchema.index({ location: '2dsphere'});
 //ActivitySchema.index({ "location.coordinates":"2d"});
 
 
