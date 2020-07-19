@@ -381,7 +381,7 @@ const getActivitiesByCategory  = async (req, res) => {
                 //console.log("IDCheck - CurrUser: "+req.id+"; ActCreator: "+activities[i].creator)
                 //console.log(req.id.toString() === activities[i].creator.toString())
                 console.log("Gendercheck: "+activities[i].prefGender.toLowerCase()+" === "+propCurrUser.gender.toLowerCase()+"; results in: "+(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || activities[i].prefGender.toLowerCase() === "notdeclared" || propCurrUser.gender.toLowerCase() === "notdeclared"))
-                if(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || propCurrUser.gender.toLowerCase() === "notdeclared") {
+                if(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || propCurrUser.gender.toLowerCase() === "notdeclared" || activities[i].prefGender.toLowerCase()=== "notdeclared") {
                     resact.push(activities[i])
                 }
             }
@@ -465,9 +465,13 @@ const search = (async(req, res) => {
 			query[k] = req.body[k]
 		}
 	}
-	
-	console.log(query)	
-	
+    
+    console.log(new Date(req.body.fromTime))
+    console.log(query)	
+    
+    // The first letter has to upper-case!
+    var catForSearch = req.body.category.charAt(0).toUpperCase() + req.body.category.substring(1)
+    
     // Should an activity match all the filters,
     // only then it will be appended to the ressearch-array.
     var ressearch = []
@@ -485,6 +489,11 @@ const search = (async(req, res) => {
                 }
             ,
             //category: req.body.category,
+            //dateTime: { 
+            //    $lt: new Date(query.toTime), //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()+req.dtpm)),
+            //    $gte: new Date(query.fromTime) //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()-req.dtpm))
+            //},
+            category: catForSearch,
             status: 0
     })
     .catch(error => {return res.status(500).json({
@@ -495,6 +504,8 @@ const search = (async(req, res) => {
     console.log("Pre-Selection: ")
     console.log(resdtandc)
 
+
+    
     // For every found activity, narrow the result further down.
     for(var i=0; i<resdtandc.length; i++) {
         // First compare the age of the creator with the filter set by the searcher.
@@ -532,7 +543,7 @@ const search = (async(req, res) => {
                             // Match the price-span.
                             if(resdtandc[i]["price"]<=query.maxPrice && resdtandc[i]["price"]>=query.minPrice) {
                                 // Match category-specific entries.
-                                switch(req.body.category) {
+                                switch(catForSearch) {
                                     case "Sport":
                                         // Physical condition has to match upper and lower bound.
                                         if(resdtandc[i]["phyCondition"]<=query.maxPhyCondition && resdtandc[i]["phyCondition"]>=query.minPhyCondition) {
@@ -553,7 +564,7 @@ const search = (async(req, res) => {
                                             ressearch.push(resdtandc[i]);
                                         }
                                         break;
-                                    case "Other":
+                                    case "Others":
                                         // There is nothing to compare here, therefore the activity will directly be added.
                                         ressearch.push(resdtandc[i]);
                                         break;
@@ -574,6 +585,8 @@ const search = (async(req, res) => {
     // we can finally return the result.
     console.log(ressearch)
     return res.status(200).json(ressearch)
+
+    
 })
 
 
