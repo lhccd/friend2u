@@ -440,14 +440,34 @@ const search = (async(req, res) => {
     console.log(req.body)
     console.log(req.id)
 
-    if (Object.keys(req.body).length === 0)
-    {
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body is empty'
-        });
-    }
-
+	var query = {
+		fromTime: +new Date(),
+		toTime: +new Date(),
+		category: 'Sport',
+		long: 11.5969768950502,
+		lat: 48.14137159149285,
+		maxDistance: 100*1000,
+		fromAge: 18,
+		toAge: 150,
+		activityName: '',
+		minPrice: 1,
+		maxPrice: 5,
+		minPhyCondition: 1,
+		maxPhyCondition: 4,
+		kitchen: 'Other',
+		title: '',
+		gender: 'notDeclared',
+	}
+	
+	for(var k in query){
+		console.log(k)
+		if(Object.prototype.hasOwnProperty.call(req.body, k)){
+			query[k] = req.body[k]
+		}
+	}
+	
+	console.log(query)	
+	
     // Should an activity match all the filters,
     // only then it will be appended to the ressearch-array.
     var ressearch = []
@@ -458,23 +478,23 @@ const search = (async(req, res) => {
                 $near: {
                     // Note: First comes longitude and then latitude!
                     // Distances are given in Meteres
-                    $geometry: { type: "Point",  coordinates: [ req.body.long, req.body.lat ] },
+                    $geometry: { type: "Point",  coordinates: [ query.long, query.lat ] },
                     $minDistance: 0,
-                    $maxDistance: req.body.maxDistance
+                    $maxDistance: query.maxDistance
                     }
                 }
             ,
             dateTime: { 
-                $lt: new Date(req.body.toTime), //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()+req.dtpm)),
-                $gte: new Date(req.body.fromTime) //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()-req.dtpm))
+                $lt: new Date(query.toTime), //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()+req.dtpm)),
+                $gte: new Date(query.fromTime) //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()-req.dtpm))
             },
             //category: req.body.category,
             status: 0
     })
-    .catch(error => res.status(500).json({
+    .catch(error => {return res.status(500).json({
         error: 'Internal server error - activities_search_find',
         message: error.message
-    }));
+    })});
 
     console.log("Pre-Selection: ")
     console.log(resdtandc)
@@ -486,7 +506,7 @@ const search = (async(req, res) => {
         // Calculate the age of the creator, by using a separate function.
         var ageOfCreator = getAge(rescrator["birthday"])
         // Only if creator-age matches move further on.
-        if(ageOfCreator>=req.body.fromAge && ageOfCreator<=req.body.toAge) {
+        if(ageOfCreator>=query.fromAge && ageOfCreator<=query.toAge) {
 
             console.log("Age of creator is ok")
 
@@ -512,20 +532,20 @@ const search = (async(req, res) => {
                         // The provided method compareTwoStrings from a nodejs library returns a number
                         // between 0 (no match) to 1 (complete match); The value 0.4 was choosen to allow
                         // for more false postives and less false negatives.
-                        if(stringSimilarity.compareTwoStrings(resdtandc[i]["activityName"], req.body.activityName)>0.4) {
+                        if(stringSimilarity.compareTwoStrings(resdtandc[i]["activityName"], query.activityName)>0.4) {
                             // Match the price-span.
-                            if(resdtandc[i]["price"]<=req.body.maxPrice && resdtandc[i]["price"]>=req.body.minPrice) {
+                            if(resdtandc[i]["price"]<=query.maxPrice && resdtandc[i]["price"]>=query.minPrice) {
                                 // Match category-specific entries.
                                 switch(req.body.category) {
                                     case "Sport":
                                         // Physical condition has to match upper and lower bound.
-                                        if(resdtandc[i]["phyCondition"]<=req.body.maxPhyCondition && resdtandc[i]["phyCondition"]>=req.body.minPhyCondition) {
+                                        if(resdtandc[i]["phyCondition"]<=query.maxPhyCondition && resdtandc[i]["phyCondition"]>=query.minPhyCondition) {
                                             ressearch.push(resdtandc[i]);
                                         }
                                         break;
                                     case "Food":
                                         // Kitchen-type has to match exactly.
-                                        if(!resdtandc[i]["kitchen"].localeCompare(req.body.kitchen)) {
+                                        if(!resdtandc[i]["kitchen"].localeCompare(query.kitchen)) {
                                             ressearch.push(resdtandc[i]);
                                         }
                                         break;
@@ -533,7 +553,7 @@ const search = (async(req, res) => {
                                         // String-compare library is able to compare to strings according to their similarity;
                                         // The output of this function is between 0 (not similar) and 1 (identical).
                                         //console.log("String similarity index Entertainment-title: "+stringSimilarity.compareTwoStrings(resdtandc[i]["title"], req.body.title))
-                                        if(stringSimilarity.compareTwoStrings(resdtandc[i]["title"], req.body.title)>0.5) {
+                                        if(stringSimilarity.compareTwoStrings(resdtandc[i]["title"], query.title)>0.5) {
                                             ressearch.push(resdtandc[i]);
                                         }
                                         break;
