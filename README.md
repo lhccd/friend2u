@@ -1,87 +1,58 @@
-# Project Title
+# Friend2U
 
-One Paragraph of project description goes here
+Friend2U is an innovative meeting platform, on which you can find the suitable companion to do interesting activities together!
 
-## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Our application can be found [here](https://gitlab.lrz.de/rickypag/friend2u/).
 
-### Prerequisites
+## Prerequisites
 
-What things you need to install the software and how to install them
+The prerequisites for our web applications are:
 
-```
-Give examples
-```
+node.js [official website](https://www.npmjs.com/) and [npm](https://www.npmjs.com/)
 
-### Installing
 
-A step by step series of examples that tell you how to get a development env running
+MongoDB [official installation guide](https://docs.mongodb.com/manual/administration/install-community/)
 
-Say what the step will be
+## Start the project
 
-```
-Give the example
-```
+**Set up the database**
 
-And repeat
+1. Create a new directory where your database will be store
+2. Start the database server
 
 ```
-until finished
+mongod --dbpath relative/path/to/database
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+**For Backend:**
+1. install the node modules needed for backend:
 
 ```
-Give an example
+npm install
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
+2. start the backend:
 
 ```
-Give an example
+npm start
 ```
 
-## Deployment
+**For Frontend:**
+1. install the node modules needed for frontend:
 
-Add additional notes about how to deploy this on a live system
+```
+npm install
+```
 
-## Built With
+2. start the frontend:
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+```
+npm start
+```
 
 ## Authors
+SEBA Master Team 45:
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+Zeyu Zhou, Riccardo Pagliuca, Hendrik Bothe & Lorenz Dang
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
