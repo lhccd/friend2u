@@ -122,7 +122,8 @@ export default class AuthService {
 		
         return {
             id : decodedToken.id,
-            username: decodedToken.username
+            username: decodedToken.username,
+            role: decodedToken.role
         };
     }
 

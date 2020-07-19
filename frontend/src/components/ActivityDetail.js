@@ -293,7 +293,7 @@ export class ActivityDetail extends React.Component {
                                 </Button>
                             </Link>
                         </div>
-                        <div style={{float: "right", visibility: (this.props.activity.creator === AuthService.getCurrentUser().id ) ? "block" : "hidden"}}>
+                        <div style={{float: "right", visibility: (this.props.activity.creator === AuthService.getCurrentUser().id  || AuthService.getCurrentUser().role === 'moderator') ? "block" : "hidden"}}>
                             <Button onClick={this.deleteActivity} variant="danger">
                                 Delete this activity
                             </Button>
