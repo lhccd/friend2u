@@ -35,7 +35,8 @@ const read = (req, res) => {
 		'profilePicture',
         'role',
         'email',
-        'mobile'
+        'mobile',
+        'banUntilDate',
 	]
 	
 	

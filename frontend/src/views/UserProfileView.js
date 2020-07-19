@@ -83,11 +83,13 @@ export class UserProfileView extends React.Component {
 		
 		let { loading, user, notFound, serverError, id } = this.state
 		
+		console.log(user)
+		
 		if(serverError) return this.renderServerError()
 		
 		if(loading) return this.renderLoading();
 		
-		if(!id) return this.renderNotFound()
+		if(!id || user.banUntilDate) return this.renderNotFound()
 		
 		let me = AuthService.getCurrentUser()
 		if(me && me.id === id)		

@@ -130,7 +130,7 @@ export const Homepage = () => (
                         </Nav.Link>
                     </Col>
                     <Col>
-                        <Nav.Link href="#/activities/other">
+                        <Nav.Link href="#/activities/others">
                             <Container fluid className="container">
                                 <img src={OtherLogo} rounded="true" className="image" alt="Responsive image"/>
                                 <div className="middle">

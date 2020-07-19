@@ -199,14 +199,14 @@ export class EditProfile extends React.Component {
 								</Col>
 							</Form.Group>
 							
-							<Form.Group as={Row} >
-								<Form.Label column sm="2">
-									Gender:
-								</Form.Label>
-								<Col sm="10">
-								  <Form.Control plaintext readOnly defaultValue={gender} />
-								</Col>
-							</Form.Group>
+							{gender !== 'notDeclared'? <Form.Group as={Row} >
+														<Form.Label column sm="2">
+															Gender:
+														</Form.Label>
+														<Col sm="10">
+														  <Form.Control plaintext readOnly defaultValue={gender} />
+														</Col>
+													</Form.Group>:''}
 							
 							<Form.Group as={Row}>
 								<Form.Label column sm="2">
