@@ -121,6 +121,8 @@ export class ActivityListView extends React.Component {
     searchActivities(filters) {
         console.log("Search Activities with the following filters: ")
         console.log(filters)
+        delete filters["fromTime"]
+        delete filters["toTime"]
         /*
         var test_filters = {
             "fromTime": "2020-10-06T13:30:00.000Z",
