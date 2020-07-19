@@ -2,8 +2,11 @@ import React from 'react';
 import LocationPicker from './LocationPicker';
 import {Button, Card, Row, Container, Col, Form, Alert, Dropdown, ListGroup, ListGroupItem, TextArea} from 'react-bootstrap';
 import AuthService from '../services/AuthService';
+import de from "date-fns/locale/de";
+registerLocale("de", de);
+import moment from 'moment'
 
-import DatePicker from "react-datepicker";
+import DatePicker, {registerLocale } from "react-datepicker";
 
 
 export class ActivityCreate extends React.Component {
@@ -29,7 +32,8 @@ export class ActivityCreate extends React.Component {
             status: 0,
             participants: [],
             first: true,
-            submitTry: false
+            submitTry: false,
+            minTime: this.calculateMinTime(new Date())
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -42,9 +46,13 @@ export class ActivityCreate extends React.Component {
         this.timeToCurrentTimeZone = this.timeToCurrentTimeZone.bind(this)
         this.localTimeToUTC = this.localTimeToUTC.bind(this)
         this.timeToISOStringWithTimezone = this.timeToISOStringWithTimezone.bind(this)
+        this.calculateMinTime = this.calculateMinTime.bind(this)
+        this.handleDateChange = this.handleDateChange.bind(this)
         
+        /*
         this.showDatePicker = this.showDatePicker.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
+        */
         
 
         // Refs for individual categories.
@@ -54,10 +62,13 @@ export class ActivityCreate extends React.Component {
         this.submitAlertRef = React.createRef()
     }
     
+    /*
     handleChangeDate(date) {
         this.setState(Object.assign({}, this.state, {dateTime: date}));
     }
+    */
     
+    /*
     showDatePicker(){
 		const startDate = new Date();
 		const ExampleCustomTimeInput = ({ value, onChange }) => (
@@ -66,16 +77,68 @@ export class ActivityCreate extends React.Component {
 				  onChange={e => onChange(e.target.value)}
 				  style={{ border: "solid 1px pink" }}
 				/>
-			  );
+              );
+              
 		  return (
 			<DatePicker
 			  selected={this.state.dateTime}
-			  onChange={date => this.handleChangeDate(date)}
-			  showTimeInput
+              onChange={date => this.handleChangeDate(date)}
+              excludeOutOfBoundsTimes
+              showTimeSelect
+              timeIntervals={15}
+              locale="de"
+              dateFormat="MMMM d, yyyy HH:mm"
+              minDate={new Date()}
 			  customTimeInput={<ExampleCustomTimeInput />}
 			/>
-		  );
-	}
+          );
+          
+          return (
+              <DatePicker
+                  selected={this.state.dateTime}
+                  excludeOutOfBoundsTimes
+                  onChange={this.handleChange}
+                  minDate={new Date().toISOString}
+                  showTimeSelect
+              />
+          )
+    }*/
+    
+    // add these two functions to your component
+    calculateMinTime(date) {
+        let isToday = moment(date).isSame(moment(), 'day');
+        if (isToday) {
+            let nowAddOneHour = moment(new Date()).add({minute: 15}).toDate();
+            return nowAddOneHour;
+        }
+        return moment().startOf('day').toDate();
+    }
+
+    handleDateChange(date) {
+        console.log("Handle datechange")
+        console.log(new Date(date))
+        console.log(new Date())
+        // User should not be able to select a date and time,
+        // before the current one.
+        if(new Date(date)<new Date) {
+            this.setState({
+                dateTime: moment(new Date()).add({minute: 15}).toDate(),
+                minTime: this.calculateMinTime(date),
+            });
+        } else {
+            this.setState({
+                dateTime: new Date(date),
+                minTime: this.calculateMinTime(date),
+            });
+        }
+        
+        console.log(this.state.dateTime)
+        console.log((new Date(date)<new Date()))
+        if(new Date(this.state.dateTime)<new Date()) {
+            console.log("Time to early")
+            this.state.dateTime = moment(new Date(this.state.dateTime)).add({minute: 15}).toDate();
+        }
+    }
 
     getCurrentTime() {
         var currTime = new Date().toISOString().substring(0, 16) // Cut the time before the sec.
@@ -269,7 +332,11 @@ export class ActivityCreate extends React.Component {
             this.state.price = "p"+this.props.activity.price
             console.log(this.getCurrentTime())
             console.log(this.props.activity.dateTime)
-            this.state.dateTime = this.timeToISOStringWithTimezone(this.props.activity.dateTime)
+            console.log(new Date(this.props.activity.dateTime))
+            //this.handleDateChange(new Date(this.props.activity.dateTime)) //this.timeToISOStringWithTimezone(this.props.activity.dateTime)
+            this.state.dateTime =  new Date(this.props.activity.dateTime) 
+            this.state.minTime = this.calculateMinTime(this.props.activity.dateTime)
+            //console.log(this.state.dateTime)
             // Translate prefGender state.
             if(this.props.activity.prefGender === "NotDeclared") {
                 this.state.prefGender = "Does not matter"
@@ -501,9 +568,16 @@ export class ActivityCreate extends React.Component {
                     <ListGroupItem>
                         <Row>
                             <Col>
-								{
-									this.showDatePicker()
-								}
+                                <DatePicker
+                                    onChange={this.handleDateChange}
+                                    selected={this.state.dateTime}
+                                    minDate={new Date()}
+                                    minTime={this.state.minTime}
+                                    maxTime={moment().endOf('day').toDate()} // set to 23:59 pm today
+                                    timeIntervals={15}
+                                    showTimeSelect
+                                    locale="de"
+                                />
                             </Col>
                             <Col>
                                 <Form.Control type="number" name="duration" value={this.state.duration} min="1"

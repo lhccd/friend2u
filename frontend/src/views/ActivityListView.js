@@ -2,9 +2,12 @@
 
 import React from 'react';
 
+import { Spinner } from 'react-bootstrap';
+
 import { ActivityList } from '../components/ActivityList';
 import { ActivitySearch } from '../components/ActivitySearch';
 import { ActivityListNothing } from '../components/ActivityListNothing'
+import AuthService from '../services/AuthService'
 
 import ActivityService from '../services/ActivityService';
 import { FaWindows } from 'react-icons/fa';
@@ -18,11 +21,14 @@ export class ActivityListView extends React.Component {
         this.state = {
             loading: false,
             data: [],
+            myAct: [],
             sortBy: "Activityname Ascending"
         };
 
         this.sortBy = this.sortBy.bind(this)
         this.onCategoryChange = this.onCategoryChange.bind(this)
+        this.myActivities = this.myActivities.bind(this)
+        this.getSorted = this.getSorted.bind(this)
     }
 
     componentWillMount(){
@@ -104,6 +110,7 @@ export class ActivityListView extends React.Component {
         console.log("Search Activities with the following filters: ")
         console.log(filters)
 
+        /*
         var test_filters = {
             "fromTime": "2020-10-06T13:30:00.000Z",
             "toTime": "2020-11-06T19:00:00.000Z",
@@ -122,6 +129,7 @@ export class ActivityListView extends React.Component {
         }
         console.log("Test_filter:")
         console.log(test_filters)
+        */
 
         ActivityService.searchActivities(filters)
         .then((data) => {
@@ -200,18 +208,83 @@ export class ActivityListView extends React.Component {
         }
     }
 
+    // This method does the same thing as the one above, but does not modify the state;
+    // Instead it returnes the handed over sorted array.
+    getSorted(arr) {
+        // Sorting done thorugh included searchfunction, which needs a function returning
+        // -1 if the left object should stay left or 1 if left value should go to the right.
+        if(this.state.sortBy==="Activityname Ascending") {
+            return arr.sort((a,b) => {
+                return (a.activityName<=b.activityName)?-1:1
+                })
+        } 
+        else if(this.state.sortBy==="Activityname Descending") {
+            return arr.sort((a,b) => {
+                return (a.activityName>=b.activityName)?-1:1
+                })
+        }
+        else if(this.state.sortBy==="Date Ascending") {
+            return arr.sort((a,b) => {
+                return (a.dateTime<=b.dateTime)?-1:1
+                })
+        }
+        else if(this.state.sortBy==="Date Descending") {
+            return arr.sort((a,b) => {
+                return (a.dateTime>=b.dateTime)?-1:1
+                })
+        }
+        else if(this.state.sortBy==="Price Ascending") {
+            return arr.sort((a,b) => {
+                return (a.price<=b.price)?-1:1
+                })
+        }
+        else if(this.state.sortBy==="Price Descending") {
+            return arr.sort((a,b) => {
+                return (a.price>=b.price)?-1:1
+                })
+        }
+        else {
+                console.log("Sorting went not as planned!")
+        }
+    }
+
+    // The user might only want to see activities from other persons,
+    // therefore we let somebody decide what to see.
+    myActivities(showMyActivities) {
+        if(showMyActivities) {
+            console.log("true")
+            this.setState({ ["data"]: this.getSorted(this.state.data.concat(this.state.myAct)) })
+        } else {
+            console.log("Not my acts.")
+            var usrID = AuthService.getCurrentUser().id
+            console.log(this.state.data.length)
+            var res = []
+            this.state.myAct = []
+            for(var i=0; i<this.state.data.length; i++) {
+                console.log(usrID)
+                console.log(this.state.data[i].creator)
+                if(usrID.toString() === this.state.data[i].creator.toString()) {
+                    this.state.myAct =  this.state.myAct.concat([this.state.data[i]])
+                } else {
+                    console.log(this.state.data[i])
+                    res.push(this.state.data[i])
+                }
+            }
+            console.log(res)
+            console.log(this.state.myAct)
+            this.setState({ ["data"]: this.getSorted(res)})
+        }
+    }
+
     render() {
         if (this.state.loading) {
-            return (<h2>Loading... forever... Ja ne, is klar... Mh...</h2>);
+            return (<h2><Spinner animation="border" variant="success" /> Loading activities</h2>);
         }
-
-        console.log("What's wrong?")
-        
 
         return (
             <div>
                 <ActivitySearch onCategoryChange={(category) => this.onCategoryChange(category)} category={this.state.category} onSearch={(filters) => this.searchActivities(filters)}/>
-                <ActivityList data={this.state.data} onDelete={(id) => this.deleteActivity(id)} onSort={(sortBy)=>this.sortBy(sortBy)}/>
+                <ActivityList onMyActivities={(showMyActivities) => this.myActivities(showMyActivities)} data={this.state.data} onDelete={(id) => this.deleteActivity(id)} onSort={(sortBy)=>this.sortBy(sortBy)}/>
                 <div style={{ display: (this.state.data.length == 0) ? "block" : "none" }}>
                     <ActivityListNothing/>
                 </div>
