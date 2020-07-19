@@ -392,7 +392,7 @@ const sendPasswordResetEmail = (req, res) => {
 		else if(!user) return res.status(404).json({ok: false, message: "No user with that email"});
 		
 		const token = createTokenFromPassword(user.password, user._id);
-		const url = `http://localhost:8000/#/password/reset/${user._id}/${token}`;
+		const url = `http://127.0.0.1:8000/#/password/reset/${user._id}/${token}`;
 		const template = resetPasswordEmailTemplate(user.email, user.name, url);
 	
 		//return res.status(200).json({ok: true, urls: url})	

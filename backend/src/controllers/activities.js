@@ -478,7 +478,7 @@ const search = (async(req, res) => {
                 $near: {
                     // Note: First comes longitude and then latitude!
                     // Distances are given in Meteres
-                    $geometry: { type: "Point",  coordinates: [ query.long, query.lat ] },
+                    $geometry: { type: "Point",  coordinates: [ parseFloat(query.long), parseFloat(query.lat) ] },
                     $minDistance: 0,
                     $maxDistance: query.maxDistance
                     }
