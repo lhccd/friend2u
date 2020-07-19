@@ -78,11 +78,10 @@ const login = async (req,res) => {
 			
 			const response = {
 				"accessToken": accessToken,
-				//"refreshToken": refreshToken,
 			}
 			
 			res.cookie('refreshToken', refreshToken, {
-				maxAge: config.refreshTokenLife,
+				maxAge: config.refreshTokenLife*1000,
 				httpOnly: true,
 				//sameSite: 'strict',
 			});

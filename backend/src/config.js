@@ -8,7 +8,7 @@ const refreshTokenSecret = process.env.REFRESH_SECRET  || 'very secret secret';
 const resetPasswordSecret = process.env.RESET_PASSWORD_SECRET  || 'even more secret';
 
 //Access token is valid for 5 min
-const accessTokenLife = process.env.ACCESS_LIFE  || 300; //300;
+const accessTokenLife = process.env.ACCESS_LIFE  || 300;
 //Refresh token is valid for 1 day
 const refreshTokenLife = process.env.REFRESH_LIFE  || 86400;
 //Reset password link is valid for 1 hour

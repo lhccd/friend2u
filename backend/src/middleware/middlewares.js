@@ -76,6 +76,8 @@ const checkAuthentication = (req, res, next) => {
 			});
         token = tokenArray[1];
     }
+    
+    console.log(token)
 
     // verifies secret and checks exp
     jwt.verify(token, config.accessTokenSecret, (err, decoded) => {
