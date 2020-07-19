@@ -26,7 +26,7 @@ export class ActivityDetail extends React.Component {
         super(props);
         this.state = {
             alreadyJoined: this.props.activity.participants.includes(AuthService.getCurrentUser().id),
-            userID: AuthService.getCurrentUser().id,
+            userID: AuthService.getCurrentUser().id.toString(),
             isParticipant: "none",
             isCreator: "none",
             creatorButtonText: "Please Wait...",
@@ -38,7 +38,9 @@ export class ActivityDetail extends React.Component {
             prefGender: "",
             cGender: "",
             contact:{"email": "",
-        "mobile":""}
+                    "mobile":""},
+            likes: '',
+            dislikes: ''
         }
 
         this.handleJoin = this.handleJoin.bind(this);
@@ -54,10 +56,13 @@ export class ActivityDetail extends React.Component {
         this.reportActivity = this.reportActivity.bind(this)
         this.reportUser = this.reportUser.bind(this)
         this.toUserPage = this.toUserPage.bind(this)
+        this.getVotes = this.getVotes.bind(this)
 
         this.participantRef = React.createRef()
         this.creatorRef = React.createRef()
         this.creatorButtonRef = React.createRef()
+
+        this.getVotes(AuthService.getCurrentUser().id.toString())
     }
 
     async getContact(userID, role) {
@@ -75,6 +80,25 @@ export class ActivityDetail extends React.Component {
             this.setState({contact: contacts})
         }
     }
+
+    async getVotes(id){
+		try{
+            let votes = await ActivityService.getVotes(id)
+            this.setState({
+                likes: votes.upVotes
+            });
+            this.setState({
+                dislikes: votes.downVotes
+            });
+
+		}
+		catch(err){
+            console.error(err);
+            this.setState({
+                error: err
+            });
+        }
+	}
 
     reportActivity() {
         window.location = `#/report/activity/${this.props.activity._id}`
@@ -196,6 +220,8 @@ export class ActivityDetail extends React.Component {
         }
     }
 
+
+
     handleJoin() {
         this.setState({alreadyJoined: true})
         this.props.onJoin(this.props.activity._id)
@@ -298,6 +324,7 @@ export class ActivityDetail extends React.Component {
                                 </ListGroupItem>
                                 <ListGroupItem style={{ display: (this.state.cGender !== "notDeclared") ? "block" : "none" }}>Gender: {this.state.cGender}</ListGroupItem>
                                 <ListGroupItem>Age: {this.getAge(new Date(this.props.user.birthday))}</ListGroupItem>
+                                <ListGroupItem>The creator has {this.state.likes} 👍 and {this.state.dislikes} 👎 from other people.</ListGroupItem>
                                 <ListGroupItem className="list-group-item-secondary">Restricions for this activity (made by the creator)
                                 </ListGroupItem>
                                 <ListGroupItem>Age:<br/>From: {this.props.activity.fromAge} - To: {this.props.activity.toAge}</ListGroupItem>
