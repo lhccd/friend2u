@@ -312,7 +312,7 @@ const remove = async (req, res) => {
 
     // Check wheter the user who wants to delete an activity is also the creator;
     // Special check for moderators might still be required.
-    if(req.id.toString() !== delAct.creator.toString()) {
+    if(req.role !== 'moderator' || req.id.toString() !== delAct.creator.toString()) {
         res.status(400).json({
             error: 'You are not the creator of the activity!',
             message: error.message
