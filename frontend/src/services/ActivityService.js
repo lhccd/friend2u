@@ -11,6 +11,20 @@ export default class ActivityService {
     //static baseURL() {return "http://localhost:3000/activities" }
     static baseURL() {return `${config.backend_address}/activities` }
 
+    static getAllActivities(){
+        console.log("Getting all activities");
+        console.log(this.baseURL())
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${ActivityService.baseURL()}/`, function(data) {
+                console.log(data)
+                resolve(data);
+            }, function(textStatus) {
+                console.log(textStatus)
+                reject(textStatus);
+            });
+        });
+    }
+
     static getActivities(category){
         console.log("Getting activities for: "+category);
         console.log(this.baseURL())

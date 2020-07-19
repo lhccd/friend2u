@@ -15,7 +15,7 @@ const requiredProperties = require('./requiredProperties');
 //TO DO
 //Add the middleware where necessary
 
-router.get('/', ActivityHandler.list); // List all activities
+router.get('/', middlewares.checkAuthentication, ActivityHandler.list); // List all activities
 router.post('/', [middlewares.checkAuthentication, (req,res,next) => middlewares.checkBody(req,res,next,requiredProperties.activityPropertiesBasic)], ActivityHandler.create); // Create a new activity
 router.get('/userjoined/:id', middlewares.checkAuthentication, middlewares.checkIfValidId, JoinedActivityHandler.getJoinedActivities); // Get a list of joined activities for a specific user.
 router.get('/userActivityRelation', JoinedActivityHandler.list);

@@ -84,7 +84,8 @@ export class Header extends React.Component {
                     <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                     <Nav>
                         <Nav.Item>
-                            <Nav.Link href={(window.location.hash.includes("sport") || window.location.hash.includes("food") || window.location.hash.includes("entertainment") || window.location.hash.includes("other"))?"#":"#/activities/sport"}>Search</Nav.Link>
+                            {/*<Nav.Link href={(window.location.hash.includes("sport") || window.location.hash.includes("food") || window.location.hash.includes("entertainment") || window.location.hash.includes("other"))?"#":"#/activities/sport"}>Search</Nav.Link>*/}
+                            <Nav.Link onClick={()=>{window.location="#/activities/all"; location.reload()}}>Search</Nav.Link>
                         </Nav.Item>
                     </Nav>
                     <Nav>

@@ -18,7 +18,8 @@ export class ActivityListView extends React.Component {
         this.state = {
             loading: false,
             data: [],
-            sortBy: "Activityname Ascending"
+            sortBy: "Activityname Ascending",
+            category: "all"
         };
 
         this.sortBy = this.sortBy.bind(this)
@@ -34,51 +35,92 @@ export class ActivityListView extends React.Component {
 
         console.log("Let's try to get activites, for: "+category)
 
-        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "others") {
+        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "others" && category !== "all") {
             window.location = '/#/notFound'
         }
-        
-        ActivityService.getActivities(category).then((data) => {
-            console.log('Heeeelooooo')
-            this.setState({
-                // Per default, the activities are sorted by their name (ascending)
-                data: data.sort((a,b) => {
-                    return (a.activityName<=b.activityName)?-1:1
+
+        this.setState({["category"]: category})
+
+        if(category === "all"){
+            ActivityService.getAllActivities().then((data) => {
+                console.log('getting all activities')
+                this.setState({
+                    // Per default, the activities are sorted by their name (ascending)
+                    data: data.sort((a,b) => {
+                        return (a.activityName<=b.activityName)?-1:1
                     }),
-                loading: false,
-                category: category
+                    loading: false,
+                });
+
+                //console.log(this.state.data)
+            }).catch((e) => {
+                console.error(e);
             });
-            
-            //console.log(this.state.data)
-        }).catch((e) => {
-            console.error(e);
-        });
-        
+        }else{
+            ActivityService.getActivities(category).then((data) => {
+                console.log('Heeeelooooo')
+                this.setState({
+                    // Per default, the activities are sorted by their name (ascending)
+                    data: data.sort((a,b) => {
+                        return (a.activityName<=b.activityName)?-1:1
+                    }),
+                    loading: false,
+                    category: category
+                });
+
+                //console.log(this.state.data)
+            }).catch((e) => {
+                console.error(e);
+            });
+
+        }
+
     }
 
     onCategoryChange(category) {
 
-        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "others") {
+        console.log("Categorychange!")
+
+        if(category !== "sport" && category !== "entertainment" && category !== "food" && category !== "others" && category !== "all") {
             window.location = '/#/notFound'
         }
 
-        ActivityService.getActivities(category).then((data) => {
-            console.log('Categorychange to: '+category)
-            this.setState({
-                // Per default, the activities are sorted by their name (ascending)
-                data: data.sort((a,b) => {
-                    return (a.activityName<=b.activityName)?-1:1
+        this.setState({["category"]: category})
+
+        if(category === "all"){
+            console.log("Get all activities onChange")
+            ActivityService.getAllActivities().then((data) => {
+                console.log('getting all activities')
+                this.setState({
+                    // Per default, the activities are sorted by their name (ascending)
+                    data: data.sort((a,b) => {
+                        return (a.activityName<=b.activityName)?-1:1
                     }),
-                loading: false,
-                category: category
+                    loading: false,
+                });
+
+                //console.log(this.state.data)
+            }).catch((e) => {
+                console.error(e);
+            });
+        }else{
+            ActivityService.getActivities(category).then((data) => {
+                console.log('Heeeelooooo')
+                this.setState({
+                    // Per default, the activities are sorted by their name (ascending)
+                    data: data.sort((a,b) => {
+                        return (a.activityName<=b.activityName)?-1:1
+                    }),
+                    loading: false,
+                    category: category
+                });
+
+                //console.log(this.state.data)
+            }).catch((e) => {
+                console.error(e);
             });
 
-            this.sortBy(this.state.sortBy)
-            
-            //console.log(this.state.data)
-        }).catch((e) => {
-            console.error(e);
-        });
+        }
     }
 
     deleteActivity(id) {

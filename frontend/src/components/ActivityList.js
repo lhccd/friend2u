@@ -29,7 +29,7 @@ export class ActivityList extends React.Component {
         <React.Fragment>
             <DataTable plain style={{ MarginBottom: '36px'}}>
                 <ListGroup>
-                    <ListGroupItem className="list-group-item-success">
+                    <ListGroupItem className="list-group-item-success" style={{marginTop: "10px"}}>
                         <Row>
                             <Col>
                                 <h3>Searchresults:</h3>

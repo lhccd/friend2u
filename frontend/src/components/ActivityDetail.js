@@ -9,6 +9,10 @@ import LocationShower from './LocationShower';
 import AuthService from '../services/AuthService'
 import ActivityService from '../services/ActivityService'
 import thumbnail from '../media/activity_mock.jpg'
+import HikeLogo from "../views/HomepageViewMediaFiles/bordered-F2U_6.JPG";
+import FoodLogo from "../views/HomepageViewMediaFiles/bordered-F2U_3.JPG";
+import EntertainmentLogo from "../views/HomepageViewMediaFiles/bordered-F2U_5.JPG";
+import OtherLogo from "../views/HomepageViewMediaFiles/bordered-F2U_7.JPG";
 
 //import Page from './Page';
 
@@ -174,6 +178,24 @@ export class ActivityDetail extends React.Component {
         }
     }
 
+    setActivityThumbnail(category){
+        switch(category){
+            case "Sport":
+                return (<Image className="center" src={HikeLogo} fluid style={{width:"100%"}}/>)
+                array[Math.floor(Math.random() * array.length)]
+                break;
+            case "Food":
+                return (<Image className="center" src={FoodLogo} fluid style={{width:"100%"}}/>)
+                break;
+            case "Entertainment":
+                return (<Image className="center" src={EntertainmentLogo} fluid style={{width:"100%"}}/>)
+                break;
+            case "Others":
+                return (<Image className="center" src={OtherLogo} fluid style={{width:"100%"}}/>)
+                break;
+        }
+    }
+
     handleJoin() {
         this.setState({alreadyJoined: true})
         this.props.onJoin(this.props.activity._id)
@@ -235,7 +257,7 @@ export class ActivityDetail extends React.Component {
                 <Card style={{margin:"10px", padding:"5px"}}>
                     <Row key={this.props.key} className="text-center">
                     <Col xs lg={2}>
-                        <Image className="center" src={thumbnail} fluid style={{width:"100%"}}/>
+                        {this.setActivityThumbnail(this.props.activity.category)}
                     </Col>
                     <Col>
                         <div style={{float: "left"}}>

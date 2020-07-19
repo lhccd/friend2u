@@ -7,6 +7,10 @@ import thumbnail from '../media/activity_mock.jpg';
 import UserService from '../services/AuthService';
 import ActivityService from '../services/ActivityService';
 import { number } from 'prop-types';
+import HikeLogo from "../views/HomepageViewMediaFiles/bordered-F2U_6.JPG";
+import FoodLogo from "../views/HomepageViewMediaFiles/bordered-F2U_3.JPG";
+import EntertainmentLogo from "../views/HomepageViewMediaFiles/bordered-F2U_5.JPG";
+import OtherLogo from "../views/HomepageViewMediaFiles/bordered-F2U_7.JPG";
 
 export class ActivityListCard extends React.Component {
 
@@ -97,6 +101,24 @@ export class ActivityListCard extends React.Component {
             console.log(e)
         })
         window.location.reload()
+    }
+
+    setActivityThumbnail(category){
+        switch(category){
+            case "Sport":
+                return (<Image className="center" src={HikeLogo} fluid style={{width:"100%"}}/>)
+                array[Math.floor(Math.random() * array.length)]
+                break;
+            case "Food":
+                return (<Image className="center" src={FoodLogo} fluid style={{width:"100%"}}/>)
+                break;
+            case "Entertainment":
+                return (<Image className="center" src={EntertainmentLogo} fluid style={{width:"100%"}}/>)
+                break;
+            case "Others":
+                return (<Image className="center" src={OtherLogo} fluid style={{width:"100%"}}/>)
+                break;
+        }
     }
 
     async getUserInfo(userID, role) {
@@ -210,7 +232,7 @@ export class ActivityListCard extends React.Component {
                 <Card key={this.props.activity._id} style={{ margin: "10px", padding: "5px" }}>
                     <Row noGutters>
                         <Col md={3}>
-                            <Image className="center" src={thumbnail} fluid style={{ width: "100%" }} />
+                            {this.setActivityThumbnail(this.props.activity.category)}
                         </Col>
 
                         <Col>
