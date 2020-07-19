@@ -305,19 +305,19 @@ const remove = async (req, res) => {
 
     var delAct = await ActivityModel.findById(req.params.id)
 
-    //console.log(delAct)
-
     //console.log("Trying to delete activity: "+req.params.id+" from: "+delAct.creator+"="+req.id)
     //console.log("Are the ID's equal?: "+(delAct.creator.toString() === req.id.toString()))
 
     // Check wheter the user who wants to delete an activity is also the creator;
     // Special check for moderators might still be required.
-    if(req.role !== 'moderator' || req.id.toString() !== delAct.creator.toString()) {
-        res.status(400).json({
-            error: 'You are not the creator of the activity!',
-            message: error.message
+    if(req.role !== 'moderator' && req.id.toString() !== delAct.creator.toString()) {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'You are not the creator of the activity!'
         })
     }
+    
+    console.log(req.role)
 
     // Remove the activity from the ActivityModel.
     ActivityModel.findByIdAndRemove(req.params.id).exec()
