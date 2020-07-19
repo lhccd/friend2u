@@ -381,7 +381,7 @@ const getActivitiesByCategory  = async (req, res) => {
                 //console.log("IDCheck - CurrUser: "+req.id+"; ActCreator: "+activities[i].creator)
                 //console.log(req.id.toString() === activities[i].creator.toString())
                 console.log("Gendercheck: "+activities[i].prefGender.toLowerCase()+" === "+propCurrUser.gender.toLowerCase()+"; results in: "+(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || activities[i].prefGender.toLowerCase() === "notdeclared" || propCurrUser.gender.toLowerCase() === "notdeclared"))
-                if(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || activities[i].prefGender.toLowerCase() === "notdeclared" || propCurrUser.gender.toLowerCase() === "notdeclared") {
+                if(activities[i].prefGender.toLowerCase() === propCurrUser.gender.toLowerCase() || propCurrUser.gender.toLowerCase() === "notdeclared") {
                     resact.push(activities[i])
                 }
             }
@@ -468,7 +468,7 @@ const search = (async(req, res) => {
                 $lt: new Date(req.body.toTime), //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()+req.dtpm)),
                 $gte: new Date(req.body.fromTime) //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()-req.dtpm))
             },
-            category: req.body.category,
+            //category: req.body.category,
             status: 0
     })
     .catch(error => res.status(500).json({

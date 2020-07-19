@@ -26,7 +26,7 @@ export class ActivitySearch extends React.Component {
             kitchen: "Italian",
             maxPhyCondition: "4",
             minPhyCondition: "1",
-            maxDistance: "1000"
+            maxDistance: "1000",
         };
 
         this.handleChange = this.handleChange.bind(this)

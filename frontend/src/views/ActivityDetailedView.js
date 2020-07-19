@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import { Spinner } from 'react-bootstrap';
+
 import { ActivityDetail } from '../components/ActivityDetail';
 
 import ActivityService from '../services/ActivityService';
@@ -78,7 +80,7 @@ export class ActivityDetailedView extends React.Component {
 
     render() {
         if (this.state.loading1 || this.state.loading2) {
-            return (<h2>Loading the selected activity...</h2>);
+            return (<h2><Spinner animation="border" variant="success" /> Loading selected acitivity</h2>);
         }
         return (
             <ActivityDetail activity={this.state.activity} user={this.state.user} onJoin={(activityID) => this.joinUser(activityID)} onUNJoin={(activityID) => this.unJoinUser(activityID)} onDelete={(id) => this.deleteActivity(id)}/>

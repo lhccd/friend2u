@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import { Spinner } from 'react-bootstrap';
+
 import { ActivityCreate } from '../components/ActivityCreate';
 
 import ActivityService from '../services/ActivityService';
@@ -61,7 +63,7 @@ export class ActivityEditView extends React.Component {
 
     render() {
         if (this.state.loading) {
-            return (<h2>Loading the selected activity...</h2>);
+            return (<h2><Spinner animation="border" variant="success" /> Loading selected acitivity</h2>);
         }
         if(this.state.activity.creator != UserService.getCurrentUser().id) {
             return (<Alert className="alert-danger">You are not allowed to edit this activity!</Alert>)

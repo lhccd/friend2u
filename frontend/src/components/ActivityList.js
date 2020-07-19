@@ -14,7 +14,12 @@ export class ActivityList extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            showMyActivities: true
+        }
+
         this.handleSort = this.handleSort.bind(this)
+        this.myActivities = this.myActivities.bind(this)
     }
 
     handleSort(event) {
@@ -22,6 +27,17 @@ export class ActivityList extends React.Component {
         console.log(event.target.name)
         console.log(event.target.value)
         this.props.onSort(event.target.value)
+    }
+
+    myActivities(event) {
+        //console.log(event.target)
+        if(this.state.showMyActivities) {
+            this.setState({ ["showMyActivities"]: false})
+            this.props.onMyActivities(false)
+        } else {
+            this.setState({ ["showMyActivities"]: true})
+            this.props.onMyActivities(true)
+        }
     }
 
     render() {
@@ -36,7 +52,8 @@ export class ActivityList extends React.Component {
                             </Col>
                             <Col>
                                 <div style={{float: "right", inline: true}}>
-                                    Search by:
+                                    Search by: 
+                                    ( <Form.Check inline checked={this.state.showMyActivities} onClick={this.myActivities}  type="checkbox" label="Show My Activities" />)
                                     <Form.Control as="select" name="prefGender" defaultValue="Activityname Ascending" style={{width: "15rem"}}
                                                         onChange={this.handleSort}>
                                                                         <option>Activityname Ascending</option>
