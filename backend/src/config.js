@@ -2,7 +2,7 @@
 
 //Configuration variables for our backend.
 const port      = process.env.PORT        || '3000';
-const mongoURI  = process.env.MONGODB_URI || 'mongodb://localhost:27017/friend2udb_test2'//'mongodb+srv://lorenz:friend2u@cluster0-g5wgv.gcp.mongodb.net/test?retryWrites=true&w=majority';
+const mongoURI  = process.env.MONGODB_URI || 'mongodb+srv://lorenz:friend2u@cluster0-g5wgv.gcp.mongodb.net/test?retryWrites=true&w=majority';
 const accessTokenSecret = process.env.ACCESS_SECRET  || 'very secret';
 const refreshTokenSecret = process.env.REFRESH_SECRET  || 'very secret secret';
 const resetPasswordSecret = process.env.RESET_PASSWORD_SECRET  || 'even more secret';
@@ -33,4 +33,4 @@ module.exports = {
 };
 
 
-//'mongodb://localhost:27017/friend2udb'
+//'mongodb://localhost:27017/friend2udb''mongodb://localhost:27017/friend2udb_test2'//
