@@ -324,7 +324,7 @@ const remove = async (req, res) => {
         .then(() => {
             // As the activity does not longer exist, all the reports for this
             // specific category can be deleted.
-            ActivityReportModel.deleteMany({activityID: req.params.id })
+            ActivityReportModel.deleteMany({category: 'activity', reported: req.params.id})
                 .then(activity => {
                     res.status(200).json({message: `Activity and its corresponding ActivityReports for id${req.params.id} were deleted`})
                 })
@@ -480,14 +480,10 @@ const search = (async(req, res) => {
                     // Distances are given in Meteres
                     $geometry: { type: "Point",  coordinates: [ parseFloat(query.long), parseFloat(query.lat) ] },
                     $minDistance: 0,
-                    $maxDistance: query.maxDistance
+                    $maxDistance: parseInt(query.maxDistance)
                     }
                 }
             ,
-            dateTime: { 
-                $lt: new Date(query.toTime), //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()+req.dtpm)),
-                $gte: new Date(query.fromTime) //new Date(new Date(req.dateTime).setDate(new Date(req.dateTime).getDate()-req.dtpm))
-            },
             //category: req.body.category,
             status: 0
     })

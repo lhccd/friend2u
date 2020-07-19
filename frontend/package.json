@@ -45,7 +45,7 @@
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0",
     "build": "webpack --config webpack.prod.js",
-    "prod": "webpack --config webpack.prod.js --host 0.0.0.0" ,
+    "prod": "webpack --config webpack.prod.js --host 0.0.0.0",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
